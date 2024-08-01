@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::selection {
+    color: #5B6DF3; 
+    background-color: rgba(91, 109, 243, 0.3); 
+}
+
+.custom-sidebar {
+    background: transparent !important;
+}
+
+.ant-menu-item-selected {
+    background-color: #5B6DF3 !important;
+    color: #fff !important;
+}
+
+.transition-margin {
+    transition: margin-left ease-in-out;
+}
+  
