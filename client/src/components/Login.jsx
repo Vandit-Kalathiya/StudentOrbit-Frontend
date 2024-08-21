@@ -80,10 +80,10 @@ function Login() {
                     label="Student ID"
                     name="studentid"
                     rules={[
-                      {
-                        required: true,
-                        message: "Please write your student id",
-                      },
+                      // {
+                      //   required: true,
+                      //   message: "Please write your student id",
+                      // },
                       { type: "text", message: "The input is not valid" },
                     ]}
                   >
@@ -92,9 +92,9 @@ function Login() {
                   <Form.Item
                     label="Password"
                     name="password"
-                    rules={[
-                      { required: true, message: "Please write your password" },
-                    ]}
+                    // rules={[
+                    //   { required: true, message: "Please write your password" },
+                    // ]}
                   >
                     <Input.Password
                       size="large"

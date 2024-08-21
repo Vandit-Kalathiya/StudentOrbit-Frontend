@@ -2,7 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AuthImg from "../Styles/AuthImg";
-import loginImg from "../assets/Fingerprint.mp4";
+import loginImg from "../assets/Fingerprint (1).mp4";
 import { Card, Typography, Form, Input, Button } from "antd";
 
 function Signup() {
@@ -80,10 +80,10 @@ function Signup() {
                     label="Student ID"
                     name="studentid"
                     rules={[
-                      {
-                        required: true,
-                        message: "Please write your student id",
-                      },
+                      // {
+                      //   required: true,
+                      //   message: "Please write your student id",
+                      // },
                       { type: "text", message: "The input is not valid" },
                     ]}
                   >
@@ -93,10 +93,10 @@ function Signup() {
                     label="Email"
                     name="email"
                     rules={[
-                      {
-                        required: true,
-                        message: "Please write your student email",
-                      },
+                      // {
+                      //   required: true,
+                      //   message: "Please write your student email",
+                      // },
                       { type: "text", message: "The input is not valid" },
                     ]}
                   >
@@ -108,9 +108,9 @@ function Signup() {
                   <Form.Item
                     label="Password"
                     name="password"
-                    rules={[
-                      { required: true, message: "Please write your password" },
-                    ]}
+                    // rules={[
+                    //   { required: true, message: "Please write your password" },
+                    // ]}
                   >
                     <Input.Password
                       size="large"

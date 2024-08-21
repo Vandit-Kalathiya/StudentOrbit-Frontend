@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import Navbar from "./components/Navbar";
+import About from "./components/About";
 import Home from "./components/Home";
 import Contact from "./components/Contact";
 import Login from "./components/Login";
@@ -15,6 +16,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signUp" element={<Signup />} />
         <Route path="/contact" element={<Contact />} />

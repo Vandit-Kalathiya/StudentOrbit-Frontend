@@ -7,7 +7,7 @@ function ContentSidebar() {
     <div className="text-center">
       <Card style={{position: "relative"}}>
         <Image
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4FbpvZh5jwaDNTSer_Ac03nhI6PVoYV400A&s"
+          // src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4FbpvZh5jwaDNTSer_Ac03nhI6PVoYV400A&s"
           alt="Background"
           style={{
             height: 150,
@@ -15,10 +15,10 @@ function ContentSidebar() {
           }}
         />
         <Typography.Title level={2} strong className="mt-2">
-            Charlie Parker
+            Ram Bhai
         </Typography.Title>
         <Typography.Text>
-            Email : alice01@gmail.com <br />
+            Email : ram12@gmail.com <br />
         </Typography.Text>
         <Typography.Text>
             Total Batches : 3 <br />

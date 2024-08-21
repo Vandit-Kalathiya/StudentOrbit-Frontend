@@ -7,8 +7,8 @@ import PendingTask from './PendingTask'
 function SideContent() {
   return (
     <Flex vertical gap='2.3rem' style={{width: 350}}>
-      <ContentSidebar />
       <PendingTask />
+      {/* <ContentSidebar /> */}
     </Flex>
   )
 }
