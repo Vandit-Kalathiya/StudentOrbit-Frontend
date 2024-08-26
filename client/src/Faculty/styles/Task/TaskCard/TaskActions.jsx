@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Modal, Input } from "antd";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import { CheckCircleFilled } from "@ant-design/icons";
 
 const TaskActions = ({ status, showModal, updateTaskStatus, taskId }) => {
   const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
@@ -42,7 +42,7 @@ const TaskActions = ({ status, showModal, updateTaskStatus, taskId }) => {
               Go for Review
             </button>
           )}
-
+ 
           {status === "inreview" && (
             <div className="md:flex flex-col md:flex-row">
               <button
@@ -62,8 +62,8 @@ const TaskActions = ({ status, showModal, updateTaskStatus, taskId }) => {
         </>
       ) : (
         <div className="flex items-center">
-          <CheckCircleOutlined className="text-green-500 mr-2" />
-          <span className="text-green-500">Completed</span>
+          <CheckCircleFilled className="text-green-600 mr-2" />
+          <span className="text-green-600">Completed</span>
         </div>
       )}
       <Modal

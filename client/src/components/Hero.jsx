@@ -30,7 +30,7 @@ function Hero() {
           background: "rgba(0, 0, 0, 0.01)",
         }}
       ></div>
-      <div className="container flex text-center items-center relative z-10 md:flex-row flex-col md:px-24 px-4">
+      <div className="container flex text-center items-center relative z-10 md:flex-row flex-col md:px-16 px-4">
         <div className="flex flex-col justify-center items-center">
           <h1
             className="md:text-6xl text-[#012970] font-semibold mb-4 text-4xl tracking-tight"
@@ -55,7 +55,7 @@ function Hero() {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col justify-center items-center pt-8 md:pl-16 md:w-full md:h-full w-[90%]">
+        <div className="flex flex-col justify-center items-center pt-8 ml md:pl-16 md:w-full md:h-full w-[90%] md:-mr-44">
           <img
             src={heroImg}
             alt="Hero"

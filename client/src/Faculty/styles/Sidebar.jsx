@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Button, Layout } from "antd";
 import MenuList from "./MenuList";
@@ -8,76 +7,92 @@ import Main from "../Main";
 import Group from "./Group/GroupCard/Group";
 import Batch from "./Batch/Batch";
 import GroupDetails from "./Group/GroupDetails";
-import WeekDetails from "./Task/WeekDetails";
+import WeekDetails from "./Task/TaskCard/WeekDetails";
+import TaskDetail from "./Task/TaskPage/TaskDetail";
+import Project from "../../Progress/Project";
 
 // eslint-disable-next-line no-unused-vars
 const { Header, Sider, Content } = Layout;
 
+const initialData = [
+  { batch: "A1", sem: "5", id1: "22ce001", id2: "22ce022" },
+  { batch: "B1", sem: "3", id1: "22ce023", id2: "22ce045" },
+  { batch: "C1", sem: "5", id1: "22ce046", id2: "22ce068" },
+  { batch: "A1", sem: "3", id1: "22ce001", id2: "22ce022" },
+  { batch: "B1", sem: "5", id1: "22ce023", id2: "22ce045" },
+  { batch: "C2", sem: "5", id1: "22ce141", id2: "22ce164" },
+];
+
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(true);
+  const [sidebarVisible, setSidebarVisible] = useState(true); // Track sidebar visibility on mobile
+
+  const batchData = initialData.map(item => ({
+    name: `${item.sem}${item.batch}`,
+    route: `/dashboard/batches/${item.sem}${item.batch}`
+  }));
+
+  const toggleSidebar = () => {
+    setSidebarVisible(prev => !prev);
+  };
 
   return (
-    // <Router>
-    <div className="flex w-full">
-      <Layout
-        className="w-full flex"
+    <Layout className="flex w-full">
+      {/* Sidebar Toggle Button for Mobile View */}
+      <div
+        className="md:hidden absolute bottom-8 left-2 cursor-pointer z-50 bg-[#5B6DF3] text-white py-2 px-6 rounded-md"
+        onClick={toggleSidebar}
       >
-        <Sider
-          collapsed={collapsed}
-          collapsible
-          trigger={null}
-          // theme={darkTheme ? "dark" : "light"}
-          className="custom-sidebar bg-white z-999 mt-20"
-          style={{ position: "fixed", left: 0, bottom: 0, top: 0 }}
-        >
-          <div className="md:flex flex-col h-full">
-            {/* <Logo /> */}
-            <MenuList className="flex-grow" />
-            <Button
-              type="text"
-              className="toggle -mt-36 ml-5"
-              onClick={() => setCollapsed(!collapsed)}
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            />
-          </div>
-        </Sider>
-        <Layout
-          className="w-full md:pl-0 bg-inherit"
+        {sidebarVisible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+      </div>
+
+      <Sider
+        collapsed={collapsed}
+        collapsible
+        trigger={null}
+        className={`md:block custom-sidebar bg-white z-999 mt-20 ${!sidebarVisible ? 'hidden' : ''}`}
+        style={{ position: "fixed", left: 0, bottom: 0, top: 0 }}
+      >
+        <div className="md:flex flex-col h-full">
+          <MenuList className="flex-grow" batchData={batchData} />
+          <Button
+            type="text"
+            className="toggle -mt-36 ml-5"
+            onClick={() => setCollapsed(!collapsed)}
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          />
+        </div>
+      </Sider>
+
+      <Layout
+        className={`w-full ${sidebarVisible ? 'md:pl-0' : 'pl-0'} bg-inherit`}
+        style={{
+          // marginLeft: collapsed ? 70 : 150,
+          marginLeft: sidebarVisible ? (collapsed ? 70 : 150) : 0,
+          transition: "margin-left 0.1s linear",
+          marginRight: 16,
+        }}
+      >
+        <Content
+          className="transition-margin h-full overflow-auto mt-20"
           style={{
-            marginLeft: collapsed ? 80 : 170, 
-            transition: "margin-left 0.3s linear",
-            marginRight: 16, 
+            marginLeft: collapsed ? "1vw" : "4vw",
+            transition: "margin-left 0.3s ease-in-out",
           }}
         >
-          {/* <Header
-          className="header bg-white text-black shadow-md h-20 pt-4 w-[90%] z-10 ml-20"
-          style={{ position: "fixed", left: 0, top: 0 }}
-        >
-          <CHeader />
-        </Header> */}
-          <Content
-            className="transition-margin h-full overflow-auto mt-20"
-            style={{
-              marginLeft: collapsed ? "1vw" : "4vw",
-              transition: "margin-left 0.3s ease-in-out",
-            }}
-          >
-            <Routes>
-              <Route path="/" element={<Main />} />
-              <Route path="batches" element={<Batch />} />
-              <Route path="batches/:batch" element={<Group />} />
-              <Route
-                path="batches/:batch/:projectName"
-                element={<GroupDetails collapsed={collapsed} />}
-              />
-              <Route path="batches/:batch/:projectName/:week" element={<WeekDetails />} />
-              <Route path="*" element={<div>Page not found</div>} />
-            </Routes>
-          </Content>
-        </Layout>
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="batches" element={<Batch />} />
+            <Route path="batches/:batch" element={<Group />} />
+            <Route path="batches/:batch/:projectName" element={<GroupDetails collapsed={collapsed} />} />
+            <Route path="batches/:batch/:projectName/:week" element={<WeekDetails />} />
+            <Route path="batches/:batch/:projectName/:week/:task" element={<TaskDetail />} />
+            <Route path="progress" element={<Project />} />
+            <Route path="*" element={<div>Page not found</div>} />
+          </Routes>
+        </Content>
       </Layout>
-    </div>
-    // </Router>
+    </Layout>
   );
 }
 

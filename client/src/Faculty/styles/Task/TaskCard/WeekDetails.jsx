@@ -46,7 +46,7 @@ const ToDoPage = () => {
   const weekNumber = currentWeek.replace('week', 'Week ');
 
   return (
-    <div className='md:p-10 py-4 px-2'>
+    <div className='md:p-10 py-4 m-3'>
       <h1 className='md:text-5xl text-3xl text-center md:my-2 my-5 font-semibold'>{weekNumber}</h1>
       <Row gutter={16}>
         <Col span={24}>

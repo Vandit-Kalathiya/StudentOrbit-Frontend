@@ -23,7 +23,6 @@ const TaskList = ({ tasks, status, updateTaskStatus }) => {
   );
 };
 
-// Define PropTypes for better type checking
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(
     PropTypes.shape({

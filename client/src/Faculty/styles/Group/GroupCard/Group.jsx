@@ -60,7 +60,7 @@ const Group = () => {
   };
 
   return (
-    <div className="m-4 md:m-8">
+    <div className="my-4 mx-3 md:m-8">
       <GroupHeader batch={batch} onAddGroup={handleAddGroup} />
       <GroupList data={data} batch={batch} />
     </div>

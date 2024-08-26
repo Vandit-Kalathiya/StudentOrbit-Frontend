@@ -3,7 +3,7 @@ import { useForm } from "antd/es/form/Form";
 
 const { TextArea } = Input;
 
-const AddGroupModal = ({ visible, onClose, onAddGroup }) => {
+const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
   const [form] = useForm();
 
   // Custom validation function
@@ -28,19 +28,20 @@ const AddGroupModal = ({ visible, onClose, onAddGroup }) => {
   };
 
   const handleFinish = (values) => {
-    const { title, description, technologies, studentIds, groupLeader } = values;
+    const { projectName, description, technologies, studentIds, groupLeader } = values;
 
     // Ensure studentIds is an array
     const studentIdsArray = studentIds.split(",").map((id) => id.trim());
 
     const newGroup = {
-      title,
+      title: projectName,
       description,
       technologies: technologies.split(",").map((tech) => tech.trim()),
       groupLeader,
       members: studentIdsArray,
       progress: 0,
       category: "New Category", // Default category or provide input
+      batch, // Include the batch field
     };
 
     onAddGroup(newGroup);
@@ -56,9 +57,12 @@ const AddGroupModal = ({ visible, onClose, onAddGroup }) => {
       footer={null}
     >
       <Form form={form} layout="vertical" onFinish={handleFinish}>
+        <Form.Item label="Batch">
+          <Input value={batch} readOnly />
+        </Form.Item>
         <Form.Item
-          name="title"
-          label="Title"
+          name="projectName"
+          label="Project Name"
           rules={[{ required: true, message: "Please input the title!" }]}
         >
           <Input />
@@ -95,7 +99,7 @@ const AddGroupModal = ({ visible, onClose, onAddGroup }) => {
           <Input placeholder="22ce001" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button className="bg-[#4859DA] text-white hover:border-[#4859DA] hover:text-[#4859DA]" htmlType="submit">
             Add Group
           </Button>
         </Form.Item>

@@ -1,4 +1,5 @@
-import { Avatar, Button } from "antd";
+import { useState } from "react";
+import { Avatar, Button, Modal, Input, Form } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 const colorCombinations = [
@@ -18,10 +19,12 @@ function GroupLeft({
   category,
   progress,
 }) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [email, setEmail] = useState("");
+
   const shuffledColors = shuffleArray(colorCombinations);
 
   const extractLastTwoDigits = (id) => {
-    // Match all sequences of digits
     const matches = id.match(/\d+/g);
     if (matches) {
       const lastNumber = matches[matches.length - 1];
@@ -38,6 +41,23 @@ function GroupLeft({
       numeric: true,
     });
   });
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const 
+  handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
 
   return (
     <div className="md:m-9 md:px-6 my-6 w-full">
@@ -70,7 +90,8 @@ function GroupLeft({
         <Button
           icon={<PlusOutlined />}
           size="small"
-          className="border-[#000] text-[#595959]"
+          className="border-[#8a8a8a]"
+          onClick={showModal}
         >
           Invite
         </Button>
@@ -89,6 +110,40 @@ function GroupLeft({
           style={{ width: `${progress}%` }}
         ></div>
       </div>
+
+      <Modal
+        title="Invite Member"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleOk}>
+            Invite
+          </Button>,
+        ]}
+      >
+        <Form>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                type: "email",
+                message: "Please enter a valid email address!",
+              },
+            ]}
+          >
+            <Input
+              placeholder="Enter email address"
+              value={email}
+              onChange={handleEmailChange}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

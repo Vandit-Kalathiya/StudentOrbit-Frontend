@@ -19,4 +19,15 @@
 .transition-margin {
     transition: margin-left ease-in-out;
 }
-  
+
+/* @media (max-width: 768px) {
+  .custom-sidebar {
+    width: 60px !important; 
+    min-width: 60px !important;
+    max-width: 60px !important;
+  }
+
+  .toggle {
+    margin-left: 10px !important;
+  }
+} */

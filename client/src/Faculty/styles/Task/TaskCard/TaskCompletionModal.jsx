@@ -7,7 +7,7 @@ const TaskCompletionModal = ({ isModalVisible, handleOk, handleCancel }) => {
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
-      okText="Yes, Complete"
+      okText="Yes, Approve"
       cancelText="Cancel"
     >
       <p>Are you sure to mark this task as completed?</p>

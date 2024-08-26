@@ -10,22 +10,22 @@ const GroupHeader = ({ batch, onAddGroup }) => {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <div className="relative flex md:flex-row flex-col items-center justify-between p-2">
-      <Typography.Title level={2} className="m-0 text-center text-xl md:text-3xl flex-grow">
+    <div className="relative flex md:flex-row items-center justify-center p-2">
+      <Typography className="md:m-0 mt-5 text-center text-3xl md:text-5xl flex-grow font-semibold">
         Batch-{batch}
-      </Typography.Title>
-      <div className="flex justify-end p-2">
+      </Typography>
+      <div className="p-2">
         <Button
-          type="primary"
           shape="round"
           icon={<Plus />}
-          className="bg-[#5B6DF3] hover:bg-[#4859da] p-5 text-center mb-5"
+          className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center my-5"
           onClick={handleOpenModal}
+          block // Makes the button full-width on small screens
         >
-          Add Group
+          <span className="hidden md:inline">Add Group</span>
         </Button>
       </div>
-      <AddGroupModal visible={showModal} onClose={handleCloseModal} onAddGroup={onAddGroup} />
+      <AddGroupModal batch={batch} visible={showModal} onClose={handleCloseModal} onAddGroup={onAddGroup} />
     </div>
   );
 };
