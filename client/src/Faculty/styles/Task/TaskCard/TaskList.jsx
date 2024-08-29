@@ -2,7 +2,7 @@ import { Row, Col, Empty } from 'antd';
 import PropTypes from 'prop-types';
 import TaskCard from './TaskCard';
 
-const TaskList = ({ tasks, status, updateTaskStatus }) => {
+const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees }) => {
   // Filter tasks based on the provided status
   const filteredTasks = tasks.filter(task => task.status === status);
 
@@ -12,7 +12,7 @@ const TaskList = ({ tasks, status, updateTaskStatus }) => {
         <Row gutter={16}>
           {filteredTasks.map(task => (
             <Col xs={24} sm={12} md={8} lg={6} key={task.id}>
-              <TaskCard task={task} updateTaskStatus={updateTaskStatus} />
+              <TaskCard task={task} updateTaskStatus={updateTaskStatus}  updateAssignees={updateAssignees} />
             </Col>
           ))}
         </Row>

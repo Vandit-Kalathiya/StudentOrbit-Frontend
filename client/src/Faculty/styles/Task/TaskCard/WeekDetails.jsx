@@ -35,35 +35,49 @@ const ToDoPage = () => {
     }
   }, [tasks, currentWeek]);
 
-  const updateTaskStatus = (id, newStatus) => {
+  const updateTaskStatus = (id, newStatus, comment = "") => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
-        task.id === id ? { ...task, status: newStatus } : task
+        task.id === id
+          ? {
+              ...task,
+              status: newStatus,
+              comments: [...(task.comments || []), comment], // Add the comment if any
+            }
+          : task
       )
     );
   };
 
+  const updateAssignees = (taskId, newAssignees) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, assignees: newAssignees } : task
+      )
+    );
+  };  
+
   const weekNumber = currentWeek.replace('week', 'Week ');
 
   return (
-    <div className='md:p-10 py-4 m-3'>
+    <div className='md:p-4 py-4 m-3'>
       <h1 className='md:text-5xl text-3xl text-center md:my-2 my-5 font-semibold'>{weekNumber}</h1>
       <Row gutter={16}>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>To-do Tasks</h3>
-          <TaskList tasks={tasks} status='todo' updateTaskStatus={updateTaskStatus} />
+          <TaskList tasks={tasks} status='todo' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>In Progress Tasks</h3>
-          <TaskList tasks={tasks} status='inprogress' updateTaskStatus={updateTaskStatus} />
+          <TaskList tasks={tasks} status='inprogress' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>In Review Tasks</h3>
-          <TaskList tasks={tasks} status='inreview' updateTaskStatus={updateTaskStatus} />
+          <TaskList tasks={tasks} status='inreview' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>Completed Tasks</h3>
-          <TaskList tasks={tasks} status='completed' updateTaskStatus={updateTaskStatus} />
+          <TaskList tasks={tasks} status='completed' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
         </Col>
       </Row>
     </div>

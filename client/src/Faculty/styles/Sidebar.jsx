@@ -65,7 +65,7 @@ function Sidebar() {
       </Sider>
 
       <Layout
-        className={`w-full ${sidebarVisible ? 'md:pl-0' : 'pl-0'} bg-inherit`}
+        className={`w-full ${sidebarVisible ? 'md:pl-0' : 'pl-0'} bg-inherit min-h-screen`}
         style={{
           // marginLeft: collapsed ? 70 : 150,
           marginLeft: sidebarVisible ? (collapsed ? 70 : 150) : 0,

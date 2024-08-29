@@ -13,12 +13,12 @@ const TaskActions = ({ status, showModal, updateTaskStatus, taskId }) => {
   const handleOk = () => {
     setIsCommentModalVisible(false);
     updateTaskStatus(taskId, "inprogress", comment);
-    setComment(""); // Reset the comment
+    setComment("");
   };
 
   const handleCancel = () => {
     setIsCommentModalVisible(false);
-    setComment(""); // Reset the comment if the modal is canceled
+    setComment(""); 
   };
 
   return (
@@ -52,8 +52,8 @@ const TaskActions = ({ status, showModal, updateTaskStatus, taskId }) => {
                 Approve
               </button>
               <button
-                className="bg-yellow-500 text-black px-4 py-2 rounded-md hover:bg-yellow-600"
-                onClick={handleMoveToInProgress} // This button triggers the comment modal
+                className="bg-yellow-500 text-black px-4 py-2 md:ml-0 ml-2 rounded-md hover:bg-yellow-600"
+                onClick={handleMoveToInProgress}
               >
                 Move to In Progress
               </button>

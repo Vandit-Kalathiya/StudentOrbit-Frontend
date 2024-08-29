@@ -26,7 +26,7 @@ const Batch = () => {
 
   return (
     <div className="my-6 mx-3 md:my-8 md:px-8">
-      <div className="relative flex md:flex-row items-center justify-center p-2">
+      <div className="relative flex md:flex-row flex-col items-center justify-center p-2">
         <Typography className="md:m-0 mt-5 text-center text-4xl md:text-5xl flex-grow font-semibold">
           Batches
         </Typography>
@@ -34,14 +34,14 @@ const Batch = () => {
           <Button
             shape="round"
             icon={<Plus />}
-            className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center my-5"
+            className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center mt-2"
             onClick={() => setShowModal(true)}
           >
             Add Batch
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 md:mt-4">
         {data.map((item, index) => ( 
           <BatchCard key={index} batch={item.batch} sem={item.sem} id1={item.id1} id2={item.id2} />
         ))}

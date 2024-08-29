@@ -10,7 +10,7 @@ const GroupHeader = ({ batch, onAddGroup }) => {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <div className="relative flex md:flex-row items-center justify-center p-2">
+    <div className="relative flex md:flex-row flex-col items-center justify-center p-2">
       <Typography className="md:m-0 mt-5 text-center text-3xl md:text-5xl flex-grow font-semibold">
         Batch-{batch}
       </Typography>
@@ -18,7 +18,7 @@ const GroupHeader = ({ batch, onAddGroup }) => {
         <Button
           shape="round"
           icon={<Plus />}
-          className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center my-5"
+          className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center mt-2"
           onClick={handleOpenModal}
           block // Makes the button full-width on small screens
         >
