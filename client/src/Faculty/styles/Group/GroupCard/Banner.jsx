@@ -38,7 +38,7 @@ function Banner({ title, description, technologies, batch, projectName, groupLea
         </Flex>
         <div className="flex md:gap-10 md:flex-row flex-col items-center gap-6">
           <Link
-            to={`/dashboard/batches/${batch}/${projectName}`}
+            to={`/f/dashboard/batches/${batch}/${projectName}`}
             state={{
               title,
               description,

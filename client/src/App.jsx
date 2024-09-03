@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./Faculty/Dashboard";
+import DashboardS from "./Students/Dashboard";
 
 function App() {
   return (
@@ -20,7 +21,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signUp" element={<Signup />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/f/dashboard/*" element={<Dashboard />} />
+        <Route path="/s/dashboard/*" element={<DashboardS />} />
+        {/* <Route path="/s/projects/*" element={<DashboardS />} /> */}
       </Routes>
     </Router>
   );

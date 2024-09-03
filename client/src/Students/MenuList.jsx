@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, Modal } from "antd";
 import {
   DashboardOutlined,
-  AreaChartOutlined,
   SettingOutlined,
-  BarsOutlined,
   LogoutOutlined,
   ProjectOutlined,
 } from "@ant-design/icons";
@@ -47,9 +45,9 @@ const MenuList = ({ darkTheme, batchData }) => {
           <Link to="/f/dashboard">Dashboard</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<ProjectOutlined />}>
-          <Link to="/s/dashboard">Projects</Link>
+          <Link to="/s/dashboard/projects">Projects</Link>
         </Menu.Item>
-        {isSubMenuVisible ? (
+        {/* {isSubMenuVisible ? (
           <Menu.SubMenu key="3" icon={<BarsOutlined />} title="My Batches">
             {batchData.map((batch, index) => (
               <Menu.Item key={`3-${index}`}>
@@ -61,10 +59,10 @@ const MenuList = ({ darkTheme, batchData }) => {
           <Menu.Item key="3" icon={<BarsOutlined />}>
             <Link to="/f/dashboard/batches">My Batches</Link>
           </Menu.Item>
-        )}
-        <Menu.Item key="4" icon={<AreaChartOutlined />}>
+        )} */}
+        {/* <Menu.Item key="4" icon={<AreaChartOutlined />}>
           <Link to="/f/dashboard/progress">Progress</Link>
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="5" icon={<SettingOutlined />}>
           Settings
         </Menu.Item>

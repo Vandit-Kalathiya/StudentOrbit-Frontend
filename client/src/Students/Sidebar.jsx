@@ -3,13 +3,10 @@ import { Route, Routes } from "react-router-dom";
 import { Button, Layout } from "antd";
 import MenuList from "./MenuList";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import Main from "../Main";
-import Group from "./Group/GroupCard/Group";
-import Batch from "./Batch/Batch";
-import GroupDetails from "./Group/GroupDetails";
-import WeekDetails from "./Task/TaskCard/WeekDetails";
-import TaskDetail from "./Task/TaskPage/TaskDetail";
-import Project from "../../Progress/Project";
+import ProjectCard from "./Project/ProjectCard";
+import ProjectDetails from "./Project/ProjectDetails";
+import WeekDetails from '../Faculty/styles/Task/TaskCard/WeekDetails'
+import TaskDetail from "../Faculty/styles/Task/TaskPage/TaskDetail";
 
 // eslint-disable-next-line no-unused-vars
 const { Header, Sider, Content } = Layout;
@@ -25,8 +22,8 @@ const initialData = [
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(true);
-  const [sidebarVisible, setSidebarVisible] = useState(true);
-  
+  const [sidebarVisible, setSidebarVisible] = useState(true); // Track sidebar visibility on mobile
+
   const batchData = initialData.map(item => ({
     name: `${item.sem}${item.batch}`,
     route: `/dashboard/batches/${item.sem}${item.batch}`
@@ -81,14 +78,10 @@ function Sidebar() {
           }}
         >
           <Routes>
-            <Route path="/" element={<Main />} />
-            <Route path="batches" element={<Batch />} />
-            <Route path="batches/:batch" element={<Group />} />
-            <Route path="batches/:batch/:projectName" element={<GroupDetails collapsed={collapsed} />} />
-            <Route path="batches/:batch/:projectName/:week" element={<WeekDetails />} />
-            <Route path="batches/:batch/:projectName/:week/:taskId" element={<TaskDetail />} />
-            <Route path="progress" element={<Project />} />
-            <Route path="*" element={<div>Page not found</div>} />
+            <Route path="/projects" element={<ProjectCard />} />
+            <Route path="/projects/:projectName" element={<ProjectDetails collapsed={collapsed} />} />
+            <Route path="/projects/:projectName/:week" element={<WeekDetails />} />
+            <Route path="/projects/:projectName/:week/:taskId" element={<TaskDetail />} />
           </Routes>
         </Content>
       </Layout>

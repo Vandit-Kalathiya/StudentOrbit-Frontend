@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Avatar, Button, Modal, Input, Form } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
-const colorCombinations = [
-  { backgroundColor: "#fde3cf", color: "#f56a00", border: "#f56a00" }, // Orange
-  { backgroundColor: "#e6f7ff", color: "#1890ff", border: "#1890ff" }, // Light Blue
-  { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
-  { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
-];
-
-const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
+const colorCombinations = {
+  coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
+  blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }   // Blue
+  
+  // { backgroundColor: "#e6f7ff", color: "#1890ff", border: "#1890ff" }, // Light Blue
+  // { backgroundColor: "#fde3cf", color: "#f56a00", border: "#f56a00" }, // Orange
+  // { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
+  // { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
+};
 
 function GroupLeft({
   title,
@@ -21,8 +22,6 @@ function GroupLeft({
 }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [email, setEmail] = useState("");
-
-  const shuffledColors = shuffleArray(colorCombinations);
 
   const extractLastTwoDigits = (id) => {
     const matches = id.match(/\d+/g);
@@ -46,8 +45,7 @@ function GroupLeft({
     setIsModalVisible(true);
   };
 
-  const 
-  handleOk = () => {
+  const handleOk = () => {
     setIsModalVisible(false);
   };
 
@@ -72,8 +70,10 @@ function GroupLeft({
       <div className="flex flex-wrap items-center gap-4 my-4">
         <h3 className="md:text-lg text-base font-semibold">Members:</h3>
         {sortedMembers.map((member, index) => {
-          const { backgroundColor, color, border } =
-            shuffledColors[index % shuffledColors.length];
+          // Determine color based on odd/even index
+          const colorType = index % 2 === 0 ? "blue" : "coral";
+          const { backgroundColor, color, border } = colorCombinations[colorType];
+
           return (
             <Avatar
               key={index}

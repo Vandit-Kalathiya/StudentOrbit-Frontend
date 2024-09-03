@@ -18,9 +18,10 @@ const ToDoPage = () => {
     } else if (location.state?.tasks) {
       // Initialize tasks with 'todo' status if no saved tasks for the week
       const weekTasks = location.state.tasks.map((task, i) => ({
-        id: i + 1,
-        title: task,
-        status: 'todo',
+        id: task.id || i + 1,
+        title: task.title || `Task ${i + 1}`,
+        status: 'Todo',
+        assignees: [],
       }));
       setTasks(weekTasks);
     }
@@ -28,7 +29,6 @@ const ToDoPage = () => {
 
   useEffect(() => {
     if (tasks.length > 0) {
-      // Save tasks to localStorage keyed by the current week
       const savedTasks = JSON.parse(localStorage.getItem('tasks')) || {};
       savedTasks[currentWeek] = tasks;
       localStorage.setItem('tasks', JSON.stringify(savedTasks));
@@ -65,19 +65,19 @@ const ToDoPage = () => {
       <Row gutter={16}>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>To-do Tasks</h3>
-          <TaskList tasks={tasks} status='todo' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
+          <TaskList tasks={tasks} status='Todo' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>In Progress Tasks</h3>
-          <TaskList tasks={tasks} status='inprogress' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
+          <TaskList tasks={tasks} status='In Progress' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>In Review Tasks</h3>
-          <TaskList tasks={tasks} status='inreview' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
+          <TaskList tasks={tasks} status='In Review' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>Completed Tasks</h3>
-          <TaskList tasks={tasks} status='completed' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
+          <TaskList tasks={tasks} status='Completed' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
         </Col>
       </Row>
     </div>

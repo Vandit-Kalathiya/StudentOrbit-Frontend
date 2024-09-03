@@ -1,6 +1,19 @@
+import { useState } from "react";
 import { Modal, Form, Input, Select } from "antd";
 
 const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members }) => {
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const handleSelect = () => {
+    // Option select karte hi dropdown ko close kar do
+    setDropdownVisible(false);
+  };
+
+  const handleDropdownVisibleChange = (open) => {
+    // Jab dropdown open ya close ho raha ho, uske according state set karo
+    setDropdownVisible(open);
+  };
+
   return (
     <Modal
       title="Add New Task"
@@ -40,6 +53,9 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members }) => {
           <Select
             mode="multiple" // Enable multiple selections
             placeholder="Select assignees"
+            open={dropdownVisible} // Control the dropdown visibility
+            onSelect={handleSelect} // Handle selection to close dropdown
+            onDropdownVisibleChange={handleDropdownVisibleChange} // Handle dropdown visibility change
           >
             {members.map((memberId) => (
               <Select.Option key={memberId} value={memberId}>

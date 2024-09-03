@@ -16,25 +16,29 @@ function GroupDetails({ collapsed }) {
     progress,
   } = location.state || {};
 
-  console.log("GroupDetails Data:", {
-    title,
-    description,
-    groupLeader,
-    members,
-    category,
-    technologies,
-    progress,
-  });
+  // console.log("GroupDetails Data:", {
+  //   title,
+  //   description,
+  //   groupLeader,
+  //   members,
+  //   category,
+  //   technologies,
+  //   progress,
+  // });
+
+  if (!location.state) {
+    return <div className="p-24">No data available</div>;
+  }
 
   return (
     <div className="flex flex-col bg-[#f5f5f5] md:m-9 m-3">
       <div className="sticky mx-auto w-full md:top-0 top-3 z-20 bg-[#f5f5f5]">
         <h1 className="md:text-5xl text-3xl text-center md:pb-6 md:pt-0 py-3 mt-3 md:mt-4 font-semibold z-20 bg-[#f5f5f5]">
-          {batch}
+          {batch || "22ce047"}
         </h1>
       </div>
 
-      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+      <div className="flex w-full flex-col md:flex-row flex-1 overflow-hidden">
         <div
           className="w-full md:w-1/2 md:fixed md:top-[12rem] top-[1rem] left-[3rem] z-10"
           style={{

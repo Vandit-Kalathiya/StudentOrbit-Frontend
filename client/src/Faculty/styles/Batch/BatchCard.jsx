@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const BatchCard = ({ batch, sem, id1, id2 }) => {
   return (
-    <Link to={`/dashboard/batches/${sem}${batch}`}>
+    <Link to={`/f/dashboard/batches/${sem}${batch}`}>
       <Card
         title={`Batch ${batch}`}
         bordered={false}
