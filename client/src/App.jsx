@@ -23,7 +23,6 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/f/dashboard/*" element={<Dashboard />} />
         <Route path="/s/dashboard/*" element={<DashboardS />} />
-        {/* <Route path="/s/projects/*" element={<DashboardS />} /> */}
       </Routes>
     </Router>
   );

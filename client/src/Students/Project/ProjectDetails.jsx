@@ -1,5 +1,5 @@
-import GroupDetails from "../../Faculty/styles/Group/GroupDetails";
 import { useLocation } from "react-router-dom";
+import GroupDetailsNew from "../../Faculty/styles/Group/GroupDetailsNew";
 
 function ProjectDetails({collapsed}) {
   const location = useLocation();
@@ -10,9 +10,7 @@ function ProjectDetails({collapsed}) {
   }
 
   return (
-    <div className="w-full">
-      <GroupDetails collapsed={collapsed} />
-    </div>
+      <GroupDetailsNew collapsed={collapsed} />
   );
 }
 

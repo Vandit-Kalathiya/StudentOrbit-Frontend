@@ -52,7 +52,7 @@ function TaskDetail() {
   };
 
   return (
-    <div className="md:m-5 md:px-4 my-6 mx-4 w-full overflow-y-hidden">
+    <div className="m-5 mt-10">
       <TaskHeader task={task} />
       <TaskDescription description={task.description} />
       <TaskStatus status={task.status} />

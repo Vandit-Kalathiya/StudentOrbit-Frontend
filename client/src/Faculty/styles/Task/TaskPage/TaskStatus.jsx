@@ -1,10 +1,10 @@
 import { FileTextOutlined, CheckCircleOutlined, HourglassOutlined, PlayCircleOutlined } from "@ant-design/icons";
 
 const statusIcons = {
-  todo: <PlayCircleOutlined className="text-blue-600" />,
-  inprogress: <HourglassOutlined className="text-yellow-600" />,
-  inreview: <FileTextOutlined className="text-purple-600" />,
-  completed: <CheckCircleOutlined className="text-green-600" />,
+  'Todo': <PlayCircleOutlined className="text-blue-600" />,
+  'In Progress': <HourglassOutlined className="text-yellow-600" />,
+  'In Review': <FileTextOutlined className="text-purple-600" />,
+  'Completed': <CheckCircleOutlined className="text-green-600" />,
 };
 
 const TaskStatus = ({ status }) => {

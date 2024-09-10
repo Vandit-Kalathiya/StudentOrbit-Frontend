@@ -8,7 +8,7 @@ function SideContent() {
   return (
     <Flex vertical gap='2.3rem' style={{width: 350}}>
       <PendingTask />
-      {/* <ContentSidebar /> */}
+      <ContentSidebar />
     </Flex>
   )
 }

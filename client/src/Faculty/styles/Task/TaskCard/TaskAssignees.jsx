@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Avatar, Button, Modal, Form, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -14,6 +15,7 @@ const TaskAssignees = ({ status, assignees = [], updateAssignees }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedAssignees, setSelectedAssignees] = useState(assignees);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const location = useLocation(); 
 
   const availableAssignees = [
     { initials: "03", name: "22CE003" },
@@ -41,14 +43,14 @@ const TaskAssignees = ({ status, assignees = [], updateAssignees }) => {
   };
 
   const handleSelect = () => {
-    // Close dropdown when an option is selected
     setDropdownVisible(false);
   };
 
   const handleDropdownVisibleChange = (open) => {
-    // Set the state based on dropdown open/close
     setDropdownVisible(open);
   };
+
+  const isInFDashboard = location.pathname.startsWith("/f/dashboard");
 
   return (
     <div>
@@ -56,7 +58,6 @@ const TaskAssignees = ({ status, assignees = [], updateAssignees }) => {
         <Avatar.Group>
           {selectedAssignees.map((initials, index) => {
             const assignee = availableAssignees.find((a) => a.initials === initials);
-            // Determine color based on index (odd/even)
             const colorKey = index % 2 === 0 ? 'blue' : 'coral';
             const { backgroundColor, color, border } = colorStyles[colorKey];
 
@@ -70,7 +71,7 @@ const TaskAssignees = ({ status, assignees = [], updateAssignees }) => {
             ) : null;
           })}
         </Avatar.Group>
-        {status !== "Completed" && (
+        {status !== "Completed" && !isInFDashboard && (
           <Button
             icon={<PlusOutlined />}
             className="ml-2 rounded-full"

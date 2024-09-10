@@ -6,10 +6,10 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import Main from "../Main";
 import Group from "./Group/GroupCard/Group";
 import Batch from "./Batch/Batch";
-import GroupDetails from "./Group/GroupDetails";
 import WeekDetails from "./Task/TaskCard/WeekDetails";
 import TaskDetail from "./Task/TaskPage/TaskDetail";
 import Project from "../../Progress/Project";
+import GroupDetailsNew from "./Group/GroupDetailsNew";
 
 // eslint-disable-next-line no-unused-vars
 const { Header, Sider, Content } = Layout;
@@ -37,10 +37,9 @@ function Sidebar() {
   };
 
   return (
-    <Layout className="flex w-full">
-      {/* Sidebar Toggle Button for Mobile View */}
+    <Layout className="flex w-[100vw]">
       <div
-        className="md:hidden absolute bottom-8 left-2 cursor-pointer z-50 bg-[#5B6DF3] text-white py-2 px-6 rounded-md"
+        className="md:hidden fixed bottom-8 left-2 cursor-pointer z-50 bg-[#5B6DF3] text-white py-2 px-6 rounded-md"
         onClick={toggleSidebar}
       >
         {sidebarVisible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -53,7 +52,7 @@ function Sidebar() {
         className={`md:block custom-sidebar bg-white z-999 mt-20 ${!sidebarVisible ? 'hidden' : ''}`}
         style={{ position: "fixed", left: 0, bottom: 0, top: 0 }}
       >
-        <div className="md:flex flex-col h-full">
+        <div className="md:flex flex-col md:h-full">
           <MenuList className="flex-grow" batchData={batchData} />
           <Button
             type="text"
@@ -65,7 +64,7 @@ function Sidebar() {
       </Sider>
 
       <Layout
-        className={`w-full ${sidebarVisible ? 'md:pl-0' : 'pl-0'} bg-inherit min-h-screen`}
+        className={`w-full ${sidebarVisible ? 'md:pl-0' : 'pl-0'} bg-inherit min-h-screen h-auto`}
         style={{
           // marginLeft: collapsed ? 70 : 150,
           marginLeft: sidebarVisible ? (collapsed ? 70 : 150) : 0,
@@ -74,7 +73,7 @@ function Sidebar() {
         }}
       >
         <Content
-          className="transition-margin h-full overflow-auto mt-20"
+          className="transition-margin md:h-full mt-20 overflow-y-auto"
           style={{
             marginLeft: collapsed ? "1vw" : "4vw",
             transition: "margin-left 0.3s ease-in-out",
@@ -84,7 +83,7 @@ function Sidebar() {
             <Route path="/" element={<Main />} />
             <Route path="batches" element={<Batch />} />
             <Route path="batches/:batch" element={<Group />} />
-            <Route path="batches/:batch/:projectName" element={<GroupDetails collapsed={collapsed} />} />
+            <Route path="batches/:batch/:projectName" element={<GroupDetailsNew collapsed={collapsed} />} />
             <Route path="batches/:batch/:projectName/:week" element={<WeekDetails />} />
             <Route path="batches/:batch/:projectName/:week/:taskId" element={<TaskDetail />} />
             <Route path="progress" element={<Project />} />

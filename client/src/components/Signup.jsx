@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import AuthImg from "../Styles/AuthImg";
 import loginImg from "../assets/Fingerprint (1).mp4";
@@ -7,7 +6,7 @@ import { Card, Typography, Form, Input, Button, Checkbox } from "antd";
 function Signup() {
   // Handle form submission here
   const onFinish = (values) => {
-    console.log('Form values:', values);
+    console.log("Form values:", values);
   };
 
   return (
@@ -44,15 +43,26 @@ function Signup() {
                     label="Student ID"
                     name="studentid"
                     rules={[
-                      { type: "text", message: "The input is not valid" },
+                      {
+                        required: true,
+                        message: "Please enter your student ID",
+                      },
+                      {
+                        pattern: /^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/,
+                        message: "Student ID must be in the format YYCEXXX",
+                      },
                     ]}
                   >
-                    <Input size="large" placeholder="Enter your student id" />
+                    <Input size="large" placeholder="Enter your student ID" />
                   </Form.Item>
                   <Form.Item
                     label="Email"
                     name="email"
                     rules={[
+                      {
+                        required: true,
+                        message: "Please enter your email",
+                      },
                       { type: "email", message: "The input is not valid" },
                     ]}
                   >
@@ -64,6 +74,9 @@ function Signup() {
                   <Form.Item
                     label="Password"
                     name="password"
+                    rules={[
+                      { required: true, message: "Please enter your password" },
+                    ]}
                   >
                     <Input.Password
                       size="large"
@@ -85,7 +98,7 @@ function Signup() {
                   <Form.Item className="text-center">
                     Already a user?
                     <Link to="/login" className="text-center text-[#5B6DF2]">
-                       &nbsp;Login
+                      &nbsp;Login
                     </Link>
                   </Form.Item>
                 </Form>

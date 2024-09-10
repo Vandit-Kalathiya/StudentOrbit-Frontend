@@ -2,7 +2,7 @@ import { useLocation, useParams } from "react-router-dom";
 import GroupLeft from "./GroupLeft";
 import GroupRight from "./GroupRight/GroupRight";
 
-function GroupDetails({ collapsed }) {
+function GroupDetailsNew({ collapsed }) {
   const { batch } = useParams();
   const location = useLocation();
 
@@ -31,16 +31,16 @@ function GroupDetails({ collapsed }) {
   }
 
   return (
-    <div className="flex flex-col bg-[#f5f5f5] md:m-9 m-3">
-      <div className="sticky mx-auto w-full md:top-0 top-3 z-20 bg-[#f5f5f5]">
-        <h1 className="md:text-5xl text-3xl text-center md:pb-6 md:pt-0 py-3 mt-3 md:mt-4 font-semibold z-20 bg-[#f5f5f5]">
+    <div className="flex flex-col m-[none] h-auto w-[100%] md:h-[100%] md:overflow-hidden bg-[#F5F5F5]">
+      <div className="w-full mt-10">
+        <h1 className="text-5xl font-semibold text-center">
           {batch || "22ce047"}
         </h1>
       </div>
 
-      <div className="flex w-full flex-col md:flex-row flex-1 overflow-hidden">
+      <div className="md:flex-1 md:overflow-hidden flex flex-col md:flex-row h-auto md:max-h-[100%] md:py-4 px-5">
         <div
-          className="w-full md:w-1/2 md:fixed md:top-[12rem] top-[1rem] left-[3rem] z-10"
+          className="md:flex-1"
           style={{
             left: collapsed ? "3rem" : "11rem",
             transition: "left 0.2s linear",
@@ -57,12 +57,14 @@ function GroupDetails({ collapsed }) {
           />
         </div>
 
-        <div className="w-full md:w-1/2 md:mt-4 my-10 md:ml-[50%]">
-          <GroupRight members={members} />
+        <div className="md:flex-1 md:overflow-auto md:max-h-[100%] py-4 no-scrollbar">
+          <div className="block">
+            <GroupRight members={members} />
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default GroupDetails;
+export default GroupDetailsNew;

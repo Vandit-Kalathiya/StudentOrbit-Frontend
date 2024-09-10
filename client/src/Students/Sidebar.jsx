@@ -7,6 +7,7 @@ import ProjectCard from "./Project/ProjectCard";
 import ProjectDetails from "./Project/ProjectDetails";
 import WeekDetails from '../Faculty/styles/Task/TaskCard/WeekDetails'
 import TaskDetail from "../Faculty/styles/Task/TaskPage/TaskDetail";
+import DashboardDetails from "./DashboardDetails";
 
 // eslint-disable-next-line no-unused-vars
 const { Header, Sider, Content } = Layout;
@@ -71,13 +72,14 @@ function Sidebar() {
         }}
       >
         <Content
-          className="transition-margin h-full overflow-auto mt-20"
+          className="transition-margin overflow-y-auto h-full mt-20"
           style={{
             marginLeft: collapsed ? "1vw" : "4vw",
             transition: "margin-left 0.3s ease-in-out",
           }}
         >
           <Routes>
+            <Route path="/" element={<DashboardDetails />} />
             <Route path="/projects" element={<ProjectCard />} />
             <Route path="/projects/:projectName" element={<ProjectDetails collapsed={collapsed} />} />
             <Route path="/projects/:projectName/:week" element={<WeekDetails />} />

@@ -22,7 +22,7 @@ const AccordionItem = ({
           <svg
             data-accordion-icon
             className={`w-3 h-3 shrink-0 transform transition-transform duration-300 ${
-              isActive ? "rotate-180" : ""
+              isActive ? "rotate-0" : "rotate-180"
             }`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"

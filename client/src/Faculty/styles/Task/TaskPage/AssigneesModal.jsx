@@ -8,12 +8,10 @@ const AssigneesModal = ({ isModalVisible, handleOk, handleCancel, assignees, sel
   const [form] = Form.useForm();
 
   const handleSelect = () => {
-    // Option select karte hi dropdown ko close kar do
     setDropdownVisible(false);
   };
 
   const handleDropdownVisibleChange = (open) => {
-    // Jab dropdown open ya close ho raha ho, uske according state set karo
     setDropdownVisible(open);
   };
 
@@ -39,9 +37,9 @@ const AssigneesModal = ({ isModalVisible, handleOk, handleCancel, assignees, sel
           <Select
             mode="multiple"
             placeholder="Select assignees"
-            onSelect={handleSelect} // Jab option select ho, ye function call hoga
+            onSelect={handleSelect} 
             onDropdownVisibleChange={handleDropdownVisibleChange}
-            open={dropdownVisible} // Dropdown ki visibility control karo
+            open={dropdownVisible}
             value={form.getFieldValue('assignees')}
           >
             {assignees.map(assignee => (

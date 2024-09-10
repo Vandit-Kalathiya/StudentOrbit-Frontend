@@ -11,7 +11,12 @@ const ProjectCard = () => {
       members: ["22CE001", "22CE002", "22CE003", "22CE004"],
       groupLeader: "22CE002",
       category: "AI / Machine Learning",
-      technologies: ["Python", "TensorFlow", "Natural Language Processing", "Chatbot Framework"],
+      technologies: [
+        "Python",
+        "TensorFlow",
+        "Natural Language Processing",
+        "Chatbot Framework",
+      ],
       progress: "100",
       year: "2024",
     },
@@ -52,7 +57,6 @@ const ProjectCard = () => {
       year: "2023",
     },
   ];
-  
 
   const navigate = useNavigate();
 
@@ -60,62 +64,80 @@ const ProjectCard = () => {
     const id = name.split(" ").pop();
     return id.slice(-2);
   };
-  
+
   const handleReadMore = (project) => {
-    // Dynamically create the route by replacing spaces with hyphens and making it lowercase
     const projectName = project.title.toLowerCase().split(" ").join("-");
-    
-    // Navigate to the dynamic route
     navigate(`/s/dashboard/projects/${projectName}`, { state: project });
   };
 
+  const colorStyles = {
+    coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" },
+    blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" },
+  };
 
   return (
     <>
-    <h1 className='md:text-5xl text-3xl text-center my-5 mt-10 font-semibold'>My Projects</h1>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 my-5">
-      {projects.map((project, index) => (
-        <div key={index} className="flex justify-center">
-          <Card
-            bordered={false}
-            className="max-w-sm w-full shadow-lg rounded-lg cursor-pointer"
-            bodyStyle={{ padding: "20px" }}
-            headStyle={{ backgroundColor: '#f5f5f5', padding: 0 }}
-            onClick={() => handleReadMore(project)}
-          >
-            <div className="flex justify-between items-center mb-4" >
-              <h2 className="text-lg font-bold">{project.title}</h2>
-              <span className="text-sm text-gray-500">{project.year}</span>
-            </div>
-            <p className="text-gray-700 mb-4">
-            {`${project.description.substring(0, 100)}... `}
-              <button
-                className="text-blue-500 hover:underline focus:outline-none"
-                onClick={() => handleReadMore(project)}
-              >
-                Read More
-              </button>
-            </p>
-            <div className="mb-2">
-              <span className="font-semibold">Semester:</span> {project.semester}
-            </div>
-            <div className="mb-2">
-              <span className="font-semibold">Group Members:</span>
-              <div className="flex space-x-2 my-2">
-                {project.members.map((member, memberIndex) => (
-                  <Avatar
-                    key={memberIndex}
-                    style={{ backgroundColor: "#5B6DF3", color: "#fff" }}
-                  >
-                    {getInitials(member)}
-                  </Avatar>
-                ))}
+      <h1 className="md:text-5xl text-3xl text-center my-5 mt-10 font-semibold">
+        My Projects
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 my-5">
+        {projects.map((project, index) => (
+          <div key={index} className="flex justify-center">
+            <Card
+              bordered={false}
+              className="max-w-sm w-full shadow-lg rounded-lg cursor-pointer"
+              bodyStyle={{ padding: "20px" }}
+              headStyle={{ backgroundColor: "#f5f5f5", padding: 0 }}
+              onClick={() => handleReadMore(project)}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-bold">{project.title}</h2>
+                <span className="text-sm text-gray-500">{project.year}</span>
               </div>
-            </div>
-          </Card>
-        </div>
-      ))}
-    </div>
+              <p className="text-gray-700 mb-4">
+                {`${project.description.substring(0, 100)}... `}
+                <button
+                  className="text-blue-500 hover:underline focus:outline-none"
+                  onClick={() => handleReadMore(project)}
+                >
+                  Read More
+                </button>
+              </p>
+              <div className="mb-2">
+                <span className="font-semibold">Semester:</span>{" "}
+                {project.semester}
+              </div>
+              <div className="mb-2">
+                <span className="font-semibold">Group Members:</span>
+                <div className="flex space-x-2 my-2">
+                  {project.members.map((member, memberIndex) => (
+                    <Avatar
+                      key={memberIndex}
+                      style={{
+                        backgroundColor:
+                          memberIndex % 2 === 0
+                            ? colorStyles.blue.backgroundColor
+                            : colorStyles.coral.backgroundColor,
+                        color:
+                          memberIndex % 2 === 0
+                            ? colorStyles.blue.color
+                            : colorStyles.coral.color,
+                        border: `2px solid ${
+                          memberIndex % 2 === 0
+                            ? colorStyles.blue.border
+                            : colorStyles.coral.border
+                        }`,
+                      }}
+                    >
+                      {getInitials(member)}
+                    </Avatar>
+                  ))}
+                </div>
+              </div>
+            </Card>
+          </div>
+        ))}
+      </div>
     </>
   );
 };

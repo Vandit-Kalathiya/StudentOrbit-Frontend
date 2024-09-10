@@ -58,7 +58,7 @@ function GroupLeft({
   };
 
   return (
-    <div className="md:m-9 md:px-6 my-6 w-full">
+    <div className="md:px-6 my-6 w-full">
       <h2 className="md:text-3xl text-2xl mb-4 font-semibold">{title}</h2>
       <p className="md:text-xl text-base mb-4 md:w-[85%] w-full">
         {description}

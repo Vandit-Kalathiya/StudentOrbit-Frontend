@@ -1,20 +1,24 @@
 import { Avatar, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
 
 const colorStyles = {
   coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" },
-  blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }
+  blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" },
 };
 
 const TaskAssignees = ({ assignees, selectedAssignees, showModal }) => {
+  const location = useLocation();
+
+  const isInFDashboard = location.pathname.startsWith("/f/dashboard");
   return (
     <div className="flex flex-wrap items-center gap-4 mb-4">
       <h3 className="text-base md:text-lg font-semibold">Assignees :</h3>
       <div className="flex items-center gap-2">
         {selectedAssignees.map((initials, index) => {
-          const assignee = assignees.find(a => a.initials === initials);
+          const assignee = assignees.find((a) => a.initials === initials);
           // Determine color based on index (odd/even)
-          const colorKey = index % 2 === 0 ? 'blue' : 'coral';
+          const colorKey = index % 2 === 0 ? "blue" : "coral";
           const { backgroundColor, color, border } = colorStyles[colorKey];
 
           return assignee ? (
@@ -26,11 +30,13 @@ const TaskAssignees = ({ assignees, selectedAssignees, showModal }) => {
             </Avatar>
           ) : null;
         })}
-        <Button
-          icon={<PlusOutlined />}
-          className="ml-2 rounded-full"
-          onClick={showModal}
-        />
+         {!isInFDashboard && (
+          <Button
+            icon={<PlusOutlined />}
+            className="ml-2 rounded-full"
+            onClick={showModal}
+          />
+        )}
       </div>
     </div>
   );

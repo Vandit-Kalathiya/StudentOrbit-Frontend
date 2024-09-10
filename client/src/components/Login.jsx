@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import AuthImg from "../Styles/AuthImg";
 import loginImg from "../assets/Fingerprint.mp4";
