@@ -6,7 +6,7 @@ import { Card, Typography, Form, Input, Button, Checkbox } from "antd";
 function Login() {
   // Handle form submission here
   const onFinish = (values) => {
-    console.log('Form values:', values);
+    console.log("Form values:", values);
   };
 
   return (
@@ -39,19 +39,29 @@ function Login() {
                   Start managing your project.
                 </Typography.Text>
                 <Form layout="vertical" autoComplete="off" onFinish={onFinish}>
-                  <Form.Item
+                <Form.Item
                     label="Student ID"
                     name="studentid"
                     rules={[
-                      { type: "text", message: "The input is not valid" },
+                      {
+                        required: true,
+                        message: "Please enter your student ID",
+                      },
+                      {
+                        pattern:
+                          /^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/,
+                        message: "Student ID must be in the format YYCEXXX",
+                      },
                     ]}
                   >
                     <Input size="large" placeholder="Enter your student id" />
                   </Form.Item>
-                  <Form.Item
-                    label="Password"
-                    name="password"
-                  >
+                  <Form.Item label="Password" name="password" rules={[
+                      {
+                        required: true,  
+                        message: "Please enter your password",                
+                      },
+                    ]}>
                     <Input.Password
                       size="large"
                       placeholder="Enter your password"

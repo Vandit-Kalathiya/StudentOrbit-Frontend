@@ -17,7 +17,12 @@ const AddBatchModal = ({ visible, onCancel, onFinish, form }) => {
         <Form.Item
           name="batch"
           label="Batch Name"
-          rules={[{ required: true, message: "Please input the batch name!" }]}
+          rules={[{ required: true, message: "Please input the batch name!" },
+            {
+              pattern: /^[a-dA-D][1-2]$/,
+              message: "Batch name is not valid",
+            }
+          ]}
         >
           <Input placeholder="Eg. A1" />
         </Form.Item>
@@ -40,6 +45,11 @@ const AddBatchModal = ({ visible, onCancel, onFinish, form }) => {
           label="Start Id"
           rules={[
             { required: true, message: "Please input the start student ID!" },
+            {
+              pattern:
+                /^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/,
+              message: "Student ID must be in the format YYCEXXX",
+            },
           ]}
         >
           <Input placeholder="22CEXXX" />
@@ -49,6 +59,11 @@ const AddBatchModal = ({ visible, onCancel, onFinish, form }) => {
           label="End Id"
           rules={[
             { required: true, message: "Please input the end student ID!" },
+            {
+              pattern:
+                /^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/,
+              message: "Student ID must be in the format YYCEXXX",
+            },
           ]}
         >
           <Input placeholder="22CEXXX" />

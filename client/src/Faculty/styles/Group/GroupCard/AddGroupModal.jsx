@@ -17,12 +17,23 @@ const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
       return Promise.reject("You can enter a maximum of 4 student IDs.");
     }
 
+    const idPattern = /^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/;
+    for (const id of studentIdsArray) {
+      if (!idPattern.test(id)) {
+        return Promise.reject("Each Student ID must be in the format YYCEXXX");
+      }
+    }
+
     return Promise.resolve();
   };
 
   const validateGroupLeader = (_, value) => {
     if (value && value.trim().split(",").length > 1) {
       return Promise.reject("You can enter only one Group Leader ID.");
+    }
+    const leaderPattern = /^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/;
+    if (!leaderPattern.test(value.trim())) {
+      return Promise.reject("Group Leader ID must be in the format YYCEXXX");
     }
     return Promise.resolve();
   };

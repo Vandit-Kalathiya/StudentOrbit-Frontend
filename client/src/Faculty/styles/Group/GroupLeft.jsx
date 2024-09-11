@@ -5,11 +5,6 @@ import { PlusOutlined } from "@ant-design/icons";
 const colorCombinations = {
   coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
   blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }   // Blue
-  
-  // { backgroundColor: "#e6f7ff", color: "#1890ff", border: "#1890ff" }, // Light Blue
-  // { backgroundColor: "#fde3cf", color: "#f56a00", border: "#f56a00" }, // Orange
-  // { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
-  // { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
 };
 
 function GroupLeft({
@@ -47,6 +42,9 @@ function GroupLeft({
 
   const handleOk = () => {
     setIsModalVisible(false);
+    // Add any additional logic to handle the email invitation
+    console.log("Invited email:", email);
+    setEmail(""); // Clear email field after submission
   };
 
   const handleCancel = () => {
@@ -70,7 +68,6 @@ function GroupLeft({
       <div className="flex flex-wrap items-center gap-4 my-4">
         <h3 className="md:text-lg text-base font-semibold">Members:</h3>
         {sortedMembers.map((member, index) => {
-          // Determine color based on odd/even index
           const colorType = index % 2 === 0 ? "blue" : "coral";
           const { backgroundColor, color, border } = colorCombinations[colorType];
 
@@ -131,8 +128,12 @@ function GroupLeft({
             name="email"
             rules={[
               {
-                type: "email",
-                message: "Please enter a valid email address!",
+                required: true,
+                message: "Please enter an email address!",
+              },
+              {
+                pattern: /^\d{2}[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)@charusat\.edu\.in$/,
+                message: "Email must be in the format yycexxx@charusat.edu.in",
               },
             ]}
           >
