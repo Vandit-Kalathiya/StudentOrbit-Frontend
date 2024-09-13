@@ -6,13 +6,15 @@ import {
   LogoutOutlined,
   ProjectOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation, matchPath } from 'react-router-dom';
+import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // eslint-disable-next-line react/prop-types
 const MenuList = ({ darkTheme, batchData }) => {
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(false);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const match = matchPath('/dashboard/batches/:batch', location.pathname);
@@ -23,11 +25,25 @@ const MenuList = ({ darkTheme, batchData }) => {
     setIsLogoutModalVisible(true);
   };
 
-  const handleLogout = () => {
-    // Implement your logout logic here
-    console.log("User logged out");
-    setIsLogoutModalVisible(false);
-  };
+  const handleLogout = (e) => {
+    e.preventDefault();
+
+    axios.post('http://localhost:1818/auth/logout',null, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    })
+      .then((response) => {
+        console.log('Logged out successfully:');
+        localStorage.removeItem(
+          'jwt'
+        )
+        navigate("/")
+      })
+      .catch((error) => {
+        console.error('There was an error submitting the report:', error);
+      });
+  }
 
   const handleCancelLogout = () => {
     setIsLogoutModalVisible(false);

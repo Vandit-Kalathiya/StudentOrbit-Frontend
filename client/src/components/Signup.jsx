@@ -1,17 +1,76 @@
-import { Link } from "react-router-dom";
+import { json, Link, useNavigate } from "react-router-dom";
 import AuthImg from "../Styles/AuthImg";
 import loginImg from "../assets/Fingerprint (1).mp4";
 import { Card, Typography, Form, Input, Button, Checkbox, Progress } from "antd";
 import { useState } from "react";
+import axios from "axios";
 
 function Signup() {
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  let navigate = useNavigate()
+
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordStrengthText, setPasswordStrengthText] = useState("");
+
+
+  const handleStudentIdChange = (e) => {
+    setUsername(e.target.value);
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  }
 
   // Handle form submission here
   const onFinish = (values) => {
     console.log("Form values:", values);
   };
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    console.log(username," ",password, " ", email)
+
+    const signUpData = {
+      username: username,
+      password: password,
+      email: email,
+    }
+    axios.post('http://localhost:1818/auth/student/register', signUpData)
+    .then((response) => {
+      console.log('Signned up successfully:', response.data);
+      const loginData = {
+        username: username,
+        password: password
+      }
+      
+      // console.log(username," ",password)
+      axios.post('http://localhost:1818/auth/login', loginData)
+      .then((response) => {
+        // console.log('logged in successfully:', response.data.jwtToken);
+        // toast.success("Form submitted successfully...")
+        localStorage.setItem(
+          'jwt', response.data.jwtToken 
+        )
+        navigate("/s/dashboard")
+      })
+      .catch((error) => {
+        console.error('There was an error submitting the report:', error);
+      });
+    })
+    .catch((error) => {
+      console.error('There was an error submitting the report:', error);
+    });
+
+
+    
+  }
 
   const evaluatePasswordStrength = (password) => {
     let strength = 0;
@@ -22,7 +81,6 @@ function Signup() {
     if (/\d/.test(password)) strength += 1; // Number
     if (/[@$!%*?&]/.test(password)) strength += 1; // Special character
 
-    // Set strength text and percentage for progress bar
     if (strength === 1 || strength === 2) {
       setPasswordStrengthText("Weak");
       setPasswordStrength(20);
@@ -83,7 +141,7 @@ function Signup() {
                       },
                     ]}
                   >
-                    <Input size="large" placeholder="Enter your student ID" />
+                    <Input size="large" placeholder="Enter your student ID" onChange={(e) => handleStudentIdChange(e)} />
                   </Form.Item>
                   <Form.Item
                     label="Email"
@@ -104,6 +162,7 @@ function Signup() {
                     <Input
                       size="large"
                       placeholder="Enter your student email"
+                      onChange={(e) => handleEmailChange(e)}
                     />
                   </Form.Item>
                   <Form.Item
@@ -125,7 +184,10 @@ function Signup() {
                     <Input.Password
                       size="large"
                       placeholder="Enter your password"
-                      onChange={(e) => evaluatePasswordStrength(e.target.value)}
+                      onChange={(e) => {
+                        evaluatePasswordStrength(e.target.value),
+                        handlePasswordChange(e)
+                      }}
                     />
                   </Form.Item>
                   {passwordStrength > 0 && (
@@ -152,6 +214,7 @@ function Signup() {
                       htmlType="submit"
                       size="large"
                       className="btn w-full bg-[#5B6DF3] text-white"
+                      onClick={handleSignup}
                     >
                       Create an account
                     </Button>

@@ -1,13 +1,50 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthImg from "../Styles/AuthImg";
 import loginImg from "../assets/Fingerprint.mp4";
 import { Card, Typography, Form, Input, Button, Checkbox } from "antd";
+import { useState } from "react";
+import axios from "axios";
 
 function Login() {
-  // Handle form submission here
   const onFinish = (values) => {
     console.log("Form values:", values);
   };
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  let navigate = useNavigate()
+  
+
+  const handleStudentIdChange = (e) => {
+    setUsername(e.target.value);
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    console.log(username," ",password)
+    const loginData = {
+      username: username,
+      password: password
+    }
+    
+
+    axios.post('http://localhost:1818/auth/login', loginData)
+    .then((response) => {
+      // console.log('Report submitted successfully:', response.data.jwtToken);
+      // toast.success("Form submitted successfully...")
+      localStorage.setItem(
+        'jwt', response.data.jwtToken 
+      )
+      navigate("/s/dashboard")
+    })
+    .catch((error) => {
+      console.error('There was an error submitting the report:', error);
+    });
+  }
 
   return (
     <section>
@@ -54,7 +91,7 @@ function Login() {
                       },
                     ]}
                   >
-                    <Input size="large" placeholder="Enter your student id" />
+                    <Input size="large" placeholder="Enter your student id" onChange={(e) => handleStudentIdChange(e)} />
                   </Form.Item>
                   <Form.Item label="Password" name="password" rules={[
                       {
@@ -65,6 +102,7 @@ function Login() {
                     <Input.Password
                       size="large"
                       placeholder="Enter your password"
+                      onChange={(e) => handlePasswordChange(e)}
                     />
                   </Form.Item>
                   <Form.Item>
@@ -73,6 +111,7 @@ function Login() {
                   <Form.Item>
                     <Button
                       htmlType="submit"
+                      onClick={handleLogin}
                       size="large"
                       className="btn w-full bg-[#5B6DF3] text-white"
                     >

@@ -1,6 +1,59 @@
 import { Modal, Form, Input, Select, Button } from "antd";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddBatchModal = ({ visible, onCancel, onFinish, form }) => {
+  let navigate = useNavigate()
+  const [batchName, setBatchName] = useState("")
+  const [semester, setSemester] = useState(0)
+  const [startId, setStartId] = useState("")
+  const [endId, setEndId] = useState("")
+
+  const handleBatchName = (e) => {
+    setBatchName(e.target.value);
+  }
+  const handleSemester = (e) => {
+    setSemester(e);
+  }
+  const handleStartId = (e) => {
+    setStartId(e.target.value);
+  }
+  const handleEndId = (e) => {
+    setEndId(e.target.value);
+  }
+
+  const handleAddBatch = async (e) => {
+    e.preventDefault();
+    const batchData = {
+      batchName: batchName,
+      semester: semester,
+      startId: startId,
+      endId: endId,
+    }
+    console.log(batchData)
+
+    // axios.get('http://localhost:1818/faculty/batches/allBatches').then(x => console.log(x.data))
+
+    axios.post('http://localhost:1818/faculty/batches/add', batchData, {
+      // headers: {
+      //   'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
+      //   'Content-Type': 'application/json',
+      //   // ''
+      // },
+      withCredentials: true
+    })
+      .then((response) => {
+        console.log("Batch added...")
+        navigate("/f/dashboard/batches")
+      })
+      .catch((error) => {
+        console.error('There was an error submitting the report:', error);
+      });
+  }
+
+
+
   return (
     <Modal
       title="Add New Batch"
@@ -18,20 +71,20 @@ const AddBatchModal = ({ visible, onCancel, onFinish, form }) => {
           name="batch"
           label="Batch Name"
           rules={[{ required: true, message: "Please input the batch name!" },
-            {
-              pattern: /^[a-dA-D][1-2]$/,
-              message: "Batch name is not valid",
-            }
+          {
+            pattern: /^[a-dA-D][1-2]$/,
+            message: "Batch name is not valid",
+          }
           ]}
         >
-          <Input placeholder="Eg. A1" />
+          <Input placeholder="Eg. A1" onChange={(e) => handleBatchName(e)} />
         </Form.Item>
         <Form.Item
           name="sem"
           label="Semester"
           rules={[{ required: true, message: "Please select the semester!" }]}
         >
-          <Select placeholder="Select Semester" allowClear>
+          <Select placeholder="Select Semester" allowClear onChange={(e) => handleSemester(e)}>
             {[...Array(7).keys()].map((_, i) => (
               <Select.Option key={i + 2} value={i + 2}>
                 {i + 2}
@@ -52,7 +105,7 @@ const AddBatchModal = ({ visible, onCancel, onFinish, form }) => {
             },
           ]}
         >
-          <Input placeholder="22CEXXX" />
+          <Input placeholder="22CEXXX" onChange={(e) => handleStartId(e)} />
         </Form.Item>
         <Form.Item
           name="id2"
@@ -66,10 +119,10 @@ const AddBatchModal = ({ visible, onCancel, onFinish, form }) => {
             },
           ]}
         >
-          <Input placeholder="22CEXXX" />
+          <Input placeholder="22CEXXX" onChange={(e) => handleEndId(e)} />
         </Form.Item>
         <Form.Item>
-          <Button className="bg-[#4859DA] text-white" htmlType="submit">
+          <Button className="bg-[#4859DA] text-white" htmlType="submit" onClick={handleAddBatch}>
             Add Batch
           </Button>
         </Form.Item>

@@ -1,12 +1,45 @@
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, List, Modal } from "antd";
 import { useForm } from "antd/es/form/Form";
+import axios from "axios";
+import { useState } from "react";
 
 const { TextArea } = Input;
 
 const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
+
+  const [groupName, setGroupName] = useState("");
+  const [description, setDescription] = useState("");
+  const [batchName, setBatchName] = useState("");
+  const [groupLeaderId, setGroupLeaderId] = useState("");
+  const [students, setStudents] = useState(new Set());
+  const [technologies, setTechnologies] = useState(new Set());
+
+  const handleGroupName = (e) => {
+    setGroupName(e.target.value);
+  }
+
+  const handleGroupDescription = (e) => {
+    setDescription(e.target.value);
+  }
+
+  const handleBatchName = (e) => {
+    setBatchName(e.target.value);
+  }
+
+  const handleGroupLeaderId = (e) => {
+    setGroupLeaderId(e.target.value);
+  }
+
+  const handleStudents = (e) => {
+    setStudents(e.target.value);
+  }
+
+  const handleTechnologies = (e) => {
+    setTechnologies(e.target.value);
+  }
+
   const [form] = useForm();
 
-  // Custom validation function
   const validateStudentIds = (rule, value) => {
     if (!value) {
       return Promise.reject("Please input the student IDs!");
@@ -38,27 +71,61 @@ const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
     return Promise.resolve();
   };
 
-  const handleFinish = (values) => {
-    const { projectName, description, technologies, studentIds, groupLeader } = values;
+  // const handleFinish = (values) => {
+  //   const { projectName, description, technologies, studentIds, groupLeader } = values;
 
-    // Ensure studentIds is an array
-    const studentIdsArray = studentIds.split(",").map((id) => id.trim());
+  //   const studentIdsArray = studentIds.split(",").map((id) => id.trim());
 
-    const newGroup = {
-      title: projectName,
-      description,
-      technologies: technologies.split(",").map((tech) => tech.trim()),
-      groupLeader,
-      members: studentIdsArray,
-      progress: 0,
-      category: "New Category", // Default category or provide input
-      batch, // Include the batch field
-    };
+  //   const newGroup = {
+  //     title: projectName,
+  //     description,
+  //     technologies: technologies.split(",").map((tech) => tech.trim()),
+  //     groupLeader,
+  //     members: studentIdsArray,
+  //     progress: 0,
+  //     category: "New Category", 
+  //     batch, 
+  //   };
 
-    onAddGroup(newGroup);
-    form.resetFields();
-    onClose();
-  };
+  //   onAddGroup(newGroup);
+  //   form.resetFields();
+  //   onClose();
+  // };
+
+
+
+  const handleAddGroup = async (e) => {
+    // e.preventDefault();
+    const groupData = {
+      batchName: batchName,
+      groupName: groupName,
+      description: description,
+      groupLeaderId: groupLeaderId,
+      students: students,
+      technologies: technologies,
+    }
+    console.log(groupData)
+
+    // axios.get('http://localhost:1818/faculty/batches/allBatches').then(x => console.log(x.data))
+
+    axios.post('http://localhost:1818/faculty/groups/create', groupData, {
+      // headers: {
+      //   'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
+      //   'Content-Type': 'application/json',
+      //   // ''
+      // },
+      withCredentials: true
+    })
+      .then((response) => {
+        console.log("Group added...")
+        navigate("/f/dashboard/batches")
+      })
+      .catch((error) => {
+        console.error('There was an error submitting the report:', error);
+      });
+  }
+
+
 
   return (
     <Modal
@@ -67,37 +134,37 @@ const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
       onCancel={onClose}
       footer={null}
     >
-      <Form form={form} layout="vertical" onFinish={handleFinish}>
+      <Form form={form} layout="vertical" onFinish={handleAddGroup}>
         <Form.Item label="Batch">
-          <Input value={batch} readOnly />
+          <Input value={batch} readOnly onBeforeInput={(e) => handleBatchName(e)} />
         </Form.Item>
         <Form.Item
           name="projectName"
           label="Project Name"
           rules={[{ required: true, message: "Please input the title!" }]}
         >
-          <Input />
+          <Input onChange={(e) => handleGroupName(e)} />
         </Form.Item>
         <Form.Item
           name="description"
           label="Description"
           rules={[{ required: true, message: "Please input the description!" }]}
         >
-          <TextArea rows={4} />
+          <TextArea rows={4} onChange={(e) => handleGroupDescription(e)} />
         </Form.Item>
         <Form.Item
           name="technologies"
           label="Technologies"
           rules={[{ required: true, message: "Please input the technologies!" }]}
         >
-          <Input placeholder="Comma-separated" />
+          <Input placeholder="Comma-separated" onChange={(e) => handleTechnologies(e)} />
         </Form.Item>
         <Form.Item
           name="studentIds"
           label="Student IDs"
           rules={[{ validator: validateStudentIds }]}
         >
-          <Input placeholder="Comma-separated, max 4 IDs" />
+          <Input placeholder="Comma-separated, max 4 IDs"onChange={(e) => handleStudents(e)}  />
         </Form.Item>
         <Form.Item
           name="groupLeader"
@@ -107,7 +174,7 @@ const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
             { validator: validateGroupLeader },
           ]}
         >
-          <Input placeholder="22ce001" />
+          <Input placeholder="22ce001" onChange={(e) => handleGroupLeaderId(e)} />
         </Form.Item>
         <Form.Item>
           <Button className="bg-[#4859DA] text-white hover:border-[#4859DA] hover:text-[#4859DA]" htmlType="submit">
