@@ -16,29 +16,29 @@ function Login({ setLoginStatus }) {
   const [isStudent, setIsStudent] = useState(true);
   const navigate = useNavigate();
 
-  const handleLogin = (values) => {
-    const { username, password } = values;
-    axios
-      .post(`http://localhost:1818/auth/login`, { username, password })
-      .then((response) => {
-        const { jwtToken, role } = response.data;
+  const handleLogin = async () => {
+    const { username, password } = loginData; 
 
-        localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
-        localStorage.setItem("username", username);
-        localStorage.setItem("role", role); 
-        
-        setLoginStatus(true);
+    try {
+      const response = await axios.post(`http://localhost:1818/auth/login`, { username, password });
+      const { jwtToken, role } = response.data;
 
-        const redirectPath = role === "student" ? "/s/dashboard" : "/f/dashboard";
-        navigate(redirectPath);
+      localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
+      localStorage.setItem("username", username);
+      localStorage.setItem("role", role);
 
-        openNotification('success', 'Login Successful', 'You have successfully logged in!');
-      })
-      .catch((error) => {
-        console.error('Login error:', error);
-        openNotification('error', 'Login Failed', 'Invalid username or password. Please try again.');
-      });
+      setLoginStatus(true);
+      
+      const redirectPath = role === "student" ? "/s/dashboard" : "/f/dashboard";
+      navigate(redirectPath);
+
+      openNotification('success', 'Login Successful', 'You have successfully logged in!');
+    } catch (error) {
+      console.error('Login error:', error);
+      openNotification('error', 'Login Failed', 'Invalid username or password. Please try again.');
+    }
   };
+
   const handleFieldChange = (field, value) => {
     setLoginData((prevData) => ({
       ...prevData,
@@ -62,10 +62,8 @@ function Login({ setLoginStatus }) {
                   Start managing your project.
                 </Typography.Text>
 
-                {/* Toggle Between Student and Faculty */}
                 <ToggleRole isStudent={isStudent} setIsStudent={setIsStudent} />
 
-                {/* Login Form */}
                 <LoginForm
                   isStudent={isStudent}
                   handleLogin={handleLogin}

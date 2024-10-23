@@ -1,10 +1,12 @@
 import { Avatar } from "antd";
 
 const ProjectAvatarList = ({ members }) => {
-  const colorStyles = {
-    coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" },
-    blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" },
-  };
+  const colorStyles = [
+    { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
+    { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
+    { backgroundColor: "#f6ffed", color: "#237804", border: "#237804" }, // Green
+    { backgroundColor: "#f9f0ff", color: "#531dab", border: "#531dab" }, // Purple
+  ];
 
   const getInitials = (name) => {
     return name.username.slice(-3);
@@ -12,18 +14,19 @@ const ProjectAvatarList = ({ members }) => {
 
   return (
     <div className="flex space-x-2 my-2">
-      {members.map((member, index) => (
+      {members.map((member, index) => {
+        const color = colorStyles[index % colorStyles.length];
         <Avatar
           key={index}
           style={{
-            backgroundColor: index % 2 === 0 ? colorStyles.blue.backgroundColor : colorStyles.coral.backgroundColor,
-            color: index % 2 === 0 ? colorStyles.blue.color : colorStyles.coral.color,
-            border: `2px solid ${index % 2 === 0 ? colorStyles.blue.border : colorStyles.coral.border}`,
+            backgroundColor: color.backgroundColor,
+            color: color.color,
+            border: `2px solid ${color.border}`,
           }}
         >
           {getInitials(member)}
-        </Avatar>
-      ))}
+        </Avatar>;
+      })}
     </div>
   );
 };

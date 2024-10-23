@@ -3,10 +3,12 @@ import { Avatar, Button, Modal, Input, Form, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useLocation, useParams } from "react-router-dom";
 
-const colorCombinations = {
-  coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
-  blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
-};
+const colorCombinations = [
+  { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
+  { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
+  { backgroundColor: "#f6ffed", color: "#237804", border: "#237804" }, // Green
+  { backgroundColor: "#f9f0ff", color: "#531dab", border: "#531dab" }, // Purple
+];
 
 function GroupLeft() {
 
@@ -66,16 +68,14 @@ function GroupLeft() {
       <div className="flex flex-wrap items-center gap-4 my-4">
         <h3 className="md:text-lg text-base font-semibold">Members:</h3>
         {project.students.map((member, index) => {
-          const colorType = index % 2 === 0 ? "blue" : "coral";
-          const { backgroundColor, color, border } =
-            colorCombinations[colorType];
+          const color = colorCombinations[index % colorCombinations.length];
           return (
             <Avatar
               key={index}
               style={{
-                backgroundColor,
-                color,
-                border: `2px solid ${border}`,
+                backgroundColor: color.backgroundColor,
+                color: color.color,
+                border: `2px solid ${color.border}`,
               }}
             >
               {extractLastTwoDigits(member)}

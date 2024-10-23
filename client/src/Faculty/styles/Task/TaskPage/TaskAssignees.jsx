@@ -4,12 +4,14 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const colorStyles = {
-  coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" },
-  blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" },
-};
+const colorCombinations = [
+  { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
+  { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
+  { backgroundColor: "#f6ffed", color: "#237804", border: "#237804" }, // Green
+  { backgroundColor: "#f9f0ff", color: "#531dab", border: "#531dab" }, // Purple
+];
 
-const TaskAssignees = ({ assignees, showModal,taskId }) => {
+const TaskAssignees = ({ assignees, showModal, taskId }) => {
   const location = useLocation();
   const [assigneeMembers, setAssigneeMembers] = useState(assignees);
 
@@ -18,7 +20,7 @@ const TaskAssignees = ({ assignees, showModal,taskId }) => {
       .get(`http://localhost:1818/tasks/assignees/${taskId}`)
       .then((res) => {
         // console.log(res.data);
-        setAssigneeMembers(res.data)
+        setAssigneeMembers(res.data);
       })
       .catch((error) => {
         console.error("There was an error while assigning assignees: ", error);
@@ -31,7 +33,7 @@ const TaskAssignees = ({ assignees, showModal,taskId }) => {
       .get(`http://localhost:1818/tasks/assignees/${taskId}`)
       .then((res) => {
         // console.log(res.data);
-        setAssigneeMembers(res.data)
+        setAssigneeMembers(res.data);
       })
       .catch((error) => {
         console.error("There was an error while assigning assignees: ", error);
@@ -47,13 +49,15 @@ const TaskAssignees = ({ assignees, showModal,taskId }) => {
       <div className="flex items-center gap-2">
         {assigneeMembers.length > 0 ? (
           assigneeMembers.map((assignee, index) => {
-            const colorKey = index % 2 === 0 ? "blue" : "coral";
-            const { backgroundColor, color, border } = colorStyles[colorKey];
-
+            const color = colorCombinations[index % colorCombinations.length];
             return assignee ? (
               <Avatar
                 key={assignee.id}
-                style={{ backgroundColor, color, border: `2px solid ${border}` }}
+                style={{
+                  backgroundColor: color.backgroundColor,
+                  color: color.color,
+                  border: `2px solid ${color.border}`,
+                }}
               >
                 {assignee.username.substring(4, 7).toUpperCase()}
               </Avatar>

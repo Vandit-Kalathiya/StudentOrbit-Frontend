@@ -1,19 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
-import AuthImg from "../../Styles/AuthImg"; // Correct import for AuthImg
+import AuthImg from "../../Styles/AuthImg";
 import loginImg from "../../assets/Fingerprint (1).mp4";
-import { Card, Typography, Form, Input, Progress } from "antd";
+import { Card, Typography, Form, Input } from "antd";
 import { useState } from "react";
 import axios from "axios";
 import SubmitButton from "./SubmitButton";
 import ToggleRole from "./ToggleRole";
+import EmailInput from "./EmailInput"; 
+import IDInput from "./IDInput"; 
+import PasswordStrength from "./PasswordStrength"; 
 import { openNotification } from "../../Utils/Notification";
 
 function Signup() {
   const [formData, setFormData] = useState({
-    username: "",
+    username: "", 
     password: "",
     email: "",
-    name: "", // New field for name
+    // name: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -30,8 +33,8 @@ function Signup() {
   const facultyEmailPattern =
     /^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)@charusat\.edu\.in$/;
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   const evaluatePasswordStrength = (password) => {
@@ -98,27 +101,13 @@ function Signup() {
         <div className="w-full min-h-screen container flex flex-col-reverse md:flex-row items-center md:justify-between md:p-24 md:pt-32 md:pb-12 py-20 px-8 pt-32 justify-center">
           <AuthImg img={loginImg} />
 
-          <div
-            className="md:w-2/3 w-full"
-            data-aos="fade-up"
-            data-aos-delay="200"
-          >
+          <div className="md:w-2/3 w-full" data-aos="fade-up" data-aos-delay="200">
             <Card className="form-container">
-              <div
-                style={{ display: "flex", flexDirection: "column", flex: 1 }}
-              >
-                <Typography.Title
-                  level={2}
-                  strong
-                  className="title text-center"
-                >
+              <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                <Typography.Title level={2} strong className="title text-center">
                   Sign Up
                 </Typography.Title>
-                <Typography.Text
-                  type="secondary"
-                  strong
-                  className="slogan text-center mb-4"
-                >
+                <Typography.Text type="secondary" strong className="slogan text-center mb-4">
                   Start managing your project.
                 </Typography.Text>
 
@@ -139,71 +128,24 @@ function Signup() {
                   >
                     <Input
                       size="large"
-                      placeholder={isStudent ? "Enter your student name" : "Enter your faculty name"}
+                      placeholder={`Enter your ${isStudent ? "student" : "faculty"} name`}
                       name="name"
-                      onChange={handleInputChange}
+                      onChange={(e) => handleInputChange("name", e.target.value)}
                     />
                   </Form.Item> */}
+                  <IDInput
+                    isStudent={isStudent}
+                    handleInputChange={handleInputChange}
+                    studentIdPattern={studentIdPattern}
+                    facultyIdPattern={facultyIdPattern}
+                  />
 
-                  <Form.Item
-                    label={isStudent ? "Student ID" : "Faculty ID"}
-                    name={isStudent ? "studentid" : "facultyid"}
-                    rules={[
-                      {
-                        required: true,
-                        message: isStudent
-                          ? "Please enter your student ID"
-                          : "Please enter your faculty ID",
-                      },
-                      {
-                        pattern: isStudent
-                          ? studentIdPattern
-                          : facultyIdPattern,
-                        message: isStudent
-                          ? "Student ID must be in the format YYCEXXX"
-                          : "Faculty ID must be 3 or 4 digits",
-                      },
-                    ]}
-                    style={{ marginBottom: 8 }} // Reduced margin
-                  >
-                    <Input
-                      size="large"
-                      placeholder={
-                        isStudent
-                          ? "Enter your student ID"
-                          : "Enter your faculty ID"
-                      }
-                      name="username"
-                      onChange={handleInputChange}
-                    />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter your email",
-                      },
-                      {
-                        pattern: isStudent
-                          ? studentEmailPattern
-                          : facultyEmailPattern,
-                        message: isStudent
-                          ? "Email must be in the format YYCEXXX@charusat.edu.in"
-                          : "Email must be in the format XXCE@charusat.edu.in",
-                      },
-                    ]}
-                    style={{ marginBottom: 8 }} // Reduced margin
-                  >
-                    <Input
-                      size="large"
-                      placeholder="Enter your email"
-                      name="email"
-                      onChange={handleInputChange}
-                    />
-                  </Form.Item>
+                  <EmailInput
+                    isStudent={isStudent}
+                    handleInputChange={handleInputChange}
+                    studentEmailPattern={studentEmailPattern}
+                    facultyEmailPattern={facultyEmailPattern}
+                  />
 
                   <Form.Item
                     label="Password"
@@ -216,11 +158,10 @@ function Signup() {
                       {
                         pattern:
                           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-                        message:
-                          "Password must have uppercase, lowercase, number, and symbol",
+                        message: "Password must have uppercase, lowercase, number, and symbol",
                       },
                     ]}
-                    style={{ marginBottom: 8 }} // Reduced margin
+                    style={{ marginBottom: 8 }}
                   >
                     <Input.Password
                       size="large"
@@ -228,37 +169,19 @@ function Signup() {
                       name="password"
                       onChange={(e) => {
                         evaluatePasswordStrength(e.target.value);
-                        handleInputChange(e);
+                        handleInputChange("password", e.target.value);
                       }}
                       onKeyPress={(e) => {
                         if (e.key === "Enter") {
-                          // Check if Enter key is pressed
-                          e.preventDefault(); // Prevent default form submission
-                          handleOtpSend(); // Call the OTP send function
+                          e.preventDefault(); 
+                          handleOtpSend(); 
                         }
                       }}
                       style={{ marginBottom: 15 }}
                     />
                   </Form.Item>
 
-                  {passwordStrength > 0 && (
-                    <div style={{ marginBottom: "16px" }}>
-                      <Typography.Text strong>
-                        {passwordStrengthText}
-                      </Typography.Text>
-                      <Progress
-                        percent={passwordStrength}
-                        showInfo={false}
-                        status={
-                          passwordStrength === 100
-                            ? "success"
-                            : passwordStrength > 20
-                            ? "active"
-                            : "exception"
-                        }
-                      />
-                    </div>
-                  )}
+                  <PasswordStrength passwordStrength={passwordStrength} passwordStrengthText={passwordStrengthText} />
 
                   <SubmitButton
                     handleOtpSend={handleOtpSend}

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { motion } from "framer-motion"; // Import motion for animations
+import { motion } from "framer-motion";
 import TaskStatus from "./TaskStatus";
 import TaskDescription from "./TaskDescription";
 import TaskAssignees from "./TaskAssignees";
 import TaskActions from "./TaskActions";
 import TaskCompletionModal from "./TaskCompletionModal";
 
-const TaskCard = ({ task, updateTaskStatus, updateAssignees, members }) => {
+const TaskCard = ({ task, updateTaskStatus, members }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentAssignees, setCurrentAssignees] = useState(task.assignee);
   const navigate = useNavigate();
@@ -15,11 +15,8 @@ const TaskCard = ({ task, updateTaskStatus, updateAssignees, members }) => {
   const { batch, projectName, week } = useParams();
 
   useEffect(()=>{
-    // console.log('card loaded...');
-    
   },[currentAssignees])
 
-  // Animation variants for entering and exiting the task card
   const cardVariants = {
     initial: { opacity: 0, scale: 0.8 },
     animate: { opacity: 1, scale: 1 },
@@ -42,7 +39,6 @@ const TaskCard = ({ task, updateTaskStatus, updateAssignees, members }) => {
 
   const handleAssigneesChange = (newAssignees) => {
     setCurrentAssignees(newAssignees);
-    // updateAssignees(task.id,  newAssignees);
   };
 
   const handleReadMore = () => {
@@ -57,8 +53,6 @@ const TaskCard = ({ task, updateTaskStatus, updateAssignees, members }) => {
     }
   };
 
-  // console.log(currentAssignees);
-
   return (
     <motion.div
       className="border md:min-w-full rounded-lg shadow-md p-4 max-w-md mx-auto bg-white mb-4 cursor-pointer"
@@ -66,7 +60,7 @@ const TaskCard = ({ task, updateTaskStatus, updateAssignees, members }) => {
       initial="initial"
       animate="animate"
       exit="exit"
-      transition={{ duration: 0.3 }} // You can adjust the duration as needed
+      transition={{ duration: 0.3 }} 
     >
       <TaskStatus status={task.status} title={task.name} />
       <TaskDescription description={task.description} onReadMore={handleReadMore} />
