@@ -6,35 +6,40 @@ import TaskStatus from "./TaskStatus";
 import TaskAssignees from "./TaskAssignees";
 import FacultyComments from "./FacultyComments";
 import AssigneesModal from "./AssigneesModal";
+import axios from "axios";
 
 function TaskDetail() {
   const location = useLocation();
-  const { task } = location.state || {};
+  const { task, members } = location.state || {};
 
-  const [comments, setComments] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [assignees, setAssignees] = useState([
-    { initials: "03", name: "22CE003" },
-    { initials: "04", name: "22CE004" },
-    { initials: "05", name: "22CE005" },
-    { initials: "12", name: "22CE012" }
-  ]);
-  const [selectedAssignees, setSelectedAssignees] = useState(task.assignees || []);
+  // const [assignees, setAssignees] = useState(task.assignee);
+  const [selectedAssignees, setSelectedAssignees] = useState([]);
+  const [assigneeMembers, setAssigneeMembers] = useState(task.assignee);
 
   useEffect(() => {
-    const storedComments = JSON.parse(localStorage.getItem(`comments_${task.id}`)) || [];
-    setComments(storedComments);
-  }, [task.id]);
+  }, [assigneeMembers])
 
-  useEffect(() => {
-    localStorage.setItem(`comments_${task.id}`, JSON.stringify(comments));
-  }, [comments, task.id]);
+  const handleAssign = (assigneeIds) => {
+    // console.log(assigneeIds);
 
-  const handleDeleteComment = (index) => {
-    setComments(comments.filter((_, i) => i !== index));
+    axios
+      .post(`http://localhost:1818/tasks/${task.id}`, assigneeIds)
+      .then((res) => {
+        // console.log(res.data);
+        setAssigneeMembers(res.data.assignee)
+      })
+      .catch((error) => {
+        console.error("There was an error while assigning assignees: ", error);
+      });
   };
 
+  // const handleDeleteComment = (index) => {
+  //   setComments(comments.filter((_, i) => i !== index));
+  // };
+
   const showModal = () => {
+
     setIsModalVisible(true);
   };
 
@@ -49,29 +54,36 @@ function TaskDetail() {
   const handleFormSubmit = (values) => {
     setSelectedAssignees(values.assignees);
     setIsModalVisible(false);
+    handleAssign(values.assignees)
   };
 
+  // console.log(task.id);
+  
+
   return (
-    <div className="m-5 mt-10">
+    <div className="m-5 mt-10 px-5">
       <TaskHeader task={task} />
       <TaskDescription description={task.description} />
       <TaskStatus status={task.status} />
       <TaskAssignees
-        assignees={assignees}
-        selectedAssignees={selectedAssignees}
+        assignees={assigneeMembers}
         showModal={showModal}
+        handleFormSubmit={handleFormSubmit}
+        taskId={task.id}
       />
       <FacultyComments
-        comments={comments}
-        handleDeleteComment={handleDeleteComment}
+        taskId={task.id}
+      // comments={comments}
+      // handleDeleteComment={handleDeleteComment}
       />
       <AssigneesModal
         isModalVisible={isModalVisible}
         handleOk={handleOk}
         handleCancel={handleCancel}
-        assignees={assignees}
+        assignees={assigneeMembers}
         selectedAssignees={selectedAssignees}
         handleFormSubmit={handleFormSubmit}
+        members={members}
       />
     </div>
   );

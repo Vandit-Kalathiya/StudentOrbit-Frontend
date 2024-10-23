@@ -2,31 +2,21 @@
 import React from "react";
 import { Flex, Typography, Button, List, Avatar } from "antd";
 
-const data = [
-  {
-    Batch: "A1",
-    Group: 3,
-    Task: 1,
-    Id: "22ce001",
-  },
-  {
-    Batch: "C1",
-    Group: 5,
-    Task: 2,
-    Id: "22ce061",
-  },
-  {
-    Batch: "B1",
-    Group: 1,
-    Task: 3,
-    Id: "22ce032",
-  },
-  {
-    Batch: "A1",
-    Group: 2,
-    Task: 1,
-  },
-];
+const batches = ["A1", "B1", "C1"];
+const totalItems = 23; // Total number of items
+
+// Generate IDs and assign to batches
+const data = Array.from({ length: totalItems }, (_, index) => {
+  const batchIndex = Math.floor(index / 8); // Distribute items to batches
+  const batch = batches[batchIndex % batches.length]; // Cycle through batches
+  const idNumber = index + 1; // ID number starting from 1
+  return {
+    Batch: batch,
+    Group: (index % 5) + 1, // Example: group numbers from 1 to 5
+    Task: (index % 4) + 1, // Example: task numbers from 1 to 4
+    Id: `22ce${String(idNumber).padStart(3, '0')}` // Generate ID
+  };
+});
 
 function PendingTask() {
   return (
@@ -39,26 +29,30 @@ function PendingTask() {
           <Button type="link">View All</Button>
         </Flex>
         <List
-          pagination
+          pagination={{
+            pageSize: 7, 
+            showSizeChanger: false, 
+            showTotal: (total) => `Total ${total} items`,
+          }}
           dataSource={data}
-          renderItem={(user, index) => {
-            return (
-              <List.Item key={index}>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      src={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4FbpvZh5jwaDNTSer_Ac03nhI6PVoYV400A&s`}
-                    />
-                  }
-                  title={<a href="#">Batch: {user.Batch}</a>}
-                  description={user.Id}
-                ></List.Item.Meta>
+          renderItem={(user, index) => (
+            <List.Item key={index}>
+              <List.Item.Meta
+                avatar={
+                  <Avatar
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2d7bF1q2WBQnHUhqaR2OuxjFiv_EIWBwqow&s"
+                  />
+                }
+                title={<a href="#">Batch: {user.Batch}</a>}
+                description={user.Id}
+              />
+              <div>
                 <span>
                   Group: {user.Group} <br /> Task: {user.Task}
                 </span>
-              </List.Item>
-            );
-          }}
+              </div>
+            </List.Item>
+          )}
         />
       </Flex>
     </div>

@@ -8,13 +8,13 @@ import {
 const TaskStatus = ({ status, title }) => {
   const getStatusIcon = (status) => {
     switch (status) {
-      case "Todo":
+      case "TO_DO":
         return <PlayCircleOutlined className="text-blue-600 mr-2" />;
-      case "In Progress":
+      case "IN_PROGRESS":
         return <HourglassOutlined className="text-yellow-600 mr-2" />;
-      case "Completed":
+      case "COMPLETED":
         return <CheckCircleOutlined className="text-green-600 mr-2" />;
-      case "In Review":
+      case "IN_REVIEW":
         return <FileTextOutlined className="text-purple-600 mr-2" />;
       default:
         return null;

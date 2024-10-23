@@ -1,6 +1,5 @@
 import { Card, Table, Avatar, Progress, Typography } from 'antd';
 
-// Sample data for the table
 const workloadData = [
   {
     key: '1',

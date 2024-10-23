@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useEffect } from "react";
 import heroBg from "../assets/hero-bg.png";
 import heroImg from "../assets/hero-img.png";
@@ -11,6 +10,8 @@ function Hero() {
   useEffect(() => {
     AOS.init();
   }, []);
+
+  let role = localStorage.getItem("role");
 
   return (
     <section
@@ -49,10 +50,15 @@ function Hero() {
             <br />
           </p>
           <div className="flex" data-aos="fade-up" data-aos-delay="300">
-            <Link to="/login">
-              {" "}
+            {role == null ? (
+              <Link to="/signup">
+                <Button text="Get Started" />
+              </Link>
+            ) : role == 'student' ? <Link to="/s/dashboard">
               <Button text="Get Started" />
-            </Link>
+            </Link> : <Link to="/f/dashboard">
+              <Button text="Get Started" />
+            </Link>}
           </div>
         </div>
         <div className="flex flex-col justify-center items-center pt-8 ml md:pl-16 md:w-full md:h-full w-[90%] md:-mr-44">

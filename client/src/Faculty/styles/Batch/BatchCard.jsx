@@ -5,7 +5,7 @@ const BatchCard = ({ batch, sem, id1, id2 }) => {
   return (
     <Link to={`/f/dashboard/batches/${sem}${batch}`}>
       <Card
-        title={`Batch ${batch}`}
+        title={`Batch ${batch?.toUpperCase()}`}
         bordered={false}
         className="mx-auto w-[100%]"
         headStyle={{ fontSize: "clamp(1.4rem, 1.5vw, 1.75rem)" }}
@@ -19,7 +19,7 @@ const BatchCard = ({ batch, sem, id1, id2 }) => {
           Id :
         </p>
         <p className="inline text-sm sm:text-base md:text-lg">
-          {id1} - {id2}
+          {id1?.toUpperCase()} - {id2?.toUpperCase()}
         </p>
       </Card>
     </Link>

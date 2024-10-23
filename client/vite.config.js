@@ -7,11 +7,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/**': {
-        target: 'http://localhost:1818',  // Your backend URL
+        target: 'http://localhost:1818',
         changeOrigin: true,
         secure: false,
       }
-    }
+    },
+    
   }
 })
 

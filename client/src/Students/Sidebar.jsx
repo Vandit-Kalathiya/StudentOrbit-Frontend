@@ -7,28 +7,15 @@ import ProjectCard from "./Project/ProjectCard";
 import ProjectDetails from "./Project/ProjectDetails";
 import WeekDetails from '../Faculty/styles/Task/TaskCard/WeekDetails'
 import TaskDetail from "../Faculty/styles/Task/TaskPage/TaskDetail";
-import DashboardDetails from "./DashboardDetails";
+import DashboardDetails from "./DashboardS/DashboardDetails";
+import Profile from "./Profile/Profile";
+import Chatbot from "./Chat/Chatbot";
 
-// eslint-disable-next-line no-unused-vars
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
-const initialData = [
-  { batch: "A1", sem: "5", id1: "22ce001", id2: "22ce022" },
-  { batch: "B1", sem: "3", id1: "22ce023", id2: "22ce045" },
-  { batch: "C1", sem: "5", id1: "22ce046", id2: "22ce068" },
-  { batch: "A1", sem: "3", id1: "22ce001", id2: "22ce022" },
-  { batch: "B1", sem: "5", id1: "22ce023", id2: "22ce045" },
-  { batch: "C2", sem: "5", id1: "22ce141", id2: "22ce164" },
-];
-
-function Sidebar() {
+function Sidebar({setLoginStatus}) {
   const [collapsed, setCollapsed] = useState(true);
-  const [sidebarVisible, setSidebarVisible] = useState(true); // Track sidebar visibility on mobile
-
-  const batchData = initialData.map(item => ({
-    name: `${item.sem}${item.batch}`,
-    route: `/dashboard/batches/${item.sem}${item.batch}`
-  }));
+  const [sidebarVisible, setSidebarVisible] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarVisible(prev => !prev);
@@ -36,12 +23,11 @@ function Sidebar() {
 
   return (
     <Layout className="flex w-full">
-      {/* Sidebar Toggle Button for Mobile View */}
       <div
-        className="md:hidden absolute bottom-8 left-2 cursor-pointer z-50 bg-[#5B6DF3] text-white py-2 px-6 rounded-md"
+        className="md:hidden fixed bottom-8 left-2 cursor-pointer z-50 bg-[#5B6DF3] text-white py-2 px-6 rounded-md"
         onClick={toggleSidebar}
       >
-        {sidebarVisible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        {sidebarVisible ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
       </div>
 
       <Sider
@@ -52,7 +38,7 @@ function Sidebar() {
         style={{ position: "fixed", left: 0, bottom: 0, top: 0 }}
       >
         <div className="md:flex flex-col h-full">
-          <MenuList className="flex-grow" batchData={batchData} />
+          <MenuList setLoginStatus={setLoginStatus} className="flex-grow" />
           <Button
             type="text"
             className="toggle -mt-36 ml-5"
@@ -65,14 +51,13 @@ function Sidebar() {
       <Layout
         className={`w-full ${sidebarVisible ? 'md:pl-0' : 'pl-0'} bg-inherit min-h-screen`}
         style={{
-          // marginLeft: collapsed ? 70 : 150,
           marginLeft: sidebarVisible ? (collapsed ? 70 : 150) : 0,
           transition: "margin-left 0.1s linear",
           marginRight: 16,
         }}
       >
         <Content
-          className="transition-margin overflow-y-auto h-full mt-20"
+          className="transition-margin  h-full mt-20"
           style={{
             marginLeft: collapsed ? "1vw" : "4vw",
             transition: "margin-left 0.3s ease-in-out",
@@ -84,6 +69,8 @@ function Sidebar() {
             <Route path="/projects/:projectName" element={<ProjectDetails collapsed={collapsed} />} />
             <Route path="/projects/:projectName/:week" element={<WeekDetails />} />
             <Route path="/projects/:projectName/:week/:taskId" element={<TaskDetail />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/chat" element={<Chatbot />} />
           </Routes>
         </Content>
       </Layout>

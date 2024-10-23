@@ -1,44 +1,44 @@
-import { Button, Form, Input, List, Modal } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import { useForm } from "antd/es/form/Form";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { notification } from 'antd';
 
 const { TextArea } = Input;
 
-const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
-
+const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
+  let navigate = useNavigate();
+  const [form] = useForm();
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
-  const [batchName, setBatchName] = useState("");
   const [groupLeaderId, setGroupLeaderId] = useState("");
   const [students, setStudents] = useState(new Set());
   const [technologies, setTechnologies] = useState(new Set());
 
   const handleGroupName = (e) => {
     setGroupName(e.target.value);
-  }
+  };
 
   const handleGroupDescription = (e) => {
     setDescription(e.target.value);
-  }
-
-  const handleBatchName = (e) => {
-    setBatchName(e.target.value);
-  }
+  };
 
   const handleGroupLeaderId = (e) => {
     setGroupLeaderId(e.target.value);
-  }
+  };
 
   const handleStudents = (e) => {
-    setStudents(e.target.value);
-  }
+    const studentIdsArray = e.target.value.split(",").map((id) => id.trim());
+    const newStudentsSet = new Set(studentIdsArray);
+    setStudents(newStudentsSet);
+  };
 
   const handleTechnologies = (e) => {
-    setTechnologies(e.target.value);
-  }
-
-  const [form] = useForm();
+    const techArray = e.target.value.split(",").map((tech) => tech.trim());
+    const newTechnologiesSet = new Set(techArray);
+    setTechnologies(newTechnologiesSet);
+  };
 
   const validateStudentIds = (rule, value) => {
     if (!value) {
@@ -56,7 +56,6 @@ const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
         return Promise.reject("Each Student ID must be in the format YYCEXXX");
       }
     }
-
     return Promise.resolve();
   };
 
@@ -71,72 +70,60 @@ const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
     return Promise.resolve();
   };
 
-  // const handleFinish = (values) => {
-  //   const { projectName, description, technologies, studentIds, groupLeader } = values;
-
-  //   const studentIdsArray = studentIds.split(",").map((id) => id.trim());
-
-  //   const newGroup = {
-  //     title: projectName,
-  //     description,
-  //     technologies: technologies.split(",").map((tech) => tech.trim()),
-  //     groupLeader,
-  //     members: studentIdsArray,
-  //     progress: 0,
-  //     category: "New Category", 
-  //     batch, 
-  //   };
-
-  //   onAddGroup(newGroup);
-  //   form.resetFields();
-  //   onClose();
-  // };
-
-
-
-  const handleAddGroup = async (e) => {
-    // e.preventDefault();
+  const handleAddGroup = async () => {
     const groupData = {
-      batchName: batchName,
-      groupName: groupName,
-      description: description,
-      groupLeaderId: groupLeaderId,
-      students: students,
-      technologies: technologies,
-    }
-    console.log(groupData)
+      batchName: batch,
+      groupName,
+      description,
+      groupLeaderId,
+      students: Array.from(students),
+      technologies: Array.from(technologies),
+    };
+    console.log(batch)
+    console.log(groupData);
 
-    // axios.get('http://localhost:1818/faculty/batches/allBatches').then(x => console.log(x.data))
-
-    axios.post('http://localhost:1818/faculty/groups/create', groupData, {
-      // headers: {
-      //   'Authorization': `Bearer ${localStorage.getItem("jwt")}`,
-      //   'Content-Type': 'application/json',
-      //   // ''
-      // },
-      withCredentials: true
-    })
-      .then((response) => {
-        console.log("Group added...")
-        navigate("/f/dashboard/batches")
-      })
-      .catch((error) => {
-        console.error('There was an error submitting the report:', error);
+    try {
+      const res = await axios.post(
+        "http://localhost:1818/faculty/groups/create",
+        groupData,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Group added...");
+      onGroupAdded(res.data);
+      notification.success({
+        message: "Group Added",
+        description: "The new group has been added successfully.",
+        placement: "bottomRight",
+        duration: 3, 
+        showProgress: true,
       });
-  }
-
-
+      form.resetFields();
+      onClose();
+      navigate(`/f/dashboard/batches/${batch}`);
+    } catch (error) {
+      notification.error({
+        message: "Group Creation Failed",
+        description: "There was an issue while adding the group. Please try again.",
+        placement: "bottomRight",
+        duration: 3,
+        showProgress: true,
+      });
+      console.error("There was an error submitting the group:", error);
+    }
+  };
 
   return (
     <Modal
       title="Add New Group"
-      visible={visible}
+      open={visible}
       onCancel={onClose}
       footer={null}
     >
       <Form form={form} layout="vertical" onFinish={handleAddGroup}>
         <Form.Item label="Batch">
-          <Input value={batch} readOnly onBeforeInput={(e) => handleBatchName(e)} />
+          <Input value={batch} readOnly />
         </Form.Item>
         <Form.Item
           name="projectName"
@@ -155,16 +142,24 @@ const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
         <Form.Item
           name="technologies"
           label="Technologies"
-          rules={[{ required: true, message: "Please input the technologies!" }]}
+          rules={[
+            { required: true, message: "Please input the technologies!" },
+          ]}
         >
-          <Input placeholder="Comma-separated" onChange={(e) => handleTechnologies(e)} />
+          <Input
+            placeholder="Comma-separated"
+            onChange={(e) => handleTechnologies(e)}
+          />
         </Form.Item>
         <Form.Item
           name="studentIds"
           label="Student IDs"
           rules={[{ validator: validateStudentIds }]}
         >
-          <Input placeholder="Comma-separated, max 4 IDs"onChange={(e) => handleStudents(e)}  />
+          <Input
+            placeholder="Comma-separated, max 4 IDs"
+            onChange={(e) => handleStudents(e)}
+          />
         </Form.Item>
         <Form.Item
           name="groupLeader"
@@ -174,10 +169,16 @@ const AddGroupModal = ({ visible, onClose, onAddGroup, batch }) => {
             { validator: validateGroupLeader },
           ]}
         >
-          <Input placeholder="22ce001" onChange={(e) => handleGroupLeaderId(e)} />
+          <Input
+            placeholder="22ce001"
+            onChange={(e) => handleGroupLeaderId(e)}
+          />
         </Form.Item>
         <Form.Item>
-          <Button className="bg-[#4859DA] text-white hover:border-[#4859DA] hover:text-[#4859DA]" htmlType="submit">
+          <Button
+            className="bg-[#4859DA] text-white hover:border-[#4859DA] hover:text-[#4859DA]"
+            htmlType="submit"
+          >
             Add Group
           </Button>
         </Form.Item>

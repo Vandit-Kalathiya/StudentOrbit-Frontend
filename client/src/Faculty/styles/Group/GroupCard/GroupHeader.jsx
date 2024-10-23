@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 
-const GroupHeader = ({ batch, onAddGroup }) => {
+const GroupHeader = ({ batch, onGroupAdded }) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => setShowModal(true);
@@ -25,7 +25,12 @@ const GroupHeader = ({ batch, onAddGroup }) => {
           <span className="hidden md:inline">Add Group</span>
         </Button>
       </div>
-      <AddGroupModal batch={batch} visible={showModal} onClose={handleCloseModal} onAddGroup={onAddGroup} />
+      <AddGroupModal
+        batch={batch}
+        visible={showModal}
+        onClose={handleCloseModal}
+        onGroupAdded={onGroupAdded}
+      />
     </div>
   );
 };

@@ -1,11 +1,15 @@
 import { Modal, Form, Select, Button } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const { Option } = Select;
 
-const AssigneesModal = ({ isModalVisible, handleOk, handleCancel, assignees, selectedAssignees, handleFormSubmit }) => {
+const AssigneesModal = ({ isModalVisible, handleOk, handleCancel, members, selectedAssignees, handleFormSubmit }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue({ assignees: selectedAssignees });
+  }, [selectedAssignees, form]);
 
   const handleSelect = () => {
     setDropdownVisible(false);
@@ -18,7 +22,7 @@ const AssigneesModal = ({ isModalVisible, handleOk, handleCancel, assignees, sel
   return (
     <Modal
       title="Select Assignees"
-      visible={isModalVisible}
+      open={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={null}
@@ -42,9 +46,9 @@ const AssigneesModal = ({ isModalVisible, handleOk, handleCancel, assignees, sel
             open={dropdownVisible}
             value={form.getFieldValue('assignees')}
           >
-            {assignees.map(assignee => (
-              <Option key={assignee.initials} value={assignee.initials}>
-                {assignee.name}
+            {members.map(member => (
+              <Option key={member.id} value={member.id}>
+                {member.username}
               </Option>
             ))}
           </Select>

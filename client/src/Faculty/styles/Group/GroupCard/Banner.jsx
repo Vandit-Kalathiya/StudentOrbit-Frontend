@@ -1,22 +1,25 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
 import { Card, Flex, Typography } from "antd";
 import Button from "../../../../Styles/Button";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Banner({ title, description, technologies, batch, projectName, groupLeader, members, category, progress }) {
+function Banner({ project, batch }) {
+  const navigate = useNavigate();
+
+  const handleReadMore = () => {
+    navigate(`/f/dashboard/batches/${batch}/${project.groupName}`, { state: project });
+  };
+
   return (
     <Card className="md:h-260 md:p-5">
       <Flex vertical gap="30px">
         <Flex vertical align="flex-start">
           <Typography strong className="text-xl md:text-3xl font-bold">
-            {title}
+            {project.groupName}
           </Typography>
           <Typography type="secondary" strong className="mt-2">
-            {description}
+            {project.groupDescription}
           </Typography>
-
-          <div className="flex flex-wrap gap-2 mt-4">
+          {/* <div className="flex flex-wrap gap-2 mt-4">
             {technologies.map((tech, index) => (
               <Typography.Text
                 key={index}
@@ -25,32 +28,18 @@ function Banner({ title, description, technologies, batch, projectName, groupLea
                 {tech}
               </Typography.Text>
             ))}
-          </div>
+          </div> */}
           <div className="mt-4">
             <Typography.Text strong className="text-base">
-              Group Leader : 
+              Group Leader :
             </Typography.Text>
             <Typography.Text className="text-base ml-2">
-              {groupLeader}
+              {project.groupLeader?.toUpperCase()}
             </Typography.Text>
           </div>
-
         </Flex>
         <div className="flex md:gap-10 md:flex-row flex-col items-center gap-6">
-          <Link
-            to={`/f/dashboard/batches/${batch}/${projectName}`}
-            state={{
-              title,
-              description,
-              groupLeader,
-              members,
-              category,
-              technologies,
-              progress, 
-            }}
-          >
-            <Button text="Explore Innovations" />
-          </Link>
+          <button className="bg-[#5B6DF3] hover:bg-[#4859da] py-2 px-4 rounded-md text-white hover:text-white" onClick={handleReadMore}>Explore Innovations</button>
         </div>
       </Flex>
     </Card>

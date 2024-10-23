@@ -1,24 +1,51 @@
 import { useState } from "react";
 import { Modal, Form, Input, Select } from "antd";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members }) => {
-  const [dropdownVisible, setDropdownVisible] = useState(false);
+const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project, currentWeekId }) => {
+  const [tasks, setTasks] = useState({
+    taskName: "",
+    taskDescription: "",
+  });
 
-  const handleSelect = () => {
-    // Option select karte hi dropdown ko close kar do
-    setDropdownVisible(false);
+  const { projectName } = useParams();
+
+  const handleInputChange = (e) => {
+    setTasks({ ...tasks, [e.target.name]: e.target.value });
   };
 
-  const handleDropdownVisibleChange = (open) => {
-    // Jab dropdown open ya close ho raha ho, uske according state set karo
-    setDropdownVisible(open);
+  const handleTasks = async () => {
+    try {
+      const res = await axios.post(
+        `http://localhost:1818/tasks/add/${project.id}/${currentWeekId}`,
+        tasks, 
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log("Task added successfully", res.data);
+      axios
+        .get(`http://localhost:1818/faculty/groups/g/${projectName}`)
+        .then((res) => {
+          const demo = res.data;
+          handleOk(demo);
+        })
+        .catch((error) => {
+          console.error("There was an error while getting all batches: ", error);
+        });
+        
+    } catch (error) {
+      console.error("Error adding task", error);
+    }
   };
 
   return (
     <Modal
       title="Add New Task"
       open={isModalOpen}
-      onOk={handleOk}
+      onOk={handleTasks}
       onCancel={handleCancel}
       okText="Add Task"
       cancelText="Cancel"
@@ -34,36 +61,40 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members }) => {
           label="Task Name"
           rules={[{ required: true, message: "Please input the task name!" }]}
         >
-          <Input placeholder="Enter task name" />
+          <Input
+            placeholder="Enter task name"
+            name="taskName"
+            onChange={handleInputChange}
+          />
         </Form.Item>
         <Form.Item
           name="taskDescription"
           label="Task Description"
-          rules={[
-            { required: true, message: "Please input the task description!" },
-          ]}
+          rules={[{ required: true, message: "Please input the task description!" }]}
         >
-          <Input.TextArea rows={4} placeholder="Enter task description" />
+          <Input
+            rows={4}
+            placeholder="Enter task description"
+            name="taskDescription" 
+            onChange={handleInputChange}
+          />
         </Form.Item>
-        <Form.Item
-          name="assignee"
-          label="Assign To"
-          // rules={[{ message: "Please select an assignee!" }]}
-        >
+        {/* <Form.Item name="assignee" label="Assign To">
           <Select
-            mode="multiple" // Enable multiple selections
+            mode="multiple"
             placeholder="Select assignees"
-            open={dropdownVisible} // Control the dropdown visibility
-            onSelect={handleSelect} // Handle selection to close dropdown
-            onDropdownVisibleChange={handleDropdownVisibleChange} // Handle dropdown visibility change
+            open={dropdownVisible}
+            onChange={handleAssigneeChange} 
+            onDropdownVisibleChange={handleDropdownVisibleChange}
+            value={tasks.taskAssignes}
           >
-            {members.map((memberId) => (
-              <Select.Option key={memberId} value={memberId}>
-                {memberId}
+            {members.map((member) => (
+              <Select.Option key={member.username} value={member.username}>
+                {member.username}
               </Select.Option>
             ))}
           </Select>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );

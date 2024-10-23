@@ -1,52 +1,62 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Row, Col } from 'antd';
-import TaskList from './TaskList'; // Import the TaskList component
+import TaskList from './TaskList';
+import axios from 'axios';
 
 const ToDoPage = () => {
-  const location = useLocation();
   const [tasks, setTasks] = useState([]);
+  const [projectData, setProjectData] = useState([]);
+  const { projectName, week } = useParams();
+  const [members, setMebers] = useState([])
 
-  // Extract the current week number from the URL
-  const currentWeek = location.pathname.split('/').pop(); // e.g., 'week1'
+  const currentWeek = week.charAt(4);
+  console.log(projectName, currentWeek);
+
+  // Reusable function to fetch tasks
+  const fetchTasks = () => {
+    axios
+      .get(`http://localhost:1818/faculty/groups/g/${projectName}`)
+      .then((res) => {
+        let demo = res.data;
+        setProjectData(demo)
+        // console.log(demo.students)
+        setMebers(demo.students)
+        demo = demo.weeks.sort((a, b) => a.weekNumber - b.weekNumber);
+        setTasks(demo[currentWeek - 1].tasks);
+      })
+      .catch((error) => {
+        console.error("There was an error while getting all tasks: ", error);
+      });
+
+  };
+  // console.log(members);
 
   useEffect(() => {
-    // Load tasks from localStorage for the selected week
-    const savedTasks = JSON.parse(localStorage.getItem('tasks')) || {};
-    if (savedTasks[currentWeek]) {
-      setTasks(savedTasks[currentWeek]);
-    } else if (location.state?.tasks) {
-      // Initialize tasks with 'todo' status if no saved tasks for the week
-      const weekTasks = location.state.tasks.map((task, i) => ({
-        id: task.id || i + 1,
-        title: task.title || `Task ${i + 1}`,
-        status: 'Todo',
-        assignees: [],
-      }));
-      setTasks(weekTasks);
-    }
-  }, [location.state?.tasks, currentWeek]);
+    fetchTasks(); // Fetch tasks on component mount and when projectName or week changes
+  }, [projectName, week]);
 
-  useEffect(() => {
-    if (tasks.length > 0) {
-      const savedTasks = JSON.parse(localStorage.getItem('tasks')) || {};
-      savedTasks[currentWeek] = tasks;
-      localStorage.setItem('tasks', JSON.stringify(savedTasks));
-    }
-  }, [tasks, currentWeek]);
+  console.log(tasks);
 
-  const updateTaskStatus = (id, newStatus, comment = "") => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              status: newStatus,
-              comments: [...(task.comments || []), comment], // Add the comment if any
-            }
-          : task
-      )
-    );
+  const updateTaskStatus = (id, newStatus, assignees, comment = "") => {
+    console.log(assignees);
+
+    if (newStatus === 'IN_PROGRESS' && assignees.length > 0) {
+      changeStatus(id, newStatus);
+    } else alert("Please assign at least one user to the task before moving it to review.");
+  };
+
+  // Function to change task status
+  const changeStatus = (id, status) => {
+    axios
+      .post(`http://localhost:1818/tasks/${id}/${status}`)
+      .then((res) => {
+        console.log("Status changed successfully...", res.data);
+        fetchTasks(); // Refetch tasks after status change to trigger re-render
+      })
+      .catch((error) => {
+        console.error("There was an error while changing status: ", error);
+      });
   };
 
   const updateAssignees = (taskId, newAssignees) => {
@@ -55,9 +65,9 @@ const ToDoPage = () => {
         task.id === taskId ? { ...task, assignees: newAssignees } : task
       )
     );
-  };  
+  };
 
-  const weekNumber = currentWeek.replace('week', 'Week ');
+  const weekNumber = currentWeek.replace(currentWeek, 'Week ' + currentWeek);
 
   return (
     <div className='md:p-4 py-4 m-3'>
@@ -65,19 +75,19 @@ const ToDoPage = () => {
       <Row gutter={16}>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>To-do Tasks</h3>
-          <TaskList tasks={tasks} status='Todo' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
+          <TaskList tasks={tasks} status='TO_DO' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>In Progress Tasks</h3>
-          <TaskList tasks={tasks} status='In Progress' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
+          <TaskList tasks={tasks} status='IN_PROGRESS' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>In Review Tasks</h3>
-          <TaskList tasks={tasks} status='In Review' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
+          <TaskList tasks={tasks} status='IN_REVIEW' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
         </Col>
         <Col span={24}>
           <h3 className='text-xl mb-4 font-semibold'>Completed Tasks</h3>
-          <TaskList tasks={tasks} status='Completed' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} />
+          <TaskList tasks={tasks} status='COMPLETED' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
         </Col>
       </Row>
     </div>

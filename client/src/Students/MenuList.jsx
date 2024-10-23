@@ -1,95 +1,75 @@
-import { useState, useEffect } from 'react';
+import { useState } from "react";
 import { Menu, Modal } from "antd";
 import {
   DashboardOutlined,
-  SettingOutlined,
   LogoutOutlined,
   ProjectOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useNavigate, useLocation, matchPath } from "react-router-dom";
+import axios from "axios";
 
-// eslint-disable-next-line react/prop-types
-const MenuList = ({ darkTheme, batchData }) => {
-  const [isSubMenuVisible, setIsSubMenuVisible] = useState(false);
+const MenuList = ({ darkTheme, setLoginStatus }) => {
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    const match = matchPath('/dashboard/batches/:batch', location.pathname);
-    setIsSubMenuVisible(match !== null);
-  }, [location.pathname]);
+  const showLogoutModal = () => setIsLogoutModalVisible(true);
 
-  const showLogoutModal = () => {
-    setIsLogoutModalVisible(true);
-  };
-
-  const handleLogout = (e) => {
-    e.preventDefault();
-
-    axios.post('http://localhost:1818/auth/logout',null, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    })
-      .then((response) => {
-        console.log('Logged out successfully:');
-        localStorage.removeItem(
-          'jwt'
-        )
-        navigate("/")
-      })
-      .catch((error) => {
-        console.error('There was an error submitting the report:', error);
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:1818/auth/logout", null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("s_jwt")}`,
+        },
       });
-  }
-
-  const handleCancelLogout = () => {
-    setIsLogoutModalVisible(false);
+      console.log("Logged out successfully");
+      localStorage.removeItem("s_jwt");
+      localStorage.removeItem("role");
+      localStorage.removeItem('username');
+      setLoginStatus(false);
+      navigate("/");
+    } catch (error) {
+      console.error("There was an error logging out:", error);
+    } finally {
+      setIsLogoutModalVisible(false);
+    }
   };
+
+  const handleCancelLogout = () => setIsLogoutModalVisible(false);
+
+  const selectedKey = (() => {
+    if (matchPath("/f/dashboard", location.pathname)) return "1";
+    if (matchPath("/s/dashboard/projects/*", location.pathname)) return "2";
+    if (matchPath("/s/dashboard/profile", location.pathname)) return "3";
+    return "1";
+  })();
 
   return (
     <>
       <Menu
         theme={darkTheme ? "dark" : "light"}
         mode="inline"
-        defaultSelectedKeys={["1"]}
+        selectedKeys={[selectedKey]}
         className="min-h-[100vh] mt-0 flex flex-col gap-[15px] text-[1rem] relative"
       >
         <Menu.Item key="1" icon={<DashboardOutlined />}>
-          <Link to="/f/dashboard">Dashboard</Link>
+          <Link to="/s/dashboard">Dashboard</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<ProjectOutlined />}>
           <Link to="/s/dashboard/projects">Projects</Link>
         </Menu.Item>
-        {/* {isSubMenuVisible ? (
-          <Menu.SubMenu key="3" icon={<BarsOutlined />} title="My Batches">
-            {batchData.map((batch, index) => (
-              <Menu.Item key={`3-${index}`}>
-                <Link to={batch.route}>{batch.name}</Link>
-              </Menu.Item>
-            ))}
-          </Menu.SubMenu>
-        ) : (
-          <Menu.Item key="3" icon={<BarsOutlined />}>
-            <Link to="/f/dashboard/batches">My Batches</Link>
-          </Menu.Item>
-        )} */}
-        {/* <Menu.Item key="4" icon={<AreaChartOutlined />}>
-          <Link to="/f/dashboard/progress">Progress</Link>
-        </Menu.Item> */}
-        <Menu.Item key="5" icon={<SettingOutlined />}>
-          Settings
+        <Menu.Item key="3" icon={<UserOutlined />}>
+          <Link to="/s/dashboard/profile">Profile</Link>
         </Menu.Item>
-        <Menu.Item key="6" icon={<LogoutOutlined />} onClick={showLogoutModal}>
+        <Menu.Item key="4" icon={<LogoutOutlined />} onClick={showLogoutModal}>
           Logout
         </Menu.Item>
       </Menu>
 
       <Modal
         title="Confirm Logout"
-        visible={isLogoutModalVisible}
+        open={isLogoutModalVisible}
         onOk={handleLogout}
         onCancel={handleCancelLogout}
         okText="Yes, Logout"

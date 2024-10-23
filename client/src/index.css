@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 ::selection {
     color: #5B6DF3; 
     background-color: rgba(91, 109, 243, 0.3); 
@@ -37,3 +38,43 @@
     opacity: 0;
   }  
 }
+
+.divider {
+  height: 55%;
+  width: 1.5px; 
+  background-color: #8694ff;
+  margin: 0 10px; 
+}
+
+/* styles.css */
+.chat-popup {
+  opacity: 0;
+  transform: translateZ(-100px) rotateY(90deg);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.chat-popup-enter {
+  opacity: 1;
+  transform: translateZ(0) rotateY(0);
+}
+
+.chat-popup-exit {
+  opacity: 0;
+  transform: translateZ(-100px) rotateY(-90deg);
+}
+
+/* .chat-popup {
+  opacity: 0;
+  transform: translateY(50px) scale(0.5) rotate(15deg);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.chat-popup-enter {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotate(0);
+}
+
+.chat-popup-exit {
+  opacity: 0;
+  transform: translateY(50px) scale(0.5) rotate(-15deg);
+} */

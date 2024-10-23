@@ -1,9 +1,9 @@
 import { Row, Col, Empty } from 'antd';
 import PropTypes from 'prop-types';
 import TaskCard from './TaskCard';
+import { motion } from 'framer-motion';
 
-const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees }) => {
-  // Filter tasks based on the provided status
+const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees, members }) => {
   const filteredTasks = tasks.filter(task => task.status === status);
 
   return (
@@ -12,7 +12,12 @@ const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees }) => {
         <Row gutter={16}>
           {filteredTasks.map(task => (
             <Col xs={24} sm={12} md={8} lg={6} key={task.id}>
-              <TaskCard task={task} updateTaskStatus={updateTaskStatus}  updateAssignees={updateAssignees} />
+              <motion.div
+                layout 
+                transition={{ duration: 0.3 }}
+              >
+                <TaskCard task={task} updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
+              </motion.div>
             </Col>
           ))}
         </Row>

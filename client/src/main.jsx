@@ -7,7 +7,6 @@ import { store } from './Redux/store.js'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
     <Provider store={store}>
       <App />
     </Provider>

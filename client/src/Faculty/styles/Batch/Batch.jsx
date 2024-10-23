@@ -1,27 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Typography, Button, Form } from "antd";
 import { Plus } from "lucide-react";
 import BatchCard from "./BatchCard";
 import AddBatchModal from "./AddBatchModal";
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
+import { openNotification } from "../../../Utils/Notification";
 
-const initialData = [
-  { batch: "A1", sem: "5", id1: "22ce001", id2: "22ce022" },
-  { batch: "B1", sem: "3", id1: "22ce023", id2: "22ce045" },
-  { batch: "C1", sem: "5", id1: "22ce046", id2: "22ce068" },
-  { batch: "A1", sem: "3", id1: "22ce001", id2: "22ce022" },
-  { batch: "B1", sem: "5", id1: "22ce023", id2: "22ce045" },
-  { batch: "C2", sem: "5", id1: "22ce141", id2: "22ce164" },
-];
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const Batch = () => {
   const [showModal, setShowModal] = useState(false);
   const [form] = Form.useForm();
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
 
-  const handleAddBatch = (values) => {
+  useEffect(() => {
+    axios
+      .get("http://localhost:1818/faculty/batches/allBatches")
+      .then((res) => {
+        const demo = res.data;
+        setData(demo);
+      })
+      .catch((error) => {
+        console.error("There was an error while getting all batches: ", error);
+      });
+  }, []);
+
+  const handleBatchAdded = (values) => {
     setData([...data, values]);
     setShowModal(false);
     form.resetFields();
+    openNotification(
+      "success",
+      "Batch Added",
+      "The batch has been added successfully."
+    );
   };
 
   return (
@@ -41,12 +64,30 @@ const Batch = () => {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 md:mt-4">
-        {data.map((item, index) => ( 
-          <BatchCard key={index} batch={item.batch} sem={item.sem} id1={item.id1} id2={item.id2} />
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 md:mt-4"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {data.map((item, index) => (
+          <motion.div key={index} variants={itemVariants}>
+            <BatchCard
+              batch={item.batchName}
+              sem={item.semester}
+              id1={item.startId}
+              id2={item.endId}
+            />
+          </motion.div>
         ))}
-      </div>
-      <AddBatchModal visible={showModal} onCancel={() => setShowModal(false)} onFinish={handleAddBatch} form={form} />
+      </motion.div>
+      <AddBatchModal
+        visible={showModal}
+        onCancel={() => setShowModal(false)}
+        form={form}
+        onBatchAdded={handleBatchAdded}
+      />
+      <ToastContainer />
     </div>
   );
 };

@@ -4,7 +4,7 @@ const TaskCompletionModal = ({ isModalVisible, handleOk, handleCancel }) => {
   return (
     <Modal
       title="Are you sure?"
-      visible={isModalVisible}
+      open={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
       okText="Yes, Approve"

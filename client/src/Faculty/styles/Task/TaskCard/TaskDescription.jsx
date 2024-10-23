@@ -17,8 +17,8 @@ const TaskDescription = ({ description="Lorem ipsum dolor sit amet, consectetur 
     <p className="text-gray-600 text-sm mb-4">
       {showFullDescription
         ? description
-        : description.slice(0, 15) + (description.length > 25 ? "..." : "")}
-      {description.length > 25 && (
+        : description.slice(0, 5) + (description.length > 5 ? "..." : "")}
+      {description.length > 1 && (
         <a
           href="#"
           onClick={handleReadMoreToggle}

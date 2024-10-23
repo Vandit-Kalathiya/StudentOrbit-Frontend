@@ -1,20 +1,32 @@
 import { FileTextOutlined, CheckCircleOutlined, HourglassOutlined, PlayCircleOutlined } from "@ant-design/icons";
 
 const statusIcons = {
-  'Todo': <PlayCircleOutlined className="text-blue-600" />,
-  'In Progress': <HourglassOutlined className="text-yellow-600" />,
-  'In Review': <FileTextOutlined className="text-purple-600" />,
-  'Completed': <CheckCircleOutlined className="text-green-600" />,
+  'TO_DO': <PlayCircleOutlined className="text-blue-600" />,
+  'IN_PROGRESS': <HourglassOutlined className="text-yellow-600" />,
+  'IN_REVIEW': <FileTextOutlined className="text-purple-600" />,
+  'COMPLETED': <CheckCircleOutlined className="text-green-600" />,
 };
 
 const TaskStatus = ({ status }) => {
+  
+  let statusText = '';
+  if (status === 'TO_DO') {
+    statusText = 'To Do';
+  } else if (status === 'IN_PROGRESS') {
+    statusText = 'In Progress';
+  } else if (status === 'IN_REVIEW') {
+    statusText = 'In Review';
+  } else {
+    statusText = 'Completed';
+  }
+
   return (
     <div className="flex flex-wrap items-center gap-4 mb-4">
       <h3 className="text-base md:text-lg font-semibold flex items-center">
         Status:{" "}
         <span className="text-base md:text-lg font-normal flex items-center ml-2">
-          <span className="mr-2">{status}</span>
           {statusIcons[status] || null}
+          <span className="ml-2">{statusText}</span>
         </span>
       </h3>
     </div>

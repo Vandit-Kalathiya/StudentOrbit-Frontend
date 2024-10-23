@@ -47,37 +47,37 @@ function About() {
       number: "01",
       title: "Introduction to StudentOrbit",
       description: "StudentOrbit is a cutting-edge platform designed to transform how Student Graduation Projects (SGP) are managed in academic settings. It centralizes essential tools, making the project lifecycle—from assignment to submission—more efficient and user-friendly.",
-      src: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitmap_VS_SVG.svg",
+      src: "https://img.freepik.com/premium-psd/cuttingedge-astrophysics-services-cosmic-understanding_996812-845.jpg?ga=GA1.1.1702925771.1726489567&semt=ais_hybrid",
     },
     {
       number: "02",
       title: "Streamlined Project Management",
       description: "The platform simplifies project oversight for faculty by enabling easy project assignment, progress tracking, task management, and feedback delivery. Students benefit from a structured environment to manage tasks, track milestones, and receive automated updates.",
-      src: "https://via.placeholder.com/400x400.png?text=Dummy+Image+2",
+      src: "https://img.freepik.com/premium-vector/business-team-having-meeting-brainstorming-working-together-looking-charts-graphs-using-laptop-tablet_123891-121697.jpg?ga=GA1.1.1702925771.1726489567&semt=ais_hybrid",
     },
-    {
-      number: "03",
-      title: "Automated Monitoring and Resource Optimization",
-      description: "StudentOrbit features automated progress monitoring, keeping everyone informed of project status, and enhances lab hour management to optimize the use of resources, ensuring efficiency throughout the project.",
-      src: "https://via.placeholder.com/400x400.png?text=Dummy+Image+3",
-    },
+    // {
+    //   number: "03",
+    //   title: "Automated Monitoring and Resource Optimization",
+    //   description: "StudentOrbit features automated progress monitoring, keeping everyone informed of project status, and enhances lab hour management to optimize the use of resources, ensuring efficiency throughout the project.",
+    //   src: "https://via.placeholder.com/400x400.png?text=Dummy+Image+3",
+    // },
     {
       number: "04",
       title: "Enhanced Communication and Collaboration",
       description: "The platform fosters a collaborative environment by facilitating seamless communication between faculty and students. This ensures that projects are guided effectively and completed successfully.",
-      src: "https://via.placeholder.com/400x400.png?text=Dummy+Image+4",
+      src: "https://img.freepik.com/free-vector/flat-design-international-employees-illustration_23-2149516268.jpg?ga=GA1.1.1702925771.1726489567&semt=ais_hybrid",
     },
     {
       number: "05",
       title: "Powerful Reporting and Analytics",
       description: "Robust reporting and analytics tools provide insights into project performance, helping faculty make informed decisions and allowing students to monitor their progress, ultimately supporting academic success.",
-      src: "https://via.placeholder.com/400x400.png?text=Dummy+Image+5",
+      src: "https://img.freepik.com/premium-vector/tablet-displaying-bar-graph-symbolizing-business-growth-through-data-analysis-business-growth-reporting-data-analysis-simple-minimalist-flat-vector-illustration_538213-119503.jpg?ga=GA1.1.1702925771.1726489567&semt=ais_hybrid",
     },
     {
       number: "06",
       title: "A Vital Resource for Academic Excellence",
       description: "StudentOrbit is more than just a management tool—it's a comprehensive resource designed to support both faculty and students in achieving success in their graduation projects, ensuring an enhanced academic experience.",
-      src: "https://via.placeholder.com/400x400.png?text=Dummy+Image+6",
+      src: "https://img.freepik.com/free-vector/flat-university-concept-background_52683-11961.jpg?ga=GA1.1.1702925771.1726489567&semt=ais_hybrid",
     }
   ];
 
@@ -93,7 +93,7 @@ function About() {
         </div>
         <div className="work_right w-[30%]">
           <div className="work_right-bl flex md:flex-col justify-center sticky w-[100%] h-[100vh] top-0">
-            <div className="work_photo w-[20vw] h-[20vw] relative">
+            <div className="work_photo w-[35vw] h-[30vw] relative">
               {workItems.map((item, index) => (
                 <div
                   key={index}

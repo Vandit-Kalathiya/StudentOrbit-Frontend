@@ -6,29 +6,56 @@ import {
   SettingOutlined,
   BarsOutlined,
   LogoutOutlined,
-  ProjectOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation, matchPath } from 'react-router-dom';
+import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-// eslint-disable-next-line react/prop-types
-const MenuList = ({ darkTheme, batchData }) => {
+const MenuList = ({ darkTheme, batchData, setLoginStatus }) => {
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(false);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const match = matchPath('/dashboard/batches/:batch', location.pathname);
     setIsSubMenuVisible(match !== null);
   }, [location.pathname]);
 
+  const selectedKey = (() => {
+    if (matchPath("/f/dashboard", location.pathname)) return "1";
+    if (matchPath("/s/dashboard", location.pathname)) return "2";
+    if (matchPath("/f/dashboard/batches/*", location.pathname)) return "3";
+    if (matchPath("/f/dashboard/progress", location.pathname)) return "4";
+    return "1"; 
+  })();
+
   const showLogoutModal = () => {
     setIsLogoutModalVisible(true);
   };
 
   const handleLogout = () => {
-    // Implement your logout logic here
-    console.log("User logged out");
-    setIsLogoutModalVisible(false);
+    axios
+      .post("http://localhost:1818/auth/logout", null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("f_jwt")}`, // Use JWT from localStorage
+        },
+      })
+      .then(() => {
+        console.log("Logged out successfully");
+        localStorage.removeItem("f_jwt");
+        localStorage.removeItem("role");
+        localStorage.removeItem('username');
+        console.log("Logging out user");
+        
+        setLoginStatus(false);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("There was an error logging out:", error);
+      })
+      .finally(() => {
+        setIsLogoutModalVisible(false); // Hide the modal after logout attempt
+      });
   };
 
   const handleCancelLogout = () => {
@@ -40,15 +67,15 @@ const MenuList = ({ darkTheme, batchData }) => {
       <Menu
         theme={darkTheme ? "dark" : "light"}
         mode="inline"
-        defaultSelectedKeys={["1"]}
+        selectedKeys={[selectedKey]}
         className="min-h-[100vh] mt-0 flex flex-col gap-[15px] text-[1rem] relative"
       >
         <Menu.Item key="1" icon={<DashboardOutlined />}>
           <Link to="/f/dashboard">Dashboard</Link>
         </Menu.Item>
-        <Menu.Item key="2" icon={<ProjectOutlined />}>
+        {/* <Menu.Item key="2" icon={<ProjectOutlined />}>
           <Link to="/s/dashboard">Projects</Link>
-        </Menu.Item>
+        </Menu.Item> */}
         {isSubMenuVisible ? (
           <Menu.SubMenu key="3" icon={<BarsOutlined />} title="My Batches">
             {batchData.map((batch, index) => (
@@ -75,7 +102,7 @@ const MenuList = ({ darkTheme, batchData }) => {
 
       <Modal
         title="Confirm Logout"
-        visible={isLogoutModalVisible}
+        open={isLogoutModalVisible}
         onOk={handleLogout}
         onCancel={handleCancelLogout}
         okText="Yes, Logout"

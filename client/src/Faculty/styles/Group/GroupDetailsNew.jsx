@@ -1,69 +1,66 @@
 import { useLocation, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 import GroupLeft from "./GroupLeft";
 import GroupRight from "./GroupRight/GroupRight";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function GroupDetailsNew({ collapsed }) {
-  const { batch } = useParams();
+  const { batch, projectName } = useParams();
   const location = useLocation();
 
-  const {
-    title,
-    description,
-    groupLeader,
-    members,
-    category,
-    technologies,
-    progress,
-  } = location.state || {};
+  const project = location.state;
 
-  // console.log("GroupDetails Data:", {
-  //   title,
-  //   description,
-  //   groupLeader,
-  //   members,
-  //   category,
-  //   technologies,
-  //   progress,
-  // });
+  const containerVariants = {
+    hidden: { opacity: 0, transition: { staggerChildren: 0.2 } },
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
+  };
 
-  if (!location.state) {
-    return <div className="p-24">No data available</div>;
-  }
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
-    <div className="flex flex-col m-[none] h-auto w-[100%] md:h-[100%] md:overflow-hidden bg-[#F5F5F5]">
+    <motion.div
+      className="flex flex-col m-[none] h-auto w-[100%] md:h-[100%] md:overflow-hidden bg-[#F5F5F5]"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <div className="w-full mt-10">
-        <h1 className="text-5xl font-semibold text-center">
-          {batch || "22ce047"}
-        </h1>
+        <motion.h1
+          className="text-5xl font-semibold text-center"
+          variants={itemVariants}
+        >
+          {batch || (localStorage.getItem("username").toUpperCase())}
+
+        </motion.h1>
       </div>
 
-      <div className="md:flex-1 md:overflow-hidden flex flex-col md:flex-row h-auto md:max-h-[100%] md:py-4 px-5">
-        <div
+      <div className="md:flex-1 md:overflow-hidden flex flex-col md:flex-row h-auto md:max-h-[100vh] md:py-4 px-5">
+        <motion.div
           className="md:flex-1"
           style={{
             left: collapsed ? "3rem" : "11rem",
             transition: "left 0.2s linear",
+            height: 'calc(100vh - someOffset)',
           }}
+          variants={itemVariants}
         >
-          <GroupLeft
-            title={title}
-            description={description}
-            groupLeader={groupLeader}
-            members={members}
-            category={category}
-            technologies={technologies}
-            progress={progress}
-          />
-        </div>
+          <GroupLeft projectName={projectName} />
+        </motion.div>
 
-        <div className="md:flex-1 md:overflow-auto md:max-h-[100%] py-4 no-scrollbar">
+        <motion.div
+          className="md:flex-1 md:overflow-auto md:max-h-[73vh] py-4"
+          variants={itemVariants}
+        >
           <div className="block">
-            <GroupRight members={members} />
+            <GroupRight project={project} />
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

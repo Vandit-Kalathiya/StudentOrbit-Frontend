@@ -11,8 +11,7 @@ import TaskDetail from "./Task/TaskPage/TaskDetail";
 import Project from "../../Progress/Project";
 import GroupDetailsNew from "./Group/GroupDetailsNew";
 
-// eslint-disable-next-line no-unused-vars
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 const initialData = [
   { batch: "A1", sem: "5", id1: "22ce001", id2: "22ce022" },
@@ -23,7 +22,7 @@ const initialData = [
   { batch: "C2", sem: "5", id1: "22ce141", id2: "22ce164" },
 ];
 
-function Sidebar() {
+function Sidebar({ setLoginStatus }) {
   const [collapsed, setCollapsed] = useState(true);
   const [sidebarVisible, setSidebarVisible] = useState(true);
   
@@ -53,7 +52,7 @@ function Sidebar() {
         style={{ position: "fixed", left: 0, bottom: 0, top: 0 }}
       >
         <div className="md:flex flex-col md:h-full">
-          <MenuList className="flex-grow" batchData={batchData} />
+          <MenuList className="flex-grow" batchData={batchData} setLoginStatus={setLoginStatus} />
           <Button
             type="text"
             className="toggle -mt-36 ml-5"
@@ -73,7 +72,7 @@ function Sidebar() {
         }}
       >
         <Content
-          className="transition-margin md:h-full mt-20 overflow-y-auto"
+          className="transition-margin md:h-full mt-20"
           style={{
             marginLeft: collapsed ? "1vw" : "4vw",
             transition: "margin-left 0.3s ease-in-out",
