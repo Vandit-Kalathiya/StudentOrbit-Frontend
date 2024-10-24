@@ -6,14 +6,12 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
 
-const OTPVerification = ({ setLoginStatus }) => {
+const OTPVerification = ({setLoginStatus}) => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [timer, setTimer] = useState(300);
   const [resendVisible, setResendVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
-
-
   const inputRefs = useRef([]);
   const navigate = useNavigate();
 
@@ -24,10 +22,9 @@ const OTPVerification = ({ setLoginStatus }) => {
   const handleChange = (e, index) => {
     const { value } = e.target;
     if (/^[0-9]*$/.test(value)) {
-      let newOtp = [...otp];
+      const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
-
       if (value && index < otp.length - 1) {
         inputRefs.current[index + 1]?.focus();
       }
@@ -42,9 +39,7 @@ const OTPVerification = ({ setLoginStatus }) => {
 
   useEffect(() => {
     if (timer > 0) {
-      const interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
+      const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
       return () => clearInterval(interval);
     } else {
       setResendVisible(true);
@@ -63,67 +58,55 @@ const OTPVerification = ({ setLoginStatus }) => {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  const { username, email, password, isStudent } = location.state || {};
+  const { username, email, password , isStudent} = location.state || {};
 
   const isOtpComplete = otp.every((digit) => digit !== "");
 
-  const handleSubmit = () => {
-    const enteredOtp = otp.join("");
-    console.log("Submitted OTP:", enteredOtp);
-  };
-
   const handleSignup = (e) => {
     // e.preventDefault();
-    console.log(username, " ", password, " ", email, " ", otp.join(""));
+    console.log(username, " ", password, " ", email," ",otp.join(""));
 
     const signUpData = {
       username: username,
       password: password,
       email: email,
     };
-    axios.post("http://localhost:1818/otp/verify", { otp: otp.join(""), email: email }).then((res) => {
+    axios.post("http://localhost:1818/otp/verify",{otp:otp.join(""),email: email}).then((res)=>{
       console.log(res.data);
       axios
-        .post(
-          "http://localhost:1818/auth/" +
+      .post(
+        "http://localhost:1818/auth/" +
           (isStudent ? "student/register" : "faculty/register"),
-          signUpData
-        )
-        .then((response) => {
-          console.log("Signed up successfully:", response.data);
-          const loginData = {
-            username: username,
-            password: password,
-          };
-          axios
-            .post(`http://localhost:1818/auth/login`, { username, password })
-            .then((response) => {
-              const { jwtToken, role } = response.data;
-
-              localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
-              localStorage.setItem("username", username);
-              localStorage.setItem("role", role);
-
+        signUpData
+      )
+      .then((response) => {
+        console.log("Signed up successfully:", response.data);
+        const loginData = {
+          username: username,
+          password: password,
+        };
+        axios
+          .post("http://localhost:1818/auth/login", loginData)
+          .then((response) => {
+            isStudent
+              ? localStorage.setItem("s_jwt", response.data.jwtToken)
+              : localStorage.setItem("f_jwt", response.data.jwtToken),
+              (localStorage.setItem("username", username))
               setLoginStatus(true);
-
-              const redirectPath = role === "student" ? "/s/dashboard" : "/f/dashboard";
-              navigate(redirectPath);
-
-              openNotification('success', 'Login Successful', 'You have successfully logged in!');
-            })
-            .catch((error) => {
-              console.error('Login error:', error);
-              openNotification('error', 'Login Failed', 'Invalid username or password. Please try again.');
-            });
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 500) {
-            setErrorMessage("Student already exits with given Id..!");
-          } else {
-            console.error("There was an error signing up:", error);
-            setErrorMessage("An error occurred during signup. Please try again.");
-          }
-        });
+            isStudent ? navigate("/s/dashboard") : navigate("/f/dashboard");
+          })
+          .catch((error) => {
+            console.error("There was an error logging in:", error);
+          });
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 500) {
+          setErrorMessage("Student already exits with given Id..!");
+        } else {
+          console.error("There was an error signing up:", error);
+          setErrorMessage("An error occurred during signup. Please try again.");
+        }
+      });
     })
   };
 
@@ -136,14 +119,8 @@ const OTPVerification = ({ setLoginStatus }) => {
           className="w-[65.8%] h-auto md:w-[50%] md:h-[50%] object-cover"
         />
       </div>
-
       <div className="right w-full md:w-[30%] bg-[#4457e9] pt-10 mt-10 flex items-center pb-9">
-        <div
-          className="
-    bg-white p-6 mx-2 rounded-2xl border-[1px] border-black text-center w-full max-w-md mx-auto 
-    md:p-8 md:w-auto md:max-w-none md:absolute md:top-1/2 md:left-1/2 md:transform md:translate-x-1/3 md:-translate-y-1/2
-  "
-        >
+        <div className="bg-white p-6 mx-2 rounded-2xl border-[1px] border-black text-center w-full max-w-md mx-auto md:p-8 md:w-auto md:max-w-none md:absolute md:top-1/2 md:left-1/2 md:transform md:translate-x-1/3 md:-translate-y-1/2">
           <h2 className="text-3xl mb-4">Email Verification</h2>
           <p className="mb-4">OTP sent to your registered email ID</p>
           <div className="flex justify-center mb-6">
@@ -162,9 +139,7 @@ const OTPVerification = ({ setLoginStatus }) => {
           </div>
           {timer > 0 ? (
             <div className="flex items-center justify-center">
-              <GiAlarmClock
-                style={{ fontSize: "1.2rem", marginRight: "0.5rem" }}
-              />
+              <GiAlarmClock style={{ fontSize: "1.2rem", marginRight: "0.5rem" }} />
               <p>{formatTime(timer)}</p>
             </div>
           ) : (
@@ -177,10 +152,11 @@ const OTPVerification = ({ setLoginStatus }) => {
           >
             Verify OTP
           </Button>
-          Don't receive the code ?
+          <p>Don't receive the code?</p>
           <Button onClick={resendOtp} type="link" className="underline">
             Resend OTP
           </Button>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </div>
       </div>
     </div>

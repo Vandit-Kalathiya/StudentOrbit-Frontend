@@ -4,25 +4,32 @@ import Home from "./components/Home";
 import Contact from "./components/Contact";
 import Login from "./components/Auth/Login.jsx";
 import Signup from "./components/Auth/Signup.jsx";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Dashboard from "./Faculty/Dashboard";
 import DashboardS from "./Students/Dashboard";
 import OTPVerification from "./components/Auth/OTPVerification";
 import { useEffect, useState } from "react";
-import Lenis from '@studio-freight/lenis';
+import Lenis from "@studio-freight/lenis";
 import Loader from "./components/Loader.jsx";
 import NotFound from "./components/NotFound.jsx";
 
 function App() {
-  const userRole = localStorage.getItem("role");
-  const [isLoggedIn, setIsLoggedIn] = useState(userRole !== null);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("role") != null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 0.8,
-      easing: (t) => t,
+      duration: 0.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smooth: true,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      wheelMultiplier: 1.2,
     });
 
     const raf = (time) => {
@@ -31,7 +38,6 @@ function App() {
     };
 
     requestAnimationFrame(raf);
-
     return () => {
       lenis.destroy();
     };
@@ -51,6 +57,15 @@ function App() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log('app executed..');
+    const role = localStorage.getItem("role");
+    if (role) {
+      setIsLoggedIn(true);
+    }
+
+  }, [isLoggedIn])
+
   if (loading) {
     return <Loader />;
   }
@@ -63,7 +78,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/otp/verify" element={<OTPVerification setLoginStatus={setIsLoggedIn} />} />
+        {/* <Route path="/otp/verify" element={<OTPVerification setLoginStatus={setIsLoggedIn} />} /> */}
         <Route path="/*" element={<NotFound />} />
 
         <Route

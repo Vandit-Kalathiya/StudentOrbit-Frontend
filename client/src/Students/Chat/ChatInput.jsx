@@ -6,7 +6,7 @@ const ChatInput = ({ inputMessage, setInputMessage, sendMessage }) => {
       <div className="flex">
         <input
           type="text"
-          className="flex-grow p-2 border rounded-md focus:border-[#5B6DF3] focus:outline-none transition duration-300" // Add focus styles here
+          className="flex-grow p-2 border rounded-md focus:border-[#5B6DF3] focus:outline-none transition duration-300"
           placeholder="Type your message..."
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}

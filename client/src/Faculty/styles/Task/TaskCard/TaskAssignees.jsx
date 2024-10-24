@@ -5,20 +5,28 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 const { Option } = Select;
-const colorStyles = {
-  coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" },
-  blue: { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }
-};
 
-const TaskAssignees = ({ status, assignees, updateAssignees, members, taskId }) => {
+const colorCombinations = [
+  { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
+  { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
+  { backgroundColor: "#f6ffed", color: "#237804", border: "#237804" }, // Green
+  { backgroundColor: "#f9f0ff", color: "#531dab", border: "#531dab" }, // Purple
+];
+
+const TaskAssignees = ({
+  status,
+  assignees,
+  updateAssignees,
+  members,
+  taskId,
+}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedAssignees, setSelectedAssignees] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [assigneeMembers, setAssigneeMembers] = useState(assignees);
   const location = useLocation();
 
-  useEffect(()=>{
-  },[assigneeMembers])
+  useEffect(() => {}, [assigneeMembers]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -33,7 +41,7 @@ const TaskAssignees = ({ status, assignees, updateAssignees, members, taskId }) 
   };
 
   const handleFormSubmit = (values) => {
-    setSelectedAssignees(values.assignees); 
+    setSelectedAssignees(values.assignees);
     setIsModalVisible(false);
     handleAssign(values.assignees);
   };
@@ -48,12 +56,12 @@ const TaskAssignees = ({ status, assignees, updateAssignees, members, taskId }) 
 
   const handleAssign = (assigneeIds) => {
     console.log(assigneeIds);
-    
+
     axios
       .post(`http://localhost:1818/tasks/${taskId}`, assigneeIds)
       .then((res) => {
         console.log(res.data);
-        setAssigneeMembers(res.data.assignee)
+        setAssigneeMembers(res.data.assignee);
       })
       .catch((error) => {
         console.error("There was an error while assigning assignees: ", error);
@@ -68,26 +76,31 @@ const TaskAssignees = ({ status, assignees, updateAssignees, members, taskId }) 
         <Avatar.Group>
           {assigneeMembers.map((assignee, index) => {
             const validAssignee = members.find((a) => a.id === assignee.id);
-            const colorKey = index % 2 === 0 ? 'blue' : 'coral';
-            const { backgroundColor, color, border } = colorStyles[colorKey];
-            
+            const color = colorCombinations[index % colorCombinations.length];
+
             return assignee ? (
               <Avatar
                 key={assignee.id}
-                style={{ backgroundColor, color, border: `2px solid ${border}` }}
+                style={{
+                  backgroundColor: color.backgroundColor,
+                  color: color.color,
+                  border: `2px solid ${color.border}`,
+                }}
               >
-                {assignee.username.substring(4,7).toUpperCase()}
+                {assignee.username.substring(4, 7).toUpperCase()}
               </Avatar>
             ) : null;
           })}
         </Avatar.Group>
-        {status !== "COMPLETED" && status !== "IN_REVIEW" && !isInFDashboard && (
-          <Button
-            icon={<PlusOutlined />}
-            className="ml-2 rounded-full"
-            onClick={showModal}
-          />
-        )}
+        {status !== "COMPLETED" &&
+          status !== "IN_REVIEW" &&
+          !isInFDashboard && (
+            <Button
+              icon={<PlusOutlined />}
+              className="ml-2 rounded-full"
+              onClick={showModal}
+            />
+          )}
       </div>
 
       <Modal
@@ -101,7 +114,12 @@ const TaskAssignees = ({ status, assignees, updateAssignees, members, taskId }) 
           <Form.Item
             name="assignees"
             label="Select Assignees"
-            rules={[{ required: true, message: "Please select at least one assignee!" }]}
+            rules={[
+              {
+                required: true,
+                message: "Please select at least one assignee!",
+              },
+            ]}
           >
             <Select
               mode="multiple"

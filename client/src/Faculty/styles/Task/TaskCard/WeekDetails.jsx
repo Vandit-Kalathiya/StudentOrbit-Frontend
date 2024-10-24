@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Row, Col } from 'antd';
-import TaskList from './TaskList';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Row, Col } from "antd";
+import TaskList from "./TaskList";
+import axios from "axios";
 
 const ToDoPage = () => {
   const [tasks, setTasks] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const { projectName, week } = useParams();
-  const [members, setMebers] = useState([])
+  const [members, setMembers] = useState([]);
 
   const currentWeek = week.charAt(4);
   console.log(projectName, currentWeek);
@@ -19,16 +19,14 @@ const ToDoPage = () => {
       .get(`http://localhost:1818/faculty/groups/g/${projectName}`)
       .then((res) => {
         let demo = res.data;
-        setProjectData(demo)
-        // console.log(demo.students)
-        setMebers(demo.students)
+        setProjectData(demo);
+        setMembers(demo.students);
         demo = demo.weeks.sort((a, b) => a.weekNumber - b.weekNumber);
         setTasks(demo[currentWeek - 1].tasks);
       })
       .catch((error) => {
         console.error("There was an error while getting all tasks: ", error);
       });
-
   };
   // console.log(members);
 
@@ -38,12 +36,14 @@ const ToDoPage = () => {
 
   console.log(tasks);
 
-  const updateTaskStatus = (id, newStatus, assignees, comment = "") => {
+  const updateTaskStatus = (id, newStatus, assignees) => {
     console.log(assignees);
 
-    if (newStatus === 'IN_PROGRESS' && assignees.length > 0) {
-      changeStatus(id, newStatus);
-    } else alert("Please assign at least one user to the task before moving it to review.");
+    if (assignees.length === 0) {
+      alert(
+        "Please assign at least one user to the task before moving it to progress."
+      );
+    } else changeStatus(id, newStatus);
   };
 
   // Function to change task status
@@ -67,27 +67,53 @@ const ToDoPage = () => {
     );
   };
 
-  const weekNumber = currentWeek.replace(currentWeek, 'Week ' + currentWeek);
+  const weekNumber = currentWeek.replace(currentWeek, "Week " + currentWeek);
 
   return (
-    <div className='md:p-4 py-4 m-3'>
-      <h1 className='md:text-5xl text-3xl text-center md:my-2 my-5 font-semibold'>{weekNumber}</h1>
+    <div className="md:p-4 py-4 m-3">
+      <h1 className="md:text-5xl text-3xl text-center md:my-2 my-5 font-semibold">
+        {weekNumber}
+      </h1>
       <Row gutter={16}>
         <Col span={24}>
-          <h3 className='text-xl mb-4 font-semibold'>To-do Tasks</h3>
-          <TaskList tasks={tasks} status='TO_DO' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
+          <h3 className="text-xl mb-4 font-semibold">To-do Tasks</h3>
+          <TaskList
+            tasks={tasks}
+            status="TO_DO"
+            updateTaskStatus={updateTaskStatus}
+            updateAssignees={updateAssignees}
+            members={members}
+          />
         </Col>
         <Col span={24}>
-          <h3 className='text-xl mb-4 font-semibold'>In Progress Tasks</h3>
-          <TaskList tasks={tasks} status='IN_PROGRESS' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
+          <h3 className="text-xl mb-4 font-semibold">In Progress Tasks</h3>
+          <TaskList
+            tasks={tasks}
+            status="IN_PROGRESS"
+            updateTaskStatus={updateTaskStatus}
+            updateAssignees={updateAssignees}
+            members={members}
+          />
         </Col>
         <Col span={24}>
-          <h3 className='text-xl mb-4 font-semibold'>In Review Tasks</h3>
-          <TaskList tasks={tasks} status='IN_REVIEW' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
+          <h3 className="text-xl mb-4 font-semibold">In Review Tasks</h3>
+          <TaskList
+            tasks={tasks}
+            status="IN_REVIEW"
+            updateTaskStatus={updateTaskStatus}
+            updateAssignees={updateAssignees}
+            members={members}
+          />
         </Col>
         <Col span={24}>
-          <h3 className='text-xl mb-4 font-semibold'>Completed Tasks</h3>
-          <TaskList tasks={tasks} status='COMPLETED' updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
+          <h3 className="text-xl mb-4 font-semibold">Completed Tasks</h3>
+          <TaskList
+            tasks={tasks}
+            status="COMPLETED"
+            updateTaskStatus={updateTaskStatus}
+            updateAssignees={updateAssignees}
+            members={members}
+          />
         </Col>
       </Row>
     </div>

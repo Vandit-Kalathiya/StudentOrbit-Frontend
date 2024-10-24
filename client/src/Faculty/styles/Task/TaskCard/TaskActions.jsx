@@ -9,7 +9,7 @@ const TaskActions = ({
   showModal,
   updateTaskStatus,
   taskId,
-  assignees 
+  assignees
 }) => {
   const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
   const [comment, setComment] = useState("");
@@ -27,21 +27,15 @@ const TaskActions = ({
     axios
       .get(`http://localhost:1818/tasks/assignees/${taskId}`)
       .then((res) => {
-        // console.log(res.data);
         setAssigneeMembers(res.data)
       })
       .catch((error) => {
         console.error("There was an error while assigning assignees: ", error);
       });
-    // setAssigneeMembers(assignees);
   }, []);
 
   useEffect(()=>{
-    // console.log(assigneeMembers);
-    
   },[assigneeMembers])
-
-  // console.log(assigneeMembers);
 
   const handleMoveToInProgress = () => {
     setIsCommentModalVisible(true);
@@ -49,7 +43,7 @@ const TaskActions = ({
 
   const handleOk = () => {
     setIsCommentModalVisible(false);
-    updateTaskStatus(taskId, "IN_PROGRESS", assigneeMembers, comment);
+    updateTaskStatus(taskId, "IN_PROGRESS", assigneeMembers);
     addComment(comment);
     setComment("");
   };
@@ -81,16 +75,10 @@ const TaskActions = ({
     if (file) {
       formData.append("file", file);
     }
-
     updateTaskStatus(taskId, "IN_REVIEW",assigneeMembers, formData);
     setReviewLink("");
     setFile(null);
   };
-
-  // const handleCancelComment = () => {
-  //   setIsCommentModalVisible(false);
-  //   setComment("");
-  // };
 
   const handleCancelLink = () => {
     setIsLinkModalVisible(false);
