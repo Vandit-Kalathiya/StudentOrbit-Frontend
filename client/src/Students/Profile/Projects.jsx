@@ -1,22 +1,45 @@
-const projects = [
-  {
-    title: 'AI-Based Chatbot',
-    description: 'A chatbot that uses machine learning to assist users with common questions.',
-    semester: '3',
-  },
-  {
-    title: 'E-commerce Website',
-    description: 'A fully responsive e-commerce website with payment gateway integration.',
-    semester: '4',
-  },
-  {
-    title: 'Mobile Health App',
-    description: 'A mobile application that helps track daily health metrics for users.',
-    semester: '5',
-  },
-];
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+// const projects = [
+//   {
+//     title: 'AI-Based Chatbot',
+//     description: 'A chatbot that uses machine learning to assist users with common questions.',
+//     semester: '3',
+//   },
+//   {
+//     title: 'E-commerce Website',
+//     description: 'A fully responsive e-commerce website with payment gateway integration.',
+//     semester: '4',
+//   },
+//   {
+//     title: 'Mobile Health App',
+//     description: 'A mobile application that helps track daily health metrics for users.',
+//     semester: '5',
+//   },
+// ];
 
 function Projects() {
+
+    const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const username = localStorage.getItem("username")
+    // console.log(username);
+    
+    axios.get(`http://localhost:1818/students/g/${username}`)
+    .then((res) => {
+      const demo = res.data;
+      setProjects(demo);
+      // console.log(res.data);
+    })
+    .catch((error) => console.log("Error while fetching projects in profile")
+    );
+
+  }, [])
+
+  // console.log(projects);
+  
   return (
     <div className="projects p-5 bg-white rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Projects</h1>
@@ -26,9 +49,9 @@ function Projects() {
             key={index}
             className="project-card p-4 border-[1px] border-[#8694ff] rounded-lg shadow-md"
           >
-            <h2 className="text-lg font-semibold mb-2">{project.title}</h2>
-            <p className="text-sm text-gray-700 mb-3">{project.description}</p>
-            <p className="text-sm text-gray-500">Semester: {project.semester}</p>
+            <h2 className="text-lg font-semibold mb-2">{project.groupName}</h2>
+            <p className="text-sm text-gray-700 mb-3">{project.groupDescription   }</p>
+            <p className="text-sm text-gray-500">Semester: {project.batchName.substring(0, 1)}</p>
           </div>
         ))}
       </div>

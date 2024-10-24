@@ -12,7 +12,6 @@ const mentors = [
     semester: "4",
     imageUrl: "https://via.placeholder.com/150",
   },
-  // Add more mentors as needed
 ];
 
 function Mentors() {

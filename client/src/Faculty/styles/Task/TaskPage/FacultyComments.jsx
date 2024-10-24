@@ -122,6 +122,9 @@ const FacultyComments = ({taskId}) => {
                   </Button>
                 </Popconfirm>
               </Space>
+              <div className="absolute bottom-2 right-2 text-xs text-gray-500">
+                {comment.time.substring(0, 5)}
+              </div>
             </Card>
           ))}
         </div>

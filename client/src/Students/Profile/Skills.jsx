@@ -1,5 +1,6 @@
 import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
   FaReact,
   FaNodeJs,
@@ -7,12 +8,12 @@ import {
   FaHtml5,
   FaCss3Alt,
   FaJs,
-} from "react-icons/fa"; // Importing some icons
+} from "react-icons/fa"; 
 
 function Skills() {
-  const [skills, setSkills] = useState("");
+  const [skills, setSkills] = useState([]);
   const [skillList, setSkillList] = useState([]);
-  const [showModal, setShowModal] = useState(false); // Modal state
+  const [showModal, setShowModal] = useState(false);
 
   const skillIcons = {
     react: <FaReact className="text-blue-500" />,
@@ -24,33 +25,53 @@ function Skills() {
   };
 
   const addSkill = () => {
-    if (skills.trim() !== "") {
-      setSkillList([...skillList, skills.trim().toLowerCase()]);
-      setSkills("");
+    const username = localStorage.getItem("username")
+    let t = []
+    t.push(skillList)
+    axios.post(`http://localhost:1818/students/skills/${username}`, t)
+    .then((res) => {
+      const demo = res.data;
+      setSkills(demo.skills)
       setShowModal(false);
-    }
+      setSkillList([]);
+    })
+    .catch((error) => console.log("Error while fetching projects in profile")
+    );
   };
 
+
+  useEffect(() => {
+    const username = localStorage.getItem("username")
+
+    axios.get(`http://localhost:1818/students/skills/${username}`)
+    .then((res) => {
+      const demo = res.data;
+      setSkills(demo);
+    })
+    .catch((error) => console.log("Error while fetching projects in profile")
+    );
+  }, []) 
+  
   const removeSkill = (skillToRemove) => {
-    setSkillList(skillList.filter((skill) => skill !== skillToRemove));
+    setSkillList(skills.filter((skill) => skill !== skillToRemove));
   };
 
   return (
     <div className="skills p-5 bg-white rounded-lg">
       <h2 className="text-xl font-bold mb-4">My Skills</h2>
       <div className="mt-5 flex flex-wrap gap-2">
-        {skillList.map((skill, index) => (
+        {skills.map((skill, index) => (
           <div
             key={index}
             className="relative flex items-center space-x-2 bg-white px-3 py-1 rounded-lg border-[1px] border-[#8694ff] flex-shrink-0"
           >
-            {skillIcons[skill] ? (
-              skillIcons[skill]
+            {skillIcons[skill.name] ? (
+              skillIcons[skill.name]
             ) : (
               <FaJs className="text-gray-400" />
             )}
             <span className="text-lg font-medium flex-1 text-center">
-              {skill.charAt(0).toUpperCase() + skill.slice(1)}
+              {skill.name.charAt(0).toUpperCase() + skill.name.slice(1)}
             </span>
             <CloseOutlined
               onClick={() => removeSkill(skill)}
@@ -73,8 +94,8 @@ function Skills() {
             <h2 className="text-xl font-bold mb-4">Add a New Skill</h2>
             <input
               type="text"
-              value={skills}
-              onChange={(e) => setSkills(e.target.value)}
+              value={skillList}
+              onChange={(e) => setSkillList(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") addSkill();
               }}

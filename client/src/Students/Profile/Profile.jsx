@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Modal, Button, Input } from 'antd'; // Import Ant Design components
+import { Modal, Button, Input } from 'antd'; 
 import ProfileImage from './ProfileImage';
 import ProfileDetails from './ProfileDetails';
 import ContactInfo from './ContactInfo';
@@ -57,9 +57,8 @@ function Profile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Logic to save profileData
     console.log('Updated Profile Data:', profileData);
-    setIsModalOpen(false); // Close modal after submission
+    setIsModalOpen(false); 
   };
 
   return (
@@ -79,10 +78,9 @@ function Profile() {
           <div className="divider"></div>
           <ContactInfo />
           <div className="divider"></div>
-          <SocialLinks />
+          <SocialLinks /> 
         </motion.div>
 
-        {/* Edit Button */}
         <button 
           className="absolute top-4 right-4 bg-[#5B6DF3] text-white p-2 rounded-md flex items-center"
           onClick={handleEditClick}
@@ -91,7 +89,6 @@ function Profile() {
         </button>
       </div>
 
-      {/* Ant Design Modal for Editing Profile */}
       <Modal 
         title="Edit Profile" 
         open={isModalOpen} 

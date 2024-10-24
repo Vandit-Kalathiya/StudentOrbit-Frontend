@@ -11,7 +11,7 @@ const ToDoPage = () => {
   const [members, setMembers] = useState([]);
 
   const currentWeek = week.charAt(4);
-  console.log(projectName, currentWeek);
+  // console.log(projectName, currentWeek);
 
   // Reusable function to fetch tasks
   const fetchTasks = () => {
@@ -34,7 +34,7 @@ const ToDoPage = () => {
     fetchTasks(); // Fetch tasks on component mount and when projectName or week changes
   }, [projectName, week]);
 
-  console.log(tasks);
+  // console.log(tasks);
 
   const updateTaskStatus = (id, newStatus, assignees) => {
     console.log(assignees);
