@@ -29,7 +29,7 @@ const TaskCard = ({ task, updateTaskStatus, members }) => {
   };
 
   const handleOk = () => {
-    updateTaskStatus(task.id, "COMPLETED");
+    updateTaskStatus(task.id, "COMPLETED", currentAssignees);
     setIsModalVisible(false);
   };
 
@@ -67,7 +67,6 @@ const TaskCard = ({ task, updateTaskStatus, members }) => {
       <TaskAssignees
         status={task.status}
         assignees={currentAssignees}
-        updateAssignees={handleAssigneesChange}
         members={members}
         taskId={task.id}
       />

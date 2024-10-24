@@ -5,8 +5,7 @@ import verification from "../../assets/verification.jpg";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
-
-const OTPVerification = ({setLoginStatus}) => {
+const OTPVerification = ({ setLoginStatus }) => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [timer, setTimer] = useState(300);
   const [resendVisible, setResendVisible] = useState(false);
@@ -58,56 +57,42 @@ const OTPVerification = ({setLoginStatus}) => {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  const { username, email, password , isStudent} = location.state || {};
-
+  const { username, email, password, isStudent } = location.state || {};
   const isOtpComplete = otp.every((digit) => digit !== "");
 
   const handleSignup = (e) => {
-    // e.preventDefault();
-    console.log(username, " ", password, " ", email," ",otp.join(""));
+    console.log(username, " ", password, " ", email, " ", otp.join(""));
+    const signUpData = { username, password, email };
 
-    const signUpData = {
-      username: username,
-      password: password,
-      email: email,
-    };
-    axios.post("http://localhost:1818/otp/verify",{otp:otp.join(""),email: email}).then((res)=>{
-      console.log(res.data);
-      axios
-      .post(
-        "http://localhost:1818/auth/" +
-          (isStudent ? "student/register" : "faculty/register"),
-        signUpData
-      )
+    axios
+      .post("http://localhost:1818/otp/verify", { otp: otp.join(""), email })
+      .then((res) => {
+        console.log(res.data);
+        return axios.post(
+          "http://localhost:1818/auth/" + (isStudent ? "student/register" : "faculty/register"),
+          signUpData
+        );
+      })
       .then((response) => {
         console.log("Signed up successfully:", response.data);
-        const loginData = {
-          username: username,
-          password: password,
-        };
-        axios
-          .post("http://localhost:1818/auth/login", loginData)
-          .then((response) => {
-            isStudent
-              ? localStorage.setItem("s_jwt", response.data.jwtToken)
-              : localStorage.setItem("f_jwt", response.data.jwtToken),
-              (localStorage.setItem("username", username))
-              setLoginStatus(true);
-            isStudent ? navigate("/s/dashboard") : navigate("/f/dashboard");
-          })
-          .catch((error) => {
-            console.error("There was an error logging in:", error);
-          });
+        return axios.post("http://localhost:1818/auth/login", { username, password });
+      })
+      .then((response) => {
+        const { jwtToken, role } = response.data;
+        localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
+        localStorage.setItem("username", username);
+        localStorage.setItem("role", role);
+        setLoginStatus(true);
+        navigate(isStudent ? "/s/dashboard" : "/f/dashboard");
       })
       .catch((error) => {
         if (error.response && error.response.status === 500) {
-          setErrorMessage("Student already exits with given Id..!");
+          setErrorMessage("Student already exists with given ID..!");
         } else {
           console.error("There was an error signing up:", error);
           setErrorMessage("An error occurred during signup. Please try again.");
         }
       });
-    })
   };
 
   return (

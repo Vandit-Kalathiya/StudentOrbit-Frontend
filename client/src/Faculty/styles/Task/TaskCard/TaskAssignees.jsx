@@ -16,7 +16,6 @@ const colorCombinations = [
 const TaskAssignees = ({
   status,
   assignees,
-  updateAssignees,
   members,
   taskId,
 }) => {

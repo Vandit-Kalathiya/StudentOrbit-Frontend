@@ -32,10 +32,7 @@ const TaskActions = ({
       .catch((error) => {
         console.error("There was an error while assigning assignees: ", error);
       });
-  }, []);
-
-  useEffect(()=>{
-  },[assigneeMembers])
+  }, [assigneeMembers]);
 
   const handleMoveToInProgress = () => {
     setIsCommentModalVisible(true);
@@ -55,7 +52,6 @@ const TaskActions = ({
       "taskId": taskId
     }
     axios.post('http://localhost:1818/comment/add', commentRequest).then((res) => {
-      console.log(res.data);
     })
   }
 

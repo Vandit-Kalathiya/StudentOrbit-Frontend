@@ -19,7 +19,9 @@ import Loader from "./components/Loader.jsx";
 import NotFound from "./components/NotFound.jsx";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("role") != null);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("role") != null
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -58,18 +60,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log('app executed..');
     const role = localStorage.getItem("role");
     if (role) {
       setIsLoggedIn(true);
     }
-
-  }, [isLoggedIn])
+  }, [localStorage.getItem("role")]);
 
   if (loading) {
     return <Loader />;
   }
 
+  let userRole = localStorage.getItem("role");
 
   return (
     <Router>
@@ -78,7 +79,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        {/* <Route path="/otp/verify" element={<OTPVerification setLoginStatus={setIsLoggedIn} />} /> */}
         <Route path="/*" element={<NotFound />} />
 
         <Route
