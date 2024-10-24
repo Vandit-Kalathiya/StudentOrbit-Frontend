@@ -10,10 +10,10 @@ import {
   FaJs,
 } from "react-icons/fa"; 
 
-function Skills() {
-  const [skills, setSkills] = useState([]);
-  const [skillList, setSkillList] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill }) {
+  // const [skills, setSkills] = useState([]);
+  // const [skillList, setSkillList] = useState([]);
+  // const [showModal, setShowModal] = useState(false);
 
   const skillIcons = {
     react: <FaReact className="text-blue-500" />,
@@ -23,38 +23,39 @@ function Skills() {
     css: <FaCss3Alt className="text-blue-500" />,
     javascript: <FaJs className="text-yellow-500" />,
   };
-
-  const addSkill = () => {
-    const username = localStorage.getItem("username")
-    let t = []
-    t.push(skillList)
-    axios.post(`http://localhost:1818/students/skills/${username}`, t)
-    .then((res) => {
-      const demo = res.data;
-      setSkills(demo.skills)
-      setShowModal(false);
-      setSkillList([]);
-    })
-    .catch((error) => console.log("Error while fetching projects in profile")
-    );
-  };
-
+  
+  let t = []
+  useEffect(() => {
+    if (newSkill) {
+      const username = localStorage.getItem("username");
+      t.push(newSkill)
+      axios.post(`http://localhost:1818/students/skills/${username}`, t)
+        .then((res) => {
+          setSkills(res.data.skills); 
+        })
+        .catch(() => console.log("Error while adding skill"));
+    }
+  }, [t]);  
 
   useEffect(() => {
     const username = localStorage.getItem("username")
-
     axios.get(`http://localhost:1818/students/skills/${username}`)
     .then((res) => {
       const demo = res.data;
       setSkills(demo);
     })
-    .catch((error) => console.log("Error while fetching projects in profile")
+    .catch(() => console.log("Error while fetching projects in profile")
     );
   }, []) 
   
-  const removeSkill = (skillToRemove) => {
-    setSkillList(skills.filter((skill) => skill !== skillToRemove));
-  };
+  // const removeSkill = (skillToRemove) => {
+  //   const username = localStorage.getItem("username");
+  //   axios.delete(`http://localhost:1818/students/skills/${username}/${skillToRemove}`)
+  //     .then((res) => {
+  //       setSkills(res.data.skills); 
+  //     })
+  //     .catch(() => console.log("Error while removing skill"));
+  // };
 
   return (
     <div className="skills p-5 bg-white rounded-lg">
@@ -74,7 +75,7 @@ function Skills() {
               {skill.name.charAt(0).toUpperCase() + skill.name.slice(1)}
             </span>
             <CloseOutlined
-              onClick={() => removeSkill(skill)}
+              // onClick={() => removeSkill(skill)}
               className="p-1 text-gray-500 cursor-pointer hover:text-gray-800"
             />
           </div>
@@ -82,43 +83,11 @@ function Skills() {
 
         <div
           className="flex items-center justify-center p-3 cursor-pointer"
-          onClick={() => setShowModal(true)}
+          onClick={openAddSkillModal} 
         >
           <PlusOutlined className="text-2xl rounded-full border-2 p-2" />
         </div>
       </div>
-
-      {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-5 rounded-lg shadow-lg w-[90%] md:w-[400px]">
-            <h2 className="text-xl font-bold mb-4">Add a New Skill</h2>
-            <input
-              type="text"
-              value={skillList}
-              onChange={(e) => setSkillList(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") addSkill();
-              }}
-              className="border border-gray-400 p-2 rounded-lg w-full mb-4"
-              placeholder="Enter a skill (e.g., React, Node, Python)"
-            />
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-gray-400 text-white p-2 rounded-lg mr-3"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={addSkill}
-                className="bg-blue-600 text-white p-2 rounded-lg"
-              >
-                Add Skill
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,13 +1,13 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { Modal, Button, Input } from 'antd'; 
-import ProfileImage from './ProfileImage';
-import ProfileDetails from './ProfileDetails';
-import ContactInfo from './ContactInfo';
-import SocialLinks from './SocialLinks';
-import Skills from './Skills';
-import Mentors from './Mentors';
-import Projects from './Projects';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { Modal, Button, Input } from "antd";
+import ProfileImage from "./ProfileImage";
+import ProfileDetails from "./ProfileDetails";
+import ContactInfo from "./ContactInfo";
+import SocialLinks from "./SocialLinks";
+import Skills from "./Skills";
+import Mentors from "./Mentors";
+import Projects from "./Projects";
 import { MdOutlineEdit } from "react-icons/md";
 
 const containerVariants = {
@@ -28,12 +28,23 @@ const sectionVariants = {
 };
 
 function Profile() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState(null);
   const [profileData, setProfileData] = useState({
-    profileImage: '',
-    github: '',
-    linkedin: '',
+    profileImage: "",
+    github: "",
+    linkedin: "",
   });
+  const [newSkill, setNewSkill] = useState("");
+  const [skills, setSkills] = useState([]);
+
+  const handleModalOpen = (type) => {
+    setModalType(type);
+  };
+
+  const handleModalClose = () => {
+    setModalType(null);
+    setNewSkill("");
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,18 +63,24 @@ function Profile() {
   };
 
   const handleEditClick = () => {
-    setIsModalOpen(true);
+    handleModalOpen("profileEdit");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmitProfile = (e) => {
     e.preventDefault();
-    console.log('Updated Profile Data:', profileData);
-    setIsModalOpen(false); 
+    console.log("Updated Profile Data:", profileData);
+    handleModalClose();
+  };
+
+  const handleAddSkill = () => {
+    console.log("New Skill:", newSkill);
+    setNewSkill("");
+    handleModalClose();
   };
 
   return (
     <motion.div
-      className='mt-10 px-8 md:mt-8 md:px-8'
+      className="mt-10 px-8 md:mt-8 md:px-8"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -78,33 +95,39 @@ function Profile() {
           <div className="divider"></div>
           <ContactInfo />
           <div className="divider"></div>
-          <SocialLinks /> 
+          <SocialLinks />
         </motion.div>
 
-        <button 
+        <button
           className="absolute top-4 right-4 bg-[#5B6DF3] text-white p-2 rounded-md flex items-center"
           onClick={handleEditClick}
         >
-          <MdOutlineEdit size={16}/>
+          <MdOutlineEdit size={16} />
         </button>
       </div>
 
-      <Modal 
-        title="Edit Profile" 
-        open={isModalOpen} 
-        onCancel={() => setIsModalOpen(false)} 
+      <Modal
+        title="Edit Profile"
+        open={modalType === "profileEdit"} // Open modal if type matches
+        onCancel={handleModalClose}
         footer={[
-          <Button key="submit" className='bg-[#5B6DF3] text-white' onClick={handleSubmit}>
+          <Button
+            key="submit"
+            className="bg-[#5B6DF3] text-white"
+            onClick={handleSubmitProfile}
+          >
             Update Profile
           </Button>,
-          <Button key="cancel" onClick={() => setIsModalOpen(false)}>
+          <Button key="cancel" onClick={handleModalClose}>
             Cancel
           </Button>,
         ]}
       >
-        <form onSubmit={handleSubmit} className="mb-4">
+        <form onSubmit={handleSubmitProfile} className="mb-4">
           <div className="mb-3">
-            <label className="block text-gray-700" htmlFor="profileImage">Profile Image:</label>
+            <label className="block text-gray-700" htmlFor="profileImage">
+              Profile Image:
+            </label>
             <input
               type="file"
               accept="image/*"
@@ -114,7 +137,9 @@ function Profile() {
             />
           </div>
           <div className="mb-3">
-            <label className="block text-gray-700" htmlFor="github">GitHub Profile URL:</label>
+            <label className="block text-gray-700" htmlFor="github">
+              GitHub Profile URL:
+            </label>
             <Input
               name="github"
               value={profileData.github}
@@ -124,7 +149,9 @@ function Profile() {
             />
           </div>
           <div className="mb-3">
-            <label className="block text-gray-700" htmlFor="linkedin">LinkedIn Profile URL:</label>
+            <label className="block text-gray-700" htmlFor="linkedin">
+              LinkedIn Profile URL:
+            </label>
             <Input
               name="linkedin"
               value={profileData.linkedin}
@@ -136,17 +163,46 @@ function Profile() {
         </form>
       </Modal>
 
-      <div className="flex md:flex-row flex-col mt-5 md:mt-0 mb-5 w-full justify-between gap-7 rounded-xl">
-        <motion.div variants={sectionVariants}>
+      <div className="flex md:flex-row flex-col mt-5 md:mt-0 mb-5 w-full justify-between gap-7">
+        <motion.div className="left md:w-[66%]" variants={sectionVariants}>
           <Projects />
         </motion.div>
         <motion.div className="right md:w-[33%]" variants={sectionVariants}>
-          <Skills />
+          <Skills
+            openAddSkillModal={() => handleModalOpen("addSkill")}
+            newSkill={newSkill}
+            setNewSkill={setNewSkill}
+            skills={skills}
+            setSkills={setSkills}
+          />
           <Mentors />
         </motion.div>
       </div>
+
+      <Modal
+        title="Add a New Skill"
+        open={modalType === "addSkill"}
+        onCancel={handleModalClose}
+        footer={[
+          <Button
+            key="submit"
+            className="bg-[#5B6DF3] text-white"
+            onClick={handleAddSkill}
+          >
+            Add Skill
+          </Button>,
+          <Button key="cancel" onClick={handleModalClose}>
+            Cancel
+          </Button>,
+        ]}
+      >
+        <Input
+          value={newSkill}
+          onChange={(e) => setNewSkill(e.target.value)}
+          placeholder="Enter a skill (e.g., React, Node, Python)"
+        />
+      </Modal>
     </motion.div>
   );
 }
-
 export default Profile;
