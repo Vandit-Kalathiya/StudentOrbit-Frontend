@@ -10,7 +10,7 @@ import TaskCompletionModal from "./TaskCompletionModal";
 const TaskCard = ({ task, updateTaskStatus, updateAssignees, members }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentAssignees, setCurrentAssignees] = useState(task.assignee);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const location = useLocation();
   const { batch, projectName, week } = useParams();
 

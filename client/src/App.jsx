@@ -14,7 +14,8 @@ import Loader from "./components/Loader.jsx";
 import NotFound from "./components/NotFound.jsx";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("role") != null);
+  const userRole = localStorage.getItem("role");
+  const [isLoggedIn, setIsLoggedIn] = useState(userRole !== null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +29,6 @@ function App() {
       lenis.raf(time);
       requestAnimationFrame(raf);
     };
-    // setIsLoggedIn(localStorage.getItem("role") != null ? true : false)
 
     requestAnimationFrame(raf);
 
@@ -51,22 +51,10 @@ function App() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log('app executed..');
-    const role = localStorage.getItem("role");
-    if (role) {
-      setIsLoggedIn(true);
-    }
-
-  }, [isLoggedIn])
-
   if (loading) {
     return <Loader />;
   }
 
-  let userRole = localStorage.getItem("role");
-
-  console.log(isLoggedIn);
 
   return (
     <Router>
@@ -103,33 +91,45 @@ function App() {
         <Route
           path="/login"
           element={
-            isLoggedIn ? userRole === "faculty" ? (
-              <Navigate to="/f/dashboard" />
+            isLoggedIn ? (
+              userRole === "faculty" ? (
+                <Navigate to="/f/dashboard" />
+              ) : (
+                <Navigate to="/s/dashboard" />
+              )
             ) : (
-              <Navigate to="/s/dashboard" />
-            ) : <Login setLoginStatus={setIsLoggedIn} />
+              <Login setLoginStatus={setIsLoggedIn} />
+            )
           }
         />
 
         <Route
           path="/signup"
           element={
-            isLoggedIn ? userRole === "faculty" ? (
-              <Navigate to="/f/dashboard" />
+            isLoggedIn ? (
+              userRole === "faculty" ? (
+                <Navigate to="/f/dashboard" />
+              ) : (
+                <Navigate to="/s/dashboard" />
+              )
             ) : (
-              <Navigate to="/s/dashboard" />
-            ) : <Signup />
+              <Signup />
+            )
           }
         />
 
         <Route
           path="/otp/verify"
           element={
-            isLoggedIn ? userRole === "faculty" ? (
-              <Navigate to="/f/dashboard" />
+            isLoggedIn ? (
+              userRole === "faculty" ? (
+                <Navigate to="/f/dashboard" />
+              ) : (
+                <Navigate to="/s/dashboard" />
+              )
             ) : (
-              <Navigate to="/s/dashboard" />
-            ) : <OTPVerification setLoginStatus={setIsLoggedIn} />
+              <OTPVerification setLoginStatus={setIsLoggedIn} />
+            )
           }
         />
       </Routes>

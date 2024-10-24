@@ -9,7 +9,7 @@ const TaskActions = ({
   showModal,
   updateTaskStatus,
   taskId,
-  assignees
+  assignees 
 }) => {
   const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
   const [comment, setComment] = useState("");
