@@ -16,16 +16,18 @@ const ProjectAvatarList = ({ members }) => {
     <div className="flex space-x-2 my-2">
       {members.map((member, index) => {
         const color = colorStyles[index % colorStyles.length];
-        <Avatar
-          key={index}
-          style={{
-            backgroundColor: color.backgroundColor,
-            color: color.color,
-            border: `2px solid ${color.border}`,
-          }}
-        >
-          {getInitials(member)}
-        </Avatar>;
+        return (
+          <Avatar
+            key={index}
+            style={{
+              backgroundColor: color.backgroundColor,
+              color: color.color,
+              border: `2px solid ${color.border}`,
+            }}
+          >
+            {getInitials(member)}
+          </Avatar>
+        )
       })}
     </div>
   );
