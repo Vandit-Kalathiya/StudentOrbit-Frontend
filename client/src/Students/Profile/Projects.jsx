@@ -1,24 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// const projects = [
-//   {
-//     title: 'AI-Based Chatbot',
-//     description: 'A chatbot that uses machine learning to assist users with common questions.',
-//     semester: '3',
-//   },
-//   {
-//     title: 'E-commerce Website',
-//     description: 'A fully responsive e-commerce website with payment gateway integration.',
-//     semester: '4',
-//   },
-//   {
-//     title: 'Mobile Health App',
-//     description: 'A mobile application that helps track daily health metrics for users.',
-//     semester: '5',
-//   },
-// ];
-
 function Projects() {
 
     const [projects, setProjects] = useState([]);
@@ -33,15 +15,14 @@ function Projects() {
       setProjects(demo);
       // console.log(res.data);
     })
-    .catch((error) => console.log("Error while fetching projects in profile")
+    .catch((e) => console.log("Error while fetching projects in profile"+e)
     );
 
   }, [])
 
-  // console.log(projects);
   
   return (
-    <div className="projects p-5 bg-white rounded-lg">
+    <div className="projects p-5 bg-white rounded-lg w-full">
       <h1 className="text-2xl font-bold mb-4">Projects</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {projects.map((project, index) => (
