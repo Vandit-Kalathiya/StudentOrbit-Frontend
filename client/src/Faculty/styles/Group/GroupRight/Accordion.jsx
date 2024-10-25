@@ -16,7 +16,7 @@ const Accordion = ({ weekTasks, onDoubleClick, showModal }) => {
   }
   
   return (
-    <div id="accordion-open" data-accordion="open" className="w-full overflow-hidden">
+    <div id="accordion-open" data-accordion="open" className="w-full overflow-hidden no-scrollbar">
       {weekTasks.map((week, index) => (
         <AccordionItem
           key={week.weekNumber}

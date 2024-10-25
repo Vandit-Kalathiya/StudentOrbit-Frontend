@@ -68,7 +68,7 @@ const AccordionItem = ({
             >
               Add Task
             </button>
-          )}{" "}
+          )}
         </div>
       </div>
     </div>

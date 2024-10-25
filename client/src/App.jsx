@@ -14,9 +14,9 @@ import Dashboard from "./Faculty/Dashboard";
 import DashboardS from "./Students/Dashboard";
 import OTPVerification from "./components/Auth/OTPVerification";
 import { useEffect, useState } from "react";
-import Lenis from "@studio-freight/lenis";
 import Loader from "./components/Loader.jsx";
 import NotFound from "./components/NotFound.jsx";
+import useLenisScroll from "./Hooks/useLenisScroll.jsx";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -24,26 +24,7 @@ function App() {
   );
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 0.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      wheelMultiplier: 1.2,
-    });
-
-    const raf = (time) => {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    };
-
-    requestAnimationFrame(raf);
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
+  useLenisScroll();
 
   useEffect(() => {
     const fetchData = async () => {

@@ -4,11 +4,13 @@ import TodoList from "./TodoList";
 import CalendarWrapper from "./CalendarWrapper";
 import TeamProgressCard from "./TeamProgressCard";
 import WorkloadCard from "./WorkloadCard";
+import { useRef } from 'react';
+import useLenisScroll from '../../Hooks/useLenisScroll';
 
 const DashboardDetails = () => {
-  // const onPanelChange = (value, mode) => {
-  //   // console.log(value.format("YYYY-MM-DD"), mode);
-  // };
+
+  const todoListRef = useRef(null);
+  useLenisScroll([todoListRef]);
 
   const containerVariants = {
     hidden: {
@@ -47,7 +49,7 @@ const DashboardDetails = () => {
           variants={itemVariants}
         >
           <CardList />
-          <motion.div className="w-full mb-6" variants={itemVariants}>
+          <motion.div className="w-full mb-6" ref={todoListRef} variants={itemVariants}>
             <TodoList />
           </motion.div>
         </motion.div>
