@@ -8,12 +8,12 @@ import {
   FaHtml5,
   FaCss3Alt,
   FaJs,
-} from "react-icons/fa"; 
+} from "react-icons/fa";
 
 function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill }) {
   // const [skills, setSkills] = useState([]);
   // const [skillList, setSkillList] = useState([]);
-  // const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false); 
 
   const skillIcons = {
     react: <FaReact className="text-blue-500" />,
@@ -23,39 +23,37 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
     css: <FaCss3Alt className="text-blue-500" />,
     javascript: <FaJs className="text-yellow-500" />,
   };
-  
-  let t = []
-  useEffect(() => {
-    if (newSkill) {
-      const username = localStorage.getItem("username");
-      t.push(newSkill)
-      axios.post(`http://localhost:1818/students/skills/${username}`, t)
-        .then((res) => {
-          setSkills(res.data.skills); 
-        })
-        .catch(() => console.log("Error while adding skill"));
-    }
-  }, [t]);  
 
   useEffect(() => {
     const username = localStorage.getItem("username")
     axios.get(`http://localhost:1818/students/skills/${username}`)
-    .then((res) => {
-      const demo = res.data;
-      setSkills(demo);
-    })
-    .catch(() => console.log("Error while fetching projects in profile")
-    );
-  }, []) 
-  
-  // const removeSkill = (skillToRemove) => {
-  //   const username = localStorage.getItem("username");
-  //   axios.delete(`http://localhost:1818/students/skills/${username}/${skillToRemove}`)
+      .then((res) => {
+        const demo = res.data;
+        setSkills(demo);
+      })
+      .catch(() => console.log("Error while fetching projects in profile")
+      );
+  }, [])
+
+  // useEffect(() => {
+  //   const username = localStorage.getItem("username")
+  //   axios.get(`http://localhost:1818/students/skills/${username}`)
   //     .then((res) => {
-  //       setSkills(res.data.skills); 
+  //       const demo = res.data;
+  //       setSkills(demo);
   //     })
-  //     .catch(() => console.log("Error while removing skill"));
-  // };
+  //     .catch(() => console.log("Error while fetching projects in profile")
+  //     );
+  // }, [skills])
+
+  const removeSkill = (skillToRemove) => {
+    const username = localStorage.getItem("username");
+    axios.delete(`http://localhost:1818/students/skills/${username}/${skillToRemove}`)
+      .then((res) => {
+        setSkills(res.data)
+      })
+      .catch(() => console.log("Error while removing skill"));
+  };
 
   return (
     <div className="skills p-5 bg-white rounded-lg">
@@ -75,7 +73,7 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
               {skill.name.charAt(0).toUpperCase() + skill.name.slice(1)}
             </span>
             <CloseOutlined
-              // onClick={() => removeSkill(skill)}
+              onClick={() => removeSkill(skill.name)}
               className="p-1 text-gray-500 cursor-pointer hover:text-gray-800"
             />
           </div>
@@ -83,7 +81,7 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
 
         <div
           className="flex items-center justify-center p-3 cursor-pointer"
-          onClick={openAddSkillModal} 
+          onClick={openAddSkillModal}
         >
           <PlusOutlined className="text-2xl rounded-full border-2 p-2" />
         </div>

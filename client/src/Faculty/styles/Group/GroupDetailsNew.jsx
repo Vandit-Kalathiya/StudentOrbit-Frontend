@@ -10,7 +10,7 @@ function GroupDetailsNew({ collapsed }) {
   const location = useLocation();
 
   const project = location.state;
-
+  
   const containerVariants = {
     hidden: { opacity: 0, transition: { staggerChildren: 0.2 } },
     visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
@@ -48,7 +48,7 @@ function GroupDetailsNew({ collapsed }) {
           }}
           variants={itemVariants}
         >
-          <GroupLeft projectName={projectName} />
+          <GroupLeft projectName={projectName.replaceAll("-"," ")} />
         </motion.div>
 
         <motion.div

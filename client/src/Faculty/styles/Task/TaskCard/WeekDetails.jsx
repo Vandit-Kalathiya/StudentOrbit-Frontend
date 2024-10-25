@@ -16,7 +16,7 @@ const ToDoPage = () => {
   // Reusable function to fetch tasks
   const fetchTasks = () => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName}`)
+      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-"," ")}`)
       .then((res) => {
         let demo = res.data;
         setProjectData(demo);

@@ -22,7 +22,7 @@ const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees, members })
           ))}
         </Row>
       ) : (
-        <Empty description={`No tasks in ${status}`} />
+        <Empty description={`No tasks in ${status.toLowerCase()}`} />
       )}
     </div>
   );

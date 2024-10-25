@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Button, Input } from "antd";
 import ProfileImage from "./ProfileImage";
 import ProfileDetails from "./ProfileDetails";
@@ -9,6 +9,7 @@ import Skills from "./Skills";
 import Mentors from "./Mentors";
 import Projects from "./Projects";
 import { MdOutlineEdit } from "react-icons/md";
+import axios from "axios";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -34,8 +35,21 @@ function Profile() {
     github: "",
     linkedin: "",
   });
-  const [newSkill, setNewSkill] = useState("");
+  const [newSkill, setNewSkill] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    axios.get(`http://localhost:1818/students/u/${username}`)
+    .then((res) => {
+      setUserData(res.data); 
+    })
+    .catch(() => console.log("Error while fetching user data"));
+  }, [])
+
+  console.log(userData);
+  
 
   const handleModalOpen = (type) => {
     setModalType(type);
@@ -62,6 +76,20 @@ function Profile() {
     }
   };
 
+  
+  const addSkill = () => {
+    let t = []
+    if (newSkill) {
+      const username = localStorage.getItem("username");
+      t.push(newSkill)
+      axios.post(`http://localhost:1818/students/skills/${username}`, t)
+        .then((res) => {
+          setSkills(res.data.skills); 
+        })
+        .catch(() => console.log("Error while adding skill"));
+    } 
+  } 
+
   const handleEditClick = () => {
     handleModalOpen("profileEdit");
   };
@@ -74,6 +102,7 @@ function Profile() {
 
   const handleAddSkill = () => {
     console.log("New Skill:", newSkill);
+    addSkill();
     setNewSkill("");
     handleModalClose();
   };
@@ -91,11 +120,11 @@ function Profile() {
           variants={sectionVariants}
         >
           <ProfileImage />
-          <ProfileDetails />
+          <ProfileDetails student={userData}/>
           <div className="divider"></div>
-          <ContactInfo />
+          <ContactInfo student={userData}/>
           <div className="divider"></div>
-          <SocialLinks />
+          <SocialLinks student={userData}/>
         </motion.div>
 
         <button

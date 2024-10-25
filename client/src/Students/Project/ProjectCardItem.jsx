@@ -7,7 +7,7 @@ const ProjectCardItem = ({ project }) => {
   const navigate = useNavigate();
 
   const handleReadMore = () => {
-    navigate(`/s/dashboard/projects/${project.groupName}`, { state: project });
+    navigate(`/s/dashboard/projects/${project.groupName.replaceAll(" ","-")}`, { state: project });
   };
 
   return (
