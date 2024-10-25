@@ -8,6 +8,7 @@ import {
   FaHtml5,
   FaCss3Alt,
   FaJs,
+  FaJava,
 } from "react-icons/fa";
 
 function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill }) {
@@ -22,6 +23,7 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
     html: <FaHtml5 className="text-orange-600" />,
     css: <FaCss3Alt className="text-blue-500" />,
     javascript: <FaJs className="text-yellow-500" />,
+    java:<FaJava className="text-blue-600 text-xl" />
   };
 
   useEffect(() => {
@@ -70,7 +72,7 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
               <FaJs className="text-gray-400" />
             )}
             <span className="text-lg font-medium flex-1 text-center">
-              {skill.name.charAt(0).toUpperCase() + skill.name.slice(1)}
+            {skill.name.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
             </span>
             <CloseOutlined
               onClick={() => removeSkill(skill.name)}

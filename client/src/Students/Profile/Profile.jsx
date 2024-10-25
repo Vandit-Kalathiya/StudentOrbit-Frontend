@@ -42,14 +42,14 @@ function Profile() {
   useEffect(() => {
     const username = localStorage.getItem("username");
     axios.get(`http://localhost:1818/students/u/${username}`)
-    .then((res) => {
-      setUserData(res.data); 
-    })
-    .catch(() => console.log("Error while fetching user data"));
+      .then((res) => {
+        setUserData(res.data);
+      })
+      .catch(() => console.log("Error while fetching user data"));
   }, [])
 
-  console.log(userData);
-  
+  // console.log(userData);
+
 
   const handleModalOpen = (type) => {
     setModalType(type);
@@ -76,7 +76,7 @@ function Profile() {
     }
   };
 
-  
+
   const addSkill = () => {
     let t = []
     if (newSkill) {
@@ -84,11 +84,11 @@ function Profile() {
       t.push(newSkill)
       axios.post(`http://localhost:1818/students/skills/${username}`, t)
         .then((res) => {
-          setSkills(res.data.skills); 
+          setSkills(res.data.skills);
         })
         .catch(() => console.log("Error while adding skill"));
-    } 
-  } 
+    }
+  }
 
   const handleEditClick = () => {
     handleModalOpen("profileEdit");
@@ -96,12 +96,21 @@ function Profile() {
 
   const handleSubmitProfile = (e) => {
     e.preventDefault();
+    // console.log(profileData);
+    const username = localStorage.getItem("username");
+
+    axios.put(`http://localhost:1818/students/profile/${username}`, { "gitHubUrl": profileData.github, "linkedInUrl": profileData.linkedin })
+      .then((res) => {
+        setSkills(res.data.skills);
+      })
+      .catch(() => console.log("Error while updating profile.!"));
+
     console.log("Updated Profile Data:", profileData);
     handleModalClose();
   };
 
   const handleAddSkill = () => {
-    console.log("New Skill:", newSkill);
+    // console.log("New Skill:", newSkill);
     addSkill();
     setNewSkill("");
     handleModalClose();
@@ -120,11 +129,11 @@ function Profile() {
           variants={sectionVariants}
         >
           <ProfileImage />
-          <ProfileDetails student={userData}/>
+          <ProfileDetails student={userData} />
           <div className="divider"></div>
-          <ContactInfo student={userData}/>
+          <ContactInfo student={userData} />
           <div className="divider"></div>
-          <SocialLinks student={userData}/>
+          <SocialLinks student={userData} />
         </motion.div>
 
         <button
