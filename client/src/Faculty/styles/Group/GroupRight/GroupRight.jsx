@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Accordion from "./Accordion";
 import TaskModal from "./TaskModal";
 import { Form } from "antd";
 import axios from "axios";
+import useLenisScroll from "../../../../Hooks/useLenisScroll";
 
 function GroupRight({ project }) {
   const location = useLocation();
@@ -14,15 +15,20 @@ function GroupRight({ project }) {
   const [currentWeekId, setCurrentWeekId] = useState(null);
   const [projectData, setProjectData] = useState([]);
 
+  const accordionRef = useRef(null);
+  useLenisScroll([accordionRef]);
+
   const navigate = useNavigate();
 
-  const [form] = Form.useForm();  
+  const [form] = Form.useForm();
 
   useEffect(() => {
-    axios.get(`http://localhost:1818/faculty/groups/g/${project.groupName}`).then((res) => {
-      setWeekTasks(res.data.weeks)
-    })
-  }, [])
+    axios
+      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`)
+      .then((res) => {
+        setWeekTasks(res.data.weeks);
+      });
+  }, []);
 
   useEffect(() => {
     axios
@@ -34,30 +40,30 @@ function GroupRight({ project }) {
       .catch((error) => {
         console.error("There was an error while getting all batches: ", error);
       });
-  },[weekTasks])
+  }, [weekTasks]);
 
   const handleDoubleClick = (id) => {
     navigate(`week${id}`, {
-      state: { tasks: weekTasks.find(week => week.week === id)?.tasks || [] }
+      state: { tasks: weekTasks.find((week) => week.week === id)?.tasks || [] },
     });
   };
 
   const showModal = (weekId) => {
-    console.log('Opening modal for week:', weekId);
+    console.log("Opening modal for week:", weekId);
     setCurrentWeekId(weekId);
     setIsModalOpen(true);
   };
 
   const handleOk = (data) => {
-    form.validateFields()
-      .then((values) => {
-
-        setWeekTasks(data.weeks)
+    form
+      .validateFields()
+      .then(() => {
+        setWeekTasks(data.weeks);
         setIsModalOpen(false);
         form.resetFields();
       })
       .catch((info) => {
-        console.log('Validation failed:', info);
+        console.log("Validation failed:", info);
       });
   };
 
@@ -67,11 +73,16 @@ function GroupRight({ project }) {
 
   return (
     <>
-      <Accordion
-        weekTasks={weekTasks}
-        onDoubleClick={handleDoubleClick}
-        showModal={showModal}
-      />
+      <div
+        ref={accordionRef}
+        className="max-h-100 overflow-y-auto"
+      >
+        <Accordion
+          weekTasks={weekTasks}
+          onDoubleClick={handleDoubleClick}
+          showModal={showModal}
+        />
+      </div>
       <TaskModal
         isModalOpen={isModalOpen}
         handleOk={handleOk}
