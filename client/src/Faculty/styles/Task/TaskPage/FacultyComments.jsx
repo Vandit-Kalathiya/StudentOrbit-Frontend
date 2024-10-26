@@ -5,29 +5,23 @@ import axios from "axios";
 
 const FacultyComments = ({taskId}) => {
   const [comments, setComments] = useState([]);
-  // console.log(taskId);
   
   useEffect(() => {
     axios
       .get(`http://localhost:1818/tasks/comments/${taskId}`)
       .then((res) => {
-        // console.log(res.data);
         setComments(res.data)
       })
       .catch((error) => {
         console.error("There was an error while fetching comments : ", error);
       });
-  },[])
-
-  // console.log(comments);
-  
+  },[])  
 
   return (
     <div className="mt-8">
       <h1 className="text-lg md:text-xl mb-4 font-semibold">
         Faculty Comments
       </h1>
-
       {comments.length === 0 ? (
         <p className="text-base text-gray-500">
           No comments yet.
@@ -52,7 +46,6 @@ const FacultyComments = ({taskId}) => {
               <Space className="absolute top-2 right-2">
                 <Popconfirm
                   title="Are you sure to delete this comment?"
-                  // onConfirm={() => handleDeleteComment(index)}
                   okText="Yes"
                   cancelText="No"
                 >
@@ -77,33 +70,3 @@ const FacultyComments = ({taskId}) => {
 };
 
 export default FacultyComments;
-
-// const dummyComments = [
-//   {
-//     facultyName: "Dr. Smith",
-//     date: "2024-08-28",
-//     text: "This is a very insightful project. Great work!",
-//   },
-//   {
-//     facultyName: "Prof. Johnson",
-//     date: "2024-08-29",
-//     text: "Please review the calculations in section 3.",
-//   },
-// ];
-
-// For demonstration purposes
-// const App = () => {
-//   const handleDeleteComment = (index) => {
-//     // Handle comment deletion
-//     console.log(`Delete comment at index ${index}`);
-//   };
-
-//   return (
-//     <FacultyComments
-//       // comments={dummyComments}
-//       // handleDeleteComment={handleDeleteComment}
-//     />
-//   );
-// };
-
-// export default App;
