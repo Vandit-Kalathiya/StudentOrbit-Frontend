@@ -5,7 +5,7 @@ export const openNotification = (type, message, description) => {
     message,
     description,
     placement: 'bottomRight',
-    duration: 3,
+    duration: 5,
     showProgress: true,
   });
 };

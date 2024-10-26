@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Row, Col } from "antd";
 import TaskList from "./TaskList";
 import axios from "axios";
+import { openNotification } from "../../../../Utils/Notification";
 
 const ToDoPage = () => {
   const [tasks, setTasks] = useState([]);
@@ -40,10 +41,14 @@ const ToDoPage = () => {
     console.log(assignees);
 
     if (assignees.length === 0) {
-      alert(
-        "Please assign at least one user to the task before moving it to progress."
-      );
-    } else changeStatus(id, newStatus);
+      // alert(
+      //   "Please assign at least one user to the task before moving it to progress."
+      // );
+      openNotification('error', `Can't move to in progress.!`, 'No assignees are present in task. Please assign at least one assignee.!');
+    } else {
+      changeStatus(id, newStatus)
+      openNotification('success', 'Update Successful', `Task is moved to ${newStatus=="IN_PROGRESS"?"In Progress":newStatus=="IN_REVIEW"?"In Review":"Completed"}.!`);
+    };
   };
 
   // Function to change task status
