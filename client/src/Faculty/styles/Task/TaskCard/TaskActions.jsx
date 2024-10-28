@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Input } from "antd";
+import { Modal, Input, message } from "antd";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
@@ -63,17 +63,43 @@ const TaskActions = ({
     setIsLinkModalVisible(true);
   };
 
-  const handleOkLink = () => {
-    setIsLinkModalVisible(false);
-    const formData = new FormData();
-    formData.append("reviewLink", reviewLink);
-    if (file) {
-      formData.append("file", file);
+  const handleOkLink = async () => {
+    // Check if the review link is empty
+    if (!reviewLink.trim()) {
+      message.error("Please enter a review link or any description before submitting.");
+      return;
     }
-    updateTaskStatus(taskId, "IN_REVIEW", assignees, formData);
+
+    // Close modal
+    setIsLinkModalVisible(false);
+
+    // If file exists, add it to FormData
+    const formData = new FormData();
+    if (file) {
+      formData.append("file", file); // Add the file to formData
+    }
+
+    try {
+      // Send FormData to backend
+      const response = await axios.post("http://localhost:8080/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      console.log("Upload Response:", response.data);
+
+      // Pass data to update task status function if needed
+      updateTaskStatus(taskId, "IN_REVIEW", assignees, formData);
+    } catch (error) {
+      console.error("File upload failed:", error);
+      message.error("Failed to upload file. Please try again.");
+    }
+
+    // Reset fields after submission
     setReviewLink("");
     setFile(null);
   };
+
 
   const handleCancelLink = () => {
     setIsLinkModalVisible(false);

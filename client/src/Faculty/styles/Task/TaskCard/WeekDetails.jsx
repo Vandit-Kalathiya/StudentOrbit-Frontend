@@ -57,7 +57,7 @@ const ToDoPage = () => {
   // console.log(tasks);
 
   const updateTaskStatus = (id, newStatus, assignees) => {
-    console.log(assignees);
+    // console.log(assignees);
 
     if (assignees.length === 0) {
       openNotification('error', `Can't move to in progress.!`, 'No assignees are present in task. Please assign at least one assignee.!');

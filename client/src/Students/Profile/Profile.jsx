@@ -110,7 +110,6 @@ function Profile() {
   };
 
   const handleAddSkill = () => {
-    // console.log("New Skill:", newSkill);
     addSkill();
     setNewSkill("");
     handleModalClose();

@@ -2,8 +2,6 @@ import { useLocation, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import GroupLeft from "./GroupLeft";
 import GroupRight from "./GroupRight/GroupRight";
-import { useEffect, useState } from "react";
-import axios from "axios";
 
 function GroupDetailsNew({ collapsed }) {
   const { batch, projectName } = useParams();
@@ -12,7 +10,7 @@ function GroupDetailsNew({ collapsed }) {
   const project = location.state;
   
   const containerVariants = {
-    hidden: { opacity: 0, transition: { staggerChildren: 0.2 } },
+    hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
   };
 
