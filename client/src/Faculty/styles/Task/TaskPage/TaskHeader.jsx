@@ -5,7 +5,7 @@ const TaskHeader = ({ task }) => {
   return (
     <div className="my-5">
       <div className="md:text-5xl text-3xl text-center font-semibold">
-        {projectName}
+        {projectName.replaceAll('-',' ')}
       </div>
       <div className="text-2xl md:text-4xl my-6 font-semibold">
         {task?.name}

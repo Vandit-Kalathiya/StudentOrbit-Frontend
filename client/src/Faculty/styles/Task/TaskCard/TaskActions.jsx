@@ -15,7 +15,7 @@ const TaskActions = ({
   const [comment, setComment] = useState("");
   const [isLinkModalVisible, setIsLinkModalVisible] = useState(false);
   const [reviewLink, setReviewLink] = useState("");
-  const [assigneeMembers, setAssigneeMembers] = useState();
+  const [assigneeMembers, setAssigneeMembers] = useState(assignees);
 
   const location = useLocation();
   const [file, setFile] = useState(null);
@@ -23,24 +23,13 @@ const TaskActions = ({
   const isFacultyRoute = location.pathname.startsWith("/f/dashboard");
   const isStudentRoute = location.pathname.startsWith("/s/dashboard");
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:1818/tasks/assignees/${taskId}`)
-      .then((res) => {
-        setAssigneeMembers(res.data)
-      })
-      .catch((error) => {
-        console.error("There was an error while assigning assignees: ", error);
-      });
-  }, [assigneeMembers]);
-
   const handleMoveToInProgress = () => {
     setIsCommentModalVisible(true);
   };
 
   const handleOk = () => {
     setIsCommentModalVisible(false);
-    updateTaskStatus(taskId, "IN_PROGRESS", assigneeMembers);
+    updateTaskStatus(taskId, "IN_PROGRESS", assignees);
     addComment(comment);
     setComment("");
   };
@@ -52,6 +41,16 @@ const TaskActions = ({
       "taskId": taskId
     }
     axios.post('http://localhost:1818/comment/add', commentRequest).then((res) => {
+      // console.log(res.data);
+
+      axios
+        .get(`http://localhost:1818/tasks/assignees/${taskId}`)
+        .then((res) => {
+          setAssigneeMembers(res.data)
+        })
+        .catch((error) => {
+          console.error("There was an error while assigning assignees: ", error);
+        });
     })
   }
 
@@ -71,7 +70,7 @@ const TaskActions = ({
     if (file) {
       formData.append("file", file);
     }
-    updateTaskStatus(taskId, "IN_REVIEW",assigneeMembers, formData);
+    updateTaskStatus(taskId, "IN_REVIEW", assignees, formData);
     setReviewLink("");
     setFile(null);
   };
@@ -93,7 +92,7 @@ const TaskActions = ({
           {status === "TO_DO" && !isFacultyRoute && (
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              onClick={() => updateTaskStatus(taskId, "IN_PROGRESS",assigneeMembers)}
+              onClick={() => updateTaskStatus(taskId, "IN_PROGRESS", assignees)}
             >
               Move to In Progress
             </button>
