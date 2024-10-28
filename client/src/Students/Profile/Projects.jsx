@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Projects() {
 
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState([])
+  const navigate = useNavigate();
 
   useEffect(() => {
     const username = localStorage.getItem("username")
@@ -31,6 +33,7 @@ function Projects() {
           {projects.map((project, index) => (
             <div
               key={index}
+              onClick={() => navigate(`/s/dashboard/projects/${project.groupName.replaceAll(" ", "-")}`, { state: project })}
               className="project-card p-4 border-[1px] border-[#8694ff] rounded-lg shadow-md"
             >
               <h2 className="text-lg font-semibold mb-2">{project.groupName}</h2>
