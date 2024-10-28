@@ -14,10 +14,9 @@ const ToDoPage = () => {
   const currentWeek = week.charAt(4);
   // console.log(projectName, currentWeek);
 
-  // Reusable function to fetch tasks
   const fetchTasks = () => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-"," ")}`)
+      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`)
       .then((res) => {
         let demo = res.data;
         setProjectData(demo);
@@ -32,8 +31,28 @@ const ToDoPage = () => {
   // console.log(members);
 
   useEffect(() => {
-    fetchTasks(); // Fetch tasks on component mount and when projectName or week changes
+    fetchTasks();
   }, [projectName, week]);
+
+  useEffect(() => {
+    // console.log('task effect called..');
+  }, [tasks,projectData,members])
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`)
+      .then((res) => {
+        let demo = res.data;
+        setProjectData(demo);
+        setMembers(demo.students);
+        demo = demo.weeks.sort((a, b) => a.weekNumber - b.weekNumber);
+        setTasks(demo[currentWeek - 1].tasks);
+      })
+      .catch((error) => {
+        console.error("There was an error while getting all tasks: ", error);
+      });
+  }, [])
+
 
   // console.log(tasks);
 
@@ -41,13 +60,10 @@ const ToDoPage = () => {
     console.log(assignees);
 
     if (assignees.length === 0) {
-      // alert(
-      //   "Please assign at least one user to the task before moving it to progress."
-      // );
       openNotification('error', `Can't move to in progress.!`, 'No assignees are present in task. Please assign at least one assignee.!');
     } else {
       changeStatus(id, newStatus)
-      openNotification('success', 'Update Successful', `Task is moved to ${newStatus=="IN_PROGRESS"?"In Progress":newStatus=="IN_REVIEW"?"In Review":"Completed"}.!`);
+      openNotification('success', 'Update Successful', `Task is moved to ${newStatus == "IN_PROGRESS" ? "In Progress" : newStatus == "IN_REVIEW" ? "In Review" : "Completed"}.!`);
     };
   };
 
@@ -57,7 +73,7 @@ const ToDoPage = () => {
       .post(`http://localhost:1818/tasks/${id}/${status}`)
       .then((res) => {
         console.log("Status changed successfully...", res.data);
-        fetchTasks(); // Refetch tasks after status change to trigger re-render
+        fetchTasks();
       })
       .catch((error) => {
         console.error("There was an error while changing status: ", error);
@@ -86,6 +102,7 @@ const ToDoPage = () => {
             tasks={tasks}
             status="TO_DO"
             updateTaskStatus={updateTaskStatus}
+            // handleAssign={handleAssign}
             updateAssignees={updateAssignees}
             members={members}
           />
@@ -96,6 +113,7 @@ const ToDoPage = () => {
             tasks={tasks}
             status="IN_PROGRESS"
             updateTaskStatus={updateTaskStatus}
+            // handleAssign={handleAssign}
             updateAssignees={updateAssignees}
             members={members}
           />

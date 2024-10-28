@@ -13,10 +13,10 @@ const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees, members })
           {filteredTasks.map(task => (
             <Col xs={24} sm={12} md={8} lg={6} key={task.id}>
               <motion.div
-                layout 
+                layout
                 transition={{ duration: 0.3 }}
               >
-                <TaskCard task={task} updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
+                <TaskCard singleTask={task} updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
               </motion.div>
             </Col>
           ))}

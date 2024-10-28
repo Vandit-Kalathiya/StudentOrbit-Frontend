@@ -18,6 +18,7 @@ const TaskAssignees = ({
   assignees,
   members,
   taskId,
+  handleAssign
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedAssignees, setSelectedAssignees] = useState([]);
@@ -25,7 +26,10 @@ const TaskAssignees = ({
   const [assigneeMembers, setAssigneeMembers] = useState(assignees);
   const location = useLocation();
 
-  useEffect(() => {}, [assigneeMembers]);
+  useEffect(() => {
+    // console.log('assignee effect called..');
+    
+  }, [assigneeMembers]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -39,11 +43,19 @@ const TaskAssignees = ({
     setIsModalVisible(false);
   };
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = async (values) => {
     setSelectedAssignees(values.assignees);
     setIsModalVisible(false);
-    handleAssign(values.assignees);
-  };
+
+    try {
+        const data = await handleAssign(values.assignees, taskId);
+        console.log(data);
+        setAssigneeMembers(data.assignee);
+    } catch (error) {
+        console.error("There was an error while assigning assignees: ", error);
+    }
+};
+
 
   const handleSelect = () => {
     setDropdownVisible(false);
@@ -51,20 +63,6 @@ const TaskAssignees = ({
 
   const handleDropdownVisibleChange = (open) => {
     setDropdownVisible(open);
-  };
-
-  const handleAssign = (assigneeIds) => {
-    console.log(assigneeIds);
-
-    axios
-      .post(`http://localhost:1818/tasks/${taskId}`, assigneeIds)
-      .then((res) => {
-        console.log(res.data);
-        setAssigneeMembers(res.data.assignee);
-      })
-      .catch((error) => {
-        console.error("There was an error while assigning assignees: ", error);
-      });
   };
 
   const isInFDashboard = location.pathname.startsWith("/f/dashboard");

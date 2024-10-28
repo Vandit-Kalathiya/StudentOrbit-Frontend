@@ -6,17 +6,36 @@ import TaskDescription from "./TaskDescription";
 import TaskAssignees from "./TaskAssignees";
 import TaskActions from "./TaskActions";
 import TaskCompletionModal from "./TaskCompletionModal";
+import axios from "axios";
 
-const TaskCard = ({ task, updateTaskStatus, members }) => {
+const TaskCard = ({ singleTask, updateTaskStatus, members}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentAssignees, setCurrentAssignees] = useState(task.assignee);
+  const [task,setTask] = useState(singleTask)
+  const [currentAssignees, setCurrentAssignees] = useState(singleTask.assignee);
   const navigate = useNavigate(); 
   const location = useLocation();
   const { batch, projectName, week } = useParams();
 
   useEffect(()=>{
-  },[currentAssignees])
+    // console.log('card effect called..');  
+  },[currentAssignees,task])
 
+  const handleAssign = async (assigneeIds, taskId) => {
+    try {
+      const res = await axios.post(`http://localhost:1818/tasks/${taskId}`, assigneeIds);
+      // console.log(res.data);
+  
+      setTask(res.data);
+      setCurrentAssignees(res.data.assignee);
+  
+      // Return the response data
+      return res.data;
+    } catch (error) {
+      console.error("There was an error while assigning assignees: ", error);
+      throw error; 
+    }
+  };
+  
   const cardVariants = {
     initial: { opacity: 0, scale: 0.8 },
     animate: { opacity: 1, scale: 1 },
@@ -35,10 +54,6 @@ const TaskCard = ({ task, updateTaskStatus, members }) => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-  };
-
-  const handleAssigneesChange = (newAssignees) => {
-    setCurrentAssignees(newAssignees);
   };
 
   const handleReadMore = () => {
@@ -69,6 +84,7 @@ const TaskCard = ({ task, updateTaskStatus, members }) => {
         assignees={currentAssignees}
         members={members}
         taskId={task.id}
+        handleAssign={handleAssign}
       />
       <TaskActions
         status={task.status}
