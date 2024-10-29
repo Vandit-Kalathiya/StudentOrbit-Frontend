@@ -28,7 +28,7 @@ const Group = () => {
   };
 
   return (
-    <div className="my-4 mx-3 md:m-8">
+    <div className="my-4 mx-3 md:m-8 md:pl-0 pl-3">
       <GroupHeader batch={batch} onGroupAdded={handleAddGroup}/>
       <GroupList data={data} batch={batch}/>
     </div>

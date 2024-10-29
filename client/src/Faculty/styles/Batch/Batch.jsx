@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 import BatchCard from "./BatchCard";
 import AddBatchModal from "./AddBatchModal";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import { openNotification } from "../../../Utils/Notification";
@@ -48,7 +47,7 @@ const Batch = () => {
   };
 
   return (
-    <div className="my-6 mx-3 md:my-8 md:px-8">
+    <div className="my-6 mx-3 md:my-8 md:px-8 pl-3">
       <div className="relative flex md:flex-row flex-col items-center justify-center p-2">
         <Typography className="md:m-0 mt-5 text-center text-4xl md:text-5xl flex-grow font-semibold">
           Batches
@@ -87,7 +86,6 @@ const Batch = () => {
         form={form}
         onBatchAdded={handleBatchAdded}
       />
-      <ToastContainer />
     </div>
   );
 };

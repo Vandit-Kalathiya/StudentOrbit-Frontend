@@ -19,26 +19,22 @@ const TaskAssignees = ({ assignees, showModal, taskId }) => {
     axios
       .get(`http://localhost:1818/tasks/assignees/${taskId}`)
       .then((res) => {
-        // console.log(res.data);
         setAssigneeMembers(res.data);
       })
       .catch((error) => {
         console.error("There was an error while assigning assignees: ", error);
       });
-    // setAssigneeMembers(assignees);
   }, []);
 
   useEffect(() => {
     axios
       .get(`http://localhost:1818/tasks/assignees/${taskId}`)
       .then((res) => {
-        // console.log(res.data);
         setAssigneeMembers(res.data);
       })
       .catch((error) => {
         console.error("There was an error while assigning assignees: ", error);
       });
-    // setAssigneeMembers(assignees);
   }, [assignees]);
 
   const isInFDashboard = location.pathname.startsWith("/f/dashboard");
@@ -66,7 +62,7 @@ const TaskAssignees = ({ assignees, showModal, taskId }) => {
             );
           })
         ) : (
-          <span className="text-gray-500">NA</span> // Display "NA" when no assignees
+          <span className="text-gray-500">NA</span>
         )}
         {!isInFDashboard && (
           <Button

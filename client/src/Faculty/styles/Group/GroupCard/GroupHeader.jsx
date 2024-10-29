@@ -20,7 +20,7 @@ const GroupHeader = ({ batch, onGroupAdded }) => {
           icon={<Plus />}
           className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center mt-2"
           onClick={handleOpenModal}
-          block // Makes the button full-width on small screens
+          block 
         >
           <span className="hidden md:inline">Add Group</span>
         </Button>

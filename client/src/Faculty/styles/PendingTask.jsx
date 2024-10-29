@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
 import { Flex, Typography, Button, List, Avatar } from "antd";
 
 const batches = ["A1", "B1", "C1"];
@@ -21,12 +19,12 @@ const data = Array.from({ length: totalItems }, (_, index) => {
 function PendingTask() {
   return (
     <div className="relative w-full">
-      <Flex vertical gap="small" className="fixed">
+      <Flex vertical gap="small">
         <Flex align="center" justify="space-between" gap="large">
           <Typography.Title level={3} strong>
             Pending Tasks
           </Typography.Title>
-          <Button type="link">View All</Button>
+          {/* <Button type="link">View All</Button> */}
         </Flex>
         <List
           pagination={{
@@ -48,7 +46,7 @@ function PendingTask() {
               />
               <div>
                 <span>
-                  Group: {user.Group} <br /> Task: {user.Task}
+                  Project: Task Management System <br /> Task: Basic set up
                 </span>
               </div>
             </List.Item>

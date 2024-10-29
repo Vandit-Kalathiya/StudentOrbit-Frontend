@@ -48,7 +48,6 @@ function Profile() {
       .catch(() => console.log("Error while fetching user data"));
   }, [])
 
-  // console.log(userData);
 
 
   const handleModalOpen = (type) => {
@@ -96,7 +95,6 @@ function Profile() {
 
   const handleSubmitProfile = (e) => {
     e.preventDefault();
-    // console.log(profileData);
     const username = localStorage.getItem("username");
 
     axios.put(`http://localhost:1818/students/profile/${username}`, { "gitHubUrl": profileData.github, "linkedInUrl": profileData.linkedin })
@@ -145,7 +143,7 @@ function Profile() {
 
       <Modal
         title="Edit Profile"
-        open={modalType === "profileEdit"} // Open modal if type matches
+        open={modalType === "profileEdit"}
         onCancel={handleModalClose}
         footer={[
           <Button

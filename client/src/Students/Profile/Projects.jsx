@@ -9,13 +9,11 @@ function Projects() {
 
   useEffect(() => {
     const username = localStorage.getItem("username")
-    // console.log(username);
 
     axios.get(`http://localhost:1818/students/g/${username}`)
       .then((res) => {
         const demo = res.data;
         setProjects(demo);
-        // console.log(res.data);
       })
       .catch((e) => console.log("Error while fetching projects in profile" + e)
       );
@@ -44,11 +42,6 @@ function Projects() {
         </div>
       }
       {projects.length == 0 ? "" : <div className="more-projects mt-8 flex flex-col items-center justify-center">
-        {/* <img
-            src="https://files.oaiusercontent.com/file-IDyteROP5bKGCa1rmHkPG1b3?se=2024-09-15T05%3A34%3A35Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D073f85a9-3c7d-4bd6-a93e-7146d2ac96b6.webp&sig=q8yjgswn6/yc3icffHh/abr/%2BXDcy5CZr0tQEhBnCL8%3D"
-            alt="More projects"
-            className="mb-4 w-32 h-32 object-cover"
-          /> */}
         <h2 className="text-xl font-bold">More Projects to Go! 🚀</h2>
       </div>}
     </div>

@@ -1,14 +1,12 @@
-// Chatbot.js
 import { useState, useEffect } from "react";
-import ChatMessage from "./ChatMessage"; // Import ChatMessage component
-import ChatInput from "./ChatInput"; // Import ChatInput component
+import ChatMessage from "./ChatMessage"; 
+import ChatInput from "./ChatInput";
 
 const colorPalette = [
   { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
   { backgroundColor: "#d6e4ff", color: "#1d39c4", border: "#1d39c4" }, // Blue
   { backgroundColor: "#f6ffed", color: "#237804", border: "#237804" }, // Green
   { backgroundColor: "#f9f0ff", color: "#531dab", border: "#531dab" }, // Purple
-  // Add more colors as needed
 ];
 
 function Chatbot() {
@@ -44,7 +42,7 @@ function Chatbot() {
   };
 
   const getAvatarStyle = (memberId) => {
-    const colorIndex = (memberId) % colorPalette.length; // Use modulo to cycle through colors
+    const colorIndex = (memberId) % colorPalette.length;
     return colorPalette[colorIndex];
   };
 

@@ -17,18 +17,15 @@ const TaskCard = ({ singleTask, updateTaskStatus, members}) => {
   const { batch, projectName, week } = useParams();
 
   useEffect(()=>{
-    // console.log('card effect called..');  
   },[currentAssignees,task])
 
   const handleAssign = async (assigneeIds, taskId) => {
     try {
       const res = await axios.post(`http://localhost:1818/tasks/${taskId}`, assigneeIds);
-      // console.log(res.data);
   
       setTask(res.data);
       setCurrentAssignees(res.data.assignee);
-  
-      // Return the response data
+      
       return res.data;
     } catch (error) {
       console.error("There was an error while assigning assignees: ", error);

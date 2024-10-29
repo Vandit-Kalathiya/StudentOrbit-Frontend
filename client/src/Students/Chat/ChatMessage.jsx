@@ -1,4 +1,3 @@
-// ChatMessage.js
 const ChatMessage = ({ message, members, getAvatarStyle }) => {
   const sender = members.find((member) => member.id === message.senderId);
   const avatarStyle = getAvatarStyle(sender.id);

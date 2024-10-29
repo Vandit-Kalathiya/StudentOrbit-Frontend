@@ -1,14 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const WorkInfo = ({ title, description }) => (
-  <div className="work_info h-[100vh] flex flex-col justify-center">
+  <div className="work_info h-[100vh] flex flex-col justify-center p-4 md:p-0">
     <div className="work_left-bl p-2">
-      <h2 className="title text-6xl uppercase font-semibold">{title}</h2>
-      <p className="text-xl mt-4">{description}</p>
+      <h2 className="title text-4xl md:text-6xl uppercase font-semibold">{title}</h2>
+      <p className="text-base md:text-xl mt-4">{description}</p>
     </div>
   </div>
 );
@@ -83,25 +83,25 @@ function About() {
 
   return (
     <div className="wrapp relative w-full px-4 z-1">
-      <section className="work flex md:px-24">
-        <div className="work_left relative w-[60%] z-2">
-          <div className="work_text w-[80%]">
+      <section className="work flex flex-col md:flex-row md:px-24">
+        <div className="work_left relative w-full md:w-[60%] z-2">
+          <div className="work_text w-full md:w-[80%]">
             {workItems.map((item, index) => (
               <WorkInfo key={index} number={item.number} title={item.title} description={item.description} />
             ))}
           </div>
         </div>
-        <div className="work_right w-[30%]">
-          <div className="work_right-bl flex md:flex-col justify-center sticky w-[100%] h-[100vh] top-0">
-            <div className="work_photo w-[35vw] h-[30vw] relative">
+        <div className="work_right w-full md:w-[30%] mt-6 md:mt-0">
+          <div className="work_right-bl flex md:flex-col justify-center sticky w-full h-[60vh] md:h-[100vh] top-0">
+            <div className="work_photo w-full md:w-[35vw] h-[40vh] md:h-[30vw] relative">
               {workItems.map((item, index) => (
                 <div
                   key={index}
                   ref={(el) => (workPhotoItemsRef.current[index] = el)}
-                  className="work_photo-item absolute w-[100%] h-[100%] cursor-pointer rounded-lg overflow-hidden"
+                  className="work_photo-item absolute w-full h-full cursor-pointer rounded-lg overflow-hidden"
                   title={item.number}
                 >
-                  <img src={item.src} alt={`Dummy Image ${item.number}`} className="block w-[100%] h-[100%] object-cover" />
+                  <img src={item.src} alt={`Image ${item.number}`} className="block w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -112,5 +112,6 @@ function About() {
     </div>
   );
 }
+
 
 export default About;

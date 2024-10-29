@@ -10,7 +10,7 @@ function Dashboard({setLoginStatus}) {
   const toggleChatPopup = () => {
     if (isChatOpen) {
       setIsChatOpen(false);
-      setTimeout(() => setIsChatOpen(false), 300); // Match duration with CSS animation
+      setTimeout(() => setIsChatOpen(false), 300);
     } else {
       setIsChatOpen(true);
     }
@@ -34,10 +34,8 @@ function Dashboard({setLoginStatus}) {
   return (
     <section
       id="hero"
-      // className="w-full min-h-[100vh] relative items-center justify-center overflow-hidden"
     >
       <div
-        // className="absolute inset-0 z-10 text-black flex justify-between overflow-x-hidden"
         className="justify-between"
       >
         <Sidebar setLoginStatus={setLoginStatus} />

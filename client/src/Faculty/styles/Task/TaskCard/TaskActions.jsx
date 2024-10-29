@@ -9,13 +9,14 @@ const TaskActions = ({
   showModal,
   updateTaskStatus,
   taskId,
-  assignees
+  assignees,
 }) => {
   const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
   const [comment, setComment] = useState("");
   const [isLinkModalVisible, setIsLinkModalVisible] = useState(false);
   const [reviewLink, setReviewLink] = useState("");
   const [assigneeMembers, setAssigneeMembers] = useState(assignees);
+  const [taskDescription, setTaskDescription] = useState('');
 
   const location = useLocation();
   const [file, setFile] = useState(null);
@@ -36,23 +37,26 @@ const TaskActions = ({
 
   const addComment = (comment) => {
     const commentRequest = {
-      "commentDescription": comment,
-      "facultyId": localStorage.getItem("username"),
-      "taskId": taskId
-    }
-    axios.post('http://localhost:1818/comment/add', commentRequest).then((res) => {
-      // console.log(res.data);
-
-      axios
-        .get(`http://localhost:1818/tasks/assignees/${taskId}`)
-        .then((res) => {
-          setAssigneeMembers(res.data)
-        })
-        .catch((error) => {
-          console.error("There was an error while assigning assignees: ", error);
-        });
-    })
-  }
+      commentDescription: comment,
+      facultyId: localStorage.getItem("username"),
+      taskId: taskId,
+    };
+    axios
+      .post("http://localhost:1818/comment/add", commentRequest)
+      .then(() => {
+        axios
+          .get(`http://localhost:1818/tasks/assignees/${taskId}`)
+          .then((res) => {
+            setAssigneeMembers(res.data);
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error while assigning assignees: ",
+              error
+            );
+          });
+      });
+  };
 
   const handleCancel = () => {
     setIsCommentModalVisible(false);
@@ -64,42 +68,41 @@ const TaskActions = ({
   };
 
   const handleOkLink = async () => {
-    // Check if the review link is empty
     if (!reviewLink.trim()) {
-      message.error("Please enter a review link or any description before submitting.");
+      message.error(
+        "Please enter a review link or any description before submitting."
+      );
       return;
     }
 
-    // Close modal
     setIsLinkModalVisible(false);
 
-    // If file exists, add it to FormData
     const formData = new FormData();
     if (file) {
-      formData.append("file", file); // Add the file to formData
+      formData.append("file", file);
     }
 
     try {
-      // Send FormData to backend
-      const response = await axios.post("http://localhost:8080/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
+      const response = await axios.post(
+        "http://localhost:8080/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
       console.log("Upload Response:", response.data);
 
-      // Pass data to update task status function if needed
       updateTaskStatus(taskId, "IN_REVIEW", assignees, formData);
     } catch (error) {
       console.error("File upload failed:", error);
       message.error("Failed to upload file. Please try again.");
     }
 
-    // Reset fields after submission
     setReviewLink("");
     setFile(null);
   };
-
 
   const handleCancelLink = () => {
     setIsLinkModalVisible(false);
@@ -127,7 +130,6 @@ const TaskActions = ({
           {status === "IN_PROGRESS" && !isFacultyRoute && (
             <button
               className="bg-yellow-500 text-black px-4 py-2 rounded-md hover:bg-yellow-600"
-
               onClick={handleGoForReview}
             >
               Go for Review
@@ -185,6 +187,14 @@ const TaskActions = ({
           value={reviewLink}
           onChange={(e) => setReviewLink(e.target.value)}
           placeholder="Paste your review link here..."
+          required
+          className="mb-2"
+        />
+        <Input.TextArea
+          value={taskDescription}
+          onChange={(e) => setTaskDescription(e.target.value)}
+          placeholder="Enter task description here..."
+          rows={4}
           required
           className="mb-2"
         />

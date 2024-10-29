@@ -6,7 +6,7 @@ import {
   ProjectOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Link, useNavigate, useLocation, matchPath } from "react-router-dom";
+import { NavLink, useNavigate, useLocation, matchPath } from "react-router-dom";
 import axios from "axios";
 
 const MenuList = ({ darkTheme, setLoginStatus }) => {
@@ -45,6 +45,10 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
     return "1";
   })();
 
+  // Function to get the class for NavLink
+  const getNavLinkClass = ({ isActive }) => 
+    isActive ? "text-[#4859DA]" : "";
+
   return (
     <>
       <Menu
@@ -54,13 +58,19 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
         className="min-h-[100vh] mt-0 flex flex-col gap-[15px] text-[1rem] relative"
       >
         <Menu.Item key="1" icon={<DashboardOutlined />}>
-          <Link to="/s/dashboard">Dashboard</Link>
+          <NavLink to="/s/dashboard" className={getNavLinkClass}>
+            Dashboard
+          </NavLink>
         </Menu.Item>
         <Menu.Item key="2" icon={<ProjectOutlined />}>
-          <Link to="/s/dashboard/projects">Projects</Link>
+          <NavLink to="/s/dashboard/projects" className={getNavLinkClass}>
+            Projects
+          </NavLink>
         </Menu.Item>
         <Menu.Item key="3" icon={<UserOutlined />}>
-          <Link to="/s/dashboard/profile">Profile</Link>
+          <NavLink to="/s/dashboard/profile" className={getNavLinkClass}>
+            Profile
+          </NavLink>
         </Menu.Item>
         <Menu.Item key="4" icon={<LogoutOutlined />} onClick={showLogoutModal}>
           Logout

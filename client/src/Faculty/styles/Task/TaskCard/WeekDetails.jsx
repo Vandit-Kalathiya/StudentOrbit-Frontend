@@ -12,7 +12,6 @@ const ToDoPage = () => {
   const [members, setMembers] = useState([]);
 
   const currentWeek = week.charAt(4);
-  // console.log(projectName, currentWeek);
 
   const fetchTasks = () => {
     axios
@@ -28,14 +27,12 @@ const ToDoPage = () => {
         console.error("There was an error while getting all tasks: ", error);
       });
   };
-  // console.log(members);
 
   useEffect(() => {
     fetchTasks();
   }, [projectName, week]);
 
   useEffect(() => {
-    // console.log('task effect called..');
   }, [tasks,projectData,members])
 
   useEffect(() => {
@@ -51,23 +48,18 @@ const ToDoPage = () => {
       .catch((error) => {
         console.error("There was an error while getting all tasks: ", error);
       });
-  }, [])
-
-
-  // console.log(tasks);
+  }, []);
 
   const updateTaskStatus = (id, newStatus, assignees) => {
-    // console.log(assignees);
 
     if (assignees.length === 0) {
       openNotification('error', `Can't move to in progress.!`, 'No assignees are present in task. Please assign at least one assignee.!');
     } else {
       changeStatus(id, newStatus)
       openNotification('success', 'Update Successful', `Task is moved to ${newStatus == "IN_PROGRESS" ? "In Progress" : newStatus == "IN_REVIEW" ? "In Review" : "Completed"}.!`);
-    };
+    }
   };
 
-  // Function to change task status
   const changeStatus = (id, status) => {
     axios
       .post(`http://localhost:1818/tasks/${id}/${status}`)
@@ -102,7 +94,6 @@ const ToDoPage = () => {
             tasks={tasks}
             status="TO_DO"
             updateTaskStatus={updateTaskStatus}
-            // handleAssign={handleAssign}
             updateAssignees={updateAssignees}
             members={members}
           />
@@ -113,7 +104,6 @@ const ToDoPage = () => {
             tasks={tasks}
             status="IN_PROGRESS"
             updateTaskStatus={updateTaskStatus}
-            // handleAssign={handleAssign}
             updateAssignees={updateAssignees}
             members={members}
           />

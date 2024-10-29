@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
 // import { BrowserRouter as Router } from "react-router-dom";
 // import heroBg from "../assets/hero-bg.png";
 import Sidebar from "./styles/Sidebar";

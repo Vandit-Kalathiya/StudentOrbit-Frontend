@@ -1,5 +1,5 @@
-import { Avatar } from "antd"; // You can use Ant Design's Avatar component or any other library
-import "antd/dist/reset.css"; // Import Ant Design styles
+import { Avatar } from "antd"; 
+import "antd/dist/reset.css"; 
 
 const mentors = [
   {

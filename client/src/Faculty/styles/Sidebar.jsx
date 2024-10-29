@@ -13,23 +13,9 @@ import GroupDetailsNew from "./Group/GroupDetailsNew";
 
 const { Sider, Content } = Layout;
 
-const initialData = [
-  { batch: "A1", sem: "5", id1: "22ce001", id2: "22ce022" },
-  { batch: "B1", sem: "3", id1: "22ce023", id2: "22ce045" },
-  { batch: "C1", sem: "5", id1: "22ce046", id2: "22ce068" },
-  { batch: "A1", sem: "3", id1: "22ce001", id2: "22ce022" },
-  { batch: "B1", sem: "5", id1: "22ce023", id2: "22ce045" },
-  { batch: "C2", sem: "5", id1: "22ce141", id2: "22ce164" },
-];
-
 function Sidebar({ setLoginStatus }) {
   const [collapsed, setCollapsed] = useState(true);
   const [sidebarVisible, setSidebarVisible] = useState(true);
-  
-  const batchData = initialData.map(item => ({
-    name: `${item.sem}${item.batch}`,
-    route: `/dashboard/batches/${item.sem}${item.batch}`
-  }));
 
   const toggleSidebar = () => {
     setSidebarVisible(prev => !prev);
@@ -52,7 +38,7 @@ function Sidebar({ setLoginStatus }) {
         style={{ position: "fixed", left: 0, bottom: 0, top: 0 }}
       >
         <div className="md:flex flex-col md:h-full">
-          <MenuList className="flex-grow" batchData={batchData} setLoginStatus={setLoginStatus} />
+          <MenuList className="flex-grow" setLoginStatus={setLoginStatus} />
           <Button
             type="text"
             className="toggle -mt-36 ml-5"

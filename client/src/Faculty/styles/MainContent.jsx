@@ -1,5 +1,5 @@
 
-import { FaCalendarAlt } from 'react-icons/fa'; // Import the calendar icon from react-icons
+import { FaCalendarAlt } from 'react-icons/fa';
 
 function MainContent() {
   const now = new Date();

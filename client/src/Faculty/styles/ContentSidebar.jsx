@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
 import { Card, Typography, Image } from "antd";
 
 function ContentSidebar() {

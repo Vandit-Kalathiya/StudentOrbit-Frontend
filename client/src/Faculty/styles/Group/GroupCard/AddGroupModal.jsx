@@ -3,7 +3,7 @@ import { useForm } from "antd/es/form/Form";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { notification } from 'antd';
+import { openNotification } from "../../../../Utils/Notification";
 
 const { TextArea } = Input;
 
@@ -92,24 +92,12 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
       );
       console.log("Group added...");
       onGroupAdded(res.data);
-      notification.success({
-        message: "Group Added",
-        description: "The new group has been added successfully.",
-        placement: "bottomRight",
-        duration: 3, 
-        showProgress: true,
-      });
+      openNotification("success", "Group Added", "The new group has been added successfully.");
       form.resetFields();
       onClose();
       navigate(`/f/dashboard/batches/${batch}`);
     } catch (error) {
-      notification.error({
-        message: "Group Creation Failed",
-        description: "There was an issue while adding the group. Please try again.",
-        placement: "bottomRight",
-        duration: 3,
-        showProgress: true,
-      });
+      openNotification("error", "Group Creation Failed", "There was an issue while adding the group. Please try again.");
       console.error("There was an error submitting the group:", error);
     }
   };
@@ -120,6 +108,7 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
       open={visible}
       onCancel={onClose}
       footer={null}
+      style={{ top: 20 }}
     >
       <Form form={form} layout="vertical" onFinish={handleAddGroup}>
         <Form.Item label="Batch">

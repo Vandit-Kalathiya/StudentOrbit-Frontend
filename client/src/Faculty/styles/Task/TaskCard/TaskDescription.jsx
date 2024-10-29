@@ -2,8 +2,7 @@ import { useState } from "react";
 
 const TaskDescription = ({ description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac tortor", onReadMore }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
-  // const description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac tortor fermentum, vehicula risus a, ullamcorper risus. Integer fringilla ex in justo condimentum, id luctus felis elementum.";
-
+  
   const handleReadMoreToggle = (e) => {
     e.preventDefault();
     setShowFullDescription(!showFullDescription);

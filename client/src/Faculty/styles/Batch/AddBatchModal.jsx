@@ -1,10 +1,8 @@
-import { Modal, Form, Input, Select, Button, notification } from "antd";
+import { Modal, Form, Input, Select, Button } from "antd";
 import axios from "axios";
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 
 const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
-  // let navigate = useNavigate();
   const [batchName, setBatchName] = useState("");
   const [semester, setSemester] = useState(0);
   const [startId, setStartId] = useState("");

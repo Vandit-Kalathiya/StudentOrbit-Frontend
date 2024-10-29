@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
 import { Avatar, Typography, Flex } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 

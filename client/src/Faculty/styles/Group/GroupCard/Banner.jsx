@@ -11,8 +11,6 @@ function Banner({ project, batch }) {
     );
   };
 
-  console.log(project);
-
   return (
     <Card className="md:h-260 md:p-5">
       <Flex vertical gap="30px">

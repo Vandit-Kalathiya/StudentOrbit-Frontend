@@ -9,7 +9,6 @@ import {
 } from "recharts";
 import { useState } from "react";
 
-// Sample data
 const data = [
   {
     name: "Completed",
@@ -25,14 +24,10 @@ const data = [
   },
 ];
 
-// Colors for each pie slice
 const COLORS = ["#00C49F", "#0088FE", "#FFBB28"];
 
 const TeamProgressCard = () => {
-  // Default to "Completed" (index 0) status
   const [activeIndex, setActiveIndex] = useState(0);
-
-  // Calculate total tasks for percentage calculation
   const totalTasks = data.reduce((sum, entry) => sum + entry.tasks, 0);
 
   const handleMouseEnter = (data, index) => {

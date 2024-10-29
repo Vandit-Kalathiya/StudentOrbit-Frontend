@@ -1,9 +1,9 @@
 import { Card } from "antd";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const BatchCard = ({ batch, sem, id1, id2 }) => {
   return (
-    <Link to={`/f/dashboard/batches/${sem}${batch}`}>
+    <NavLink to={`/f/dashboard/batches/${sem}${batch}`}>
       <Card
         title={`Batch ${batch?.toUpperCase()}`}
         bordered={false}
@@ -22,7 +22,7 @@ const BatchCard = ({ batch, sem, id1, id2 }) => {
           {id1?.toUpperCase()} - {id2?.toUpperCase()}
         </p>
       </Card>
-    </Link>
+    </NavLink>
   );
 };
 

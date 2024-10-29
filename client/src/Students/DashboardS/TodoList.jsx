@@ -23,7 +23,7 @@ const TodoList = () => (
           <List.Item className="flex justify-between items-center border-b border-gray-200 py-2">
             <div className="flex items-center">
               <div className="bg-blue-100 rounded-full w-8 h-8 flex items-center justify-center mr-3">
-                {index + 1} {/* Task number (1-based index) */}
+                {index + 1}
               </div>
               <div>{item.task}</div>
             </div>

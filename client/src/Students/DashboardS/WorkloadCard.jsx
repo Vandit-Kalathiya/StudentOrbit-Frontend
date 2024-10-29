@@ -31,7 +31,6 @@ const getInitials = (assignee) => {
   return assignee.slice(-2).toUpperCase();
 };
 
-// Define columns for the table
 const columns = [
   {
     title: 'Assignees',

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Avatar, Button, Modal, Form, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 
 const { Option } = Select;
 
@@ -27,7 +26,6 @@ const TaskAssignees = ({
   const location = useLocation();
 
   useEffect(() => {
-    // console.log('assignee effect called..');
     
   }, [assigneeMembers]);
 
@@ -72,7 +70,6 @@ const TaskAssignees = ({
       <div className="flex items-center mb-4">
         <Avatar.Group>
           {assigneeMembers.map((assignee, index) => {
-            const validAssignee = members.find((a) => a.id === assignee.id);
             const color = colorCombinations[index % colorCombinations.length];
 
             return assignee ? (
