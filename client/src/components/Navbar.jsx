@@ -31,15 +31,15 @@ function Navbar({ loginStatus }) {
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src={logo} className="md:h-8 h-12" alt="StudentOrbit Logo" />
-          <span className="hidden md:inline self-center md:text-3xl whitespace-nowrap text-[#012970] font-bold text-2xl">
+          <span className="inline self-center md:text-3xl whitespace-nowrap text-[#012970] font-bold text-2xl">
             StudentOrbit
           </span>
         </a>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           {isLoggedIn ? (
-            <div className="flex gap-3 items-center border-2 border-[#9ca8ff] rounded-3xl px-3 py-1">
+            <div className="flex gap-3 items-center border-2 border-[#9ca8ff] rounded-3xl px-3 py-3 md:px-3 md:py-1">
               <FaUser size={15} />
-              <div className="text-lg font-semibold">
+              <div className="hidden md:block text-lg font-semibold">
                 {localStorage.getItem("username").toUpperCase()}
               </div>
             </div>

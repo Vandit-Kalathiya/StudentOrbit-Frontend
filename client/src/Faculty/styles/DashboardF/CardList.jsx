@@ -22,7 +22,7 @@ const cardData = [
 const CardList = () => (
   <div className="flex flex-wrap justify-between">
     {cardData.map((card, index) => (
-      <div key={index} className="w-full lg:w-[49%] mb-2">
+      <div key={index} className="w-full lg:w-[49%] md:mb-2 mb-5">
         <div
           className={`w-full p-4 rounded-lg shadow-md flex items-center bg-white h-28 ${card.borderColor}`}
         >

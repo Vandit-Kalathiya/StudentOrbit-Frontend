@@ -17,6 +17,21 @@ const DashboardDetails = () => {
   const [inProgress, setInProgress] = useState(0);
   const [completed, setCompleted] = useState(0);
 
+  const [weeks, setWeeks] = useState([]);
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:1818/students/gs/${localStorage.getItem("username")}`)
+      .then((res) => {
+        setWeeks(res.data[0].weeks)
+        setMembers(res.data[0].students)
+      }
+      )
+  }, []);
+
+  console.log(members);
+  
+
   const containerVariants = {
     hidden: {
       opacity: 0,
@@ -45,15 +60,12 @@ const DashboardDetails = () => {
     axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/TO_DO`)
       .then((res) => setTodo(res.data));
 
-      axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/IN_PROGRESS`)
+    axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/IN_PROGRESS`)
       .then((res) => setInProgress(res.data));
 
-      axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/COMPLETED`)
+    axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/COMPLETED`)
       .then((res) => setCompleted(res.data));
   }, []);
-
-  console.log(todo, " in ", inProgress, " c", completed);
-  
 
   return (
     <motion.div
@@ -84,10 +96,10 @@ const DashboardDetails = () => {
       <motion.div className="grid md:grid-cols-2 gap-8 mb-5" variants={itemVariants}
       >
         <motion.div variants={itemVariants}>
-          <TeamProgressCard />
+          <TeamProgressCard weeks={weeks} />
         </motion.div>
         <motion.div variants={itemVariants}>
-          <WorkloadCard />
+          <WorkloadCard members={members} />
         </motion.div>
       </motion.div>
     </motion.div>

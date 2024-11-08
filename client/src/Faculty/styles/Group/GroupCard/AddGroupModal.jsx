@@ -15,6 +15,7 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
   const [groupLeaderId, setGroupLeaderId] = useState("");
   const [students, setStudents] = useState(new Set());
   const [technologies, setTechnologies] = useState(new Set());
+  const [startDate, setStartDate] = useState("");
 
   const handleGroupName = (e) => {
     setGroupName(e.target.value);
@@ -27,6 +28,10 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
   const handleGroupLeaderId = (e) => {
     setGroupLeaderId(e.target.value);
   };
+
+  const handleStartDate = (e) => {
+    setStartDate(e.target.value);
+  }
 
   const handleStudents = (e) => {
     const studentIdsArray = e.target.value.split(",").map((id) => id.trim());
@@ -78,6 +83,7 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
       groupLeaderId,
       students: Array.from(students),
       technologies: Array.from(technologies),
+      // startDate,
     };
     console.log(batch)
     console.log(groupData);
@@ -126,7 +132,20 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
           label="Description"
           rules={[{ required: true, message: "Please input the description!" }]}
         >
-          <TextArea rows={4} onChange={(e) => handleGroupDescription(e)} />
+          <TextArea rows={3} onChange={(e) => handleGroupDescription(e)} />
+        </Form.Item>
+        <Form.Item
+          name="startdate"
+          label="Start Date"
+          rules={[
+            { required: true, message: "Please input the start date of project!" },
+          ]}
+        >
+          <Input
+            placeholder="Please enter it very carefully"
+            type="date"
+            onChange={(e) => handleStartDate(e)}
+          />
         </Form.Item>
         <Form.Item
           name="technologies"
@@ -143,7 +162,7 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
         <Form.Item
           name="studentIds"
           label="Student IDs"
-          rules={[{ validator: validateStudentIds }]}
+          rules={[{ required: true, validator: validateStudentIds }]}
         >
           <Input
             placeholder="Comma-separated, max 4 IDs"
