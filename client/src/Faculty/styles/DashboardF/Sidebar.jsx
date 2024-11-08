@@ -1,25 +1,39 @@
-import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Button, Layout } from "antd";
 import MenuList from "./MenuList";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import Main from "../Main";
-import Group from "./Group/GroupCard/Group";
-import Batch from "./Batch/Batch";
-import WeekDetails from "./Task/TaskCard/WeekDetails";
-import TaskDetail from "./Task/TaskPage/TaskDetail";
-import Project from "../../Progress/Project";
-import GroupDetailsNew from "./Group/GroupDetailsNew";
+import Main from "../DashboardF/Main";
+import Group from "../Group/GroupCard/Group";
+import Batch from "../Batch/Batch";
+import WeekDetails from "../Task/TaskCard/WeekDetails";
+import TaskDetail from "../Task/TaskPage/TaskDetail";
+// import Project from "../../Progress/Project";
+import GroupDetailsNew from "../Group/GroupDetailsNew";
 
 const { Sider, Content } = Layout;
 
 function Sidebar({ setLoginStatus }) {
   const [collapsed, setCollapsed] = useState(true);
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setSidebarVisible(prev => !prev);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) { 
+        setSidebarVisible(false);    
+        setCollapsed(true);    
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [location]);
 
   return (
     <Layout className="flex w-[100vw]">
@@ -71,7 +85,7 @@ function Sidebar({ setLoginStatus }) {
             <Route path="batches/:batch/:projectName" element={<GroupDetailsNew collapsed={collapsed} />} />
             <Route path="batches/:batch/:projectName/:week" element={<WeekDetails />} />
             <Route path="batches/:batch/:projectName/:week/:taskId" element={<TaskDetail />} />
-            <Route path="progress" element={<Project />} />
+            {/* <Route path="progress" element={<Project />} /> */}
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Content>

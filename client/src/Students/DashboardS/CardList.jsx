@@ -1,8 +1,10 @@
+import React from "react";
 import { CheckCircleOutlined, PlusCircleOutlined, SyncOutlined } from "@ant-design/icons";
 
 const cardData = [
   {
-    title: "12 done",
+    status: "done",
+    title: "Done",
     description: "in the last 7 days 🎉",
     icon: <CheckCircleOutlined />,
     borderColor: "border-green-200",
@@ -10,7 +12,8 @@ const cardData = [
     iconColor: "text-green-500",
   },
   {
-    title: "5 In Progress",
+    status: "inProgress",
+    title: "In Progress",
     description: "in the last 7 days 🔄",
     icon: <SyncOutlined />,
     borderColor: "border-blue-200",
@@ -18,7 +21,8 @@ const cardData = [
     iconColor: "text-blue-500",
   },
   {
-    title: "8 To do",
+    status: "toDo",
+    title: "To Do",
     description: "in the last 7 days ✨",
     icon: <PlusCircleOutlined />,
     borderColor: "border-yellow-200",
@@ -27,7 +31,7 @@ const cardData = [
   },
 ];
 
-const CardList = () => (
+const CardList = ({ todo, inProgress, completed }) => (
   <div className="flex flex-wrap -mx-4">
     {cardData.map((card, index) => (
       <div key={index} className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-6">
@@ -37,13 +41,15 @@ const CardList = () => (
           <div
             className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 ${card.avatarColor}`}
           >
-            <span className={`text-2xl ${card.iconColor}`}>
-              {card.icon}
-            </span>
+            <span className={`text-2xl ${card.iconColor}`}>{card.icon}</span>
           </div>
           <div>
             <div className={`font-semibold text-lg ${card.iconColor}`}>
-              {card.title}
+              {/* Display the counts based on the card's status */}
+              {card.status === "done" && completed}
+              {card.status === "inProgress" && inProgress}
+              {card.status === "toDo" && todo}
+              {" "}{card.title}
             </div>
             <div className="text-gray-500">{card.description}</div>
           </div>

@@ -1,6 +1,6 @@
 // import { BrowserRouter as Router } from "react-router-dom";
 // import heroBg from "../assets/hero-bg.png";
-import Sidebar from "./styles/Sidebar";
+import Sidebar from "./Sidebar";
 
 function Dashboard({ setLoginStatus }) {
   return (

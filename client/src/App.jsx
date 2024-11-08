@@ -8,9 +8,9 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate,
+  Navigate
 } from "react-router-dom";
-import Dashboard from "./Faculty/Dashboard";
+import DashboardF from "./Faculty/styles/DashboardF/Dashboard.jsx"
 import DashboardS from "./Students/Dashboard";
 import OTPVerification from "./components/Auth/OTPVerification";
 import { useEffect, useState } from "react";
@@ -66,7 +66,7 @@ function App() {
           path="/f/dashboard/*"
           element={
             isLoggedIn && userRole === "faculty" ? (
-              <Dashboard setLoginStatus={setIsLoggedIn} />
+              <DashboardF setLoginStatus={setIsLoggedIn} />
             ) : (
               <Navigate to="/login" />
             )
@@ -75,6 +75,7 @@ function App() {
 
         <Route
           path="/s/dashboard/*"
+          
           element={
             isLoggedIn && userRole === "student" ? (
               <DashboardS setLoginStatus={setIsLoggedIn} />

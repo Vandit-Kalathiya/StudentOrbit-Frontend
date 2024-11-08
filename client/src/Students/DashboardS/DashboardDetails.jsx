@@ -4,13 +4,18 @@ import TodoList from "./TodoList";
 import CalendarWrapper from "./CalendarWrapper";
 import TeamProgressCard from "./TeamProgressCard";
 import WorkloadCard from "./WorkloadCard";
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useLenisScroll from '../../Hooks/useLenisScroll';
+import axios from "axios";
 
 const DashboardDetails = () => {
 
   const todoListRef = useRef(null);
   useLenisScroll([todoListRef]);
+
+  const [todo, setTodo] = useState(0);
+  const [inProgress, setInProgress] = useState(0);
+  const [completed, setCompleted] = useState(0);
 
   const containerVariants = {
     hidden: {
@@ -36,6 +41,20 @@ const DashboardDetails = () => {
     },
   };
 
+  useEffect(() => {
+    axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/TO_DO`)
+      .then((res) => setTodo(res.data));
+
+      axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/IN_PROGRESS`)
+      .then((res) => setInProgress(res.data));
+
+      axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/COMPLETED`)
+      .then((res) => setCompleted(res.data));
+  }, []);
+
+  console.log(todo, " in ", inProgress, " c", completed);
+  
+
   return (
     <motion.div
       className="overflow-hidden mt-10 px-8 md:mt-8 md:px-8"
@@ -48,7 +67,7 @@ const DashboardDetails = () => {
           className="w-full md:w-2/3 lg:w-3/4 px-4 flex flex-col"
           variants={itemVariants}
         >
-          <CardList />
+          <CardList todo={todo} inProgress={inProgress} completed={completed} />
           <motion.div className="w-full mb-6" ref={todoListRef} variants={itemVariants}>
             <TodoList />
           </motion.div>

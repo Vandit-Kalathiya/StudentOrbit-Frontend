@@ -23,9 +23,8 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
 
   const selectedKey = (() => {
     if (matchPath("/f/dashboard", location.pathname)) return "1";
-    if (matchPath("/s/dashboard", location.pathname)) return "2";
-    if (matchPath("/f/dashboard/batches/*", location.pathname)) return "3";
-    if (matchPath("/f/dashboard/progress", location.pathname)) return "4";
+    if (matchPath("/f/dashboard/batches/*", location.pathname)) return "2";
+    if (matchPath("/f/dashboard/progress", location.pathname)) return "3";
     return "1"; 
   })();
 

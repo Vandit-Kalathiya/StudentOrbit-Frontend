@@ -7,6 +7,7 @@ import TaskAssignees from "./TaskAssignees";
 import FacultyComments from "./FacultyComments";
 import AssigneesModal from "./AssigneesModal";
 import axios from "axios";
+import SubmittedFiles from "./SubmittedFiles";
 
 function TaskDetail() {
   const location = useLocation();
@@ -14,6 +15,7 @@ function TaskDetail() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedAssignees, setSelectedAssignees] = useState([]);
   const [assigneeMembers, setAssigneeMembers] = useState(task.assignee);
+  // const [submittedFiles, setSubmittedFiles] = useState([]);
 
   useEffect(() => {}, [assigneeMembers]);
 
@@ -27,6 +29,38 @@ function TaskDetail() {
         console.error("There was an error while assigning assignees: ", error);
       });
   };
+
+  const dummyFiles = [
+    {
+      name: "Project_Report.pdf",
+      type: "pdf",
+      url: "#",
+      uploadedAt: "2023-11-01",
+    },
+    {
+      name: "Presentation_Slides.pptx",
+      type: "ppt",
+      url: "#",
+      uploadedAt: "2023-11-01",
+    },
+    {
+      name: "Design_Mockup.png",
+      type: "png",
+      url: "#",
+      uploadedAt: "2023-11-03",
+    },
+  ];
+
+  // useEffect(() => {
+  //   axios
+  //     .get(http://localhost:1818/tasks/${task.id}/files)
+  //     .then((res) => {
+  //       setSubmittedFiles(res.data.files);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching submitted files: ", error);
+  //     });
+  // }, [task.id]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -58,9 +92,7 @@ function TaskDetail() {
         taskId={task.id}
       />
 
-      <div>
-        <h1 className="text-lg md:text-xl mb-4 font-semibold">Submitted Task</h1>
-      </div>
+        <SubmittedFiles files={dummyFiles} />
 
       <FacultyComments taskId={task.id} />
       <AssigneesModal

@@ -83,26 +83,30 @@ const TaskActions = ({
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/upload",
-        formData,
-        {
+      // If a file is present, upload it
+      if (file) {
+        const response = await axios.post("http://localhost:8080/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
-      );
-      console.log("Upload Response:", response.data);
+        });
+        message.success("File uploaded successfully!");
+        console.log("File uploaded:", response.data);
+      }
 
-      updateTaskStatus(taskId, "IN_REVIEW", assignees, formData);
+      // Update task status after uploading the file (if any)
+      await updateTaskStatus(taskId, "IN_REVIEW", assignees);
+
     } catch (error) {
-      console.error("File upload failed:", error);
-      message.error("Failed to upload file. Please try again.");
+      console.error("File upload or task update failed:", error);
+      message.error("Failed to upload file or update task. Please try again.");
     }
 
+    // Clear the review link and file input after submission
     setReviewLink("");
     setFile(null);
   };
+
 
   const handleCancelLink = () => {
     setIsLinkModalVisible(false);
