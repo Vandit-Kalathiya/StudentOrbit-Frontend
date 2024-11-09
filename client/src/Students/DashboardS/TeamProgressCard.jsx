@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import { useEffect, useState } from "react";
 
-const COLORS = ["#00C49F", "#0088FE", "#FFBB28"];
+const COLORS = ["#00C49F", "#0088FE", "#FFBB28", "#FEEC37"];
 
 const TeamProgressCard = ({ weeks }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -18,12 +18,14 @@ const TeamProgressCard = ({ weeks }) => {
   const [todo, setTodo] = useState(0);
   const [inProgress, setInProgress] = useState(0);
   const [completed, setCompleted] = useState(0);
+  const [inReview, setInReview] = useState(0);
 
   // Aggregate tasks by status for all weeks
   const aggregateTasksByStatus = () => {
     let todoCount = 0;
     let inProgressCount = 0;
     let completedCount = 0;
+    let inReviewCount = 0;
 
     weeks.forEach((week) => {
       week.tasks.forEach((task) => {
@@ -37,15 +39,21 @@ const TeamProgressCard = ({ weeks }) => {
           case 'COMPLETED':
             completedCount++;
             break;
+          case 'IN_REVIEW':
+            inReviewCount++;
+            break;
           default:
             break;
         }
       });
     });
 
+    // console.log(todoCount + inReviewCount + completedCount + inProgressCount)
+
     setTodo(todoCount);
     setInProgress(inProgressCount);
     setCompleted(completedCount);
+    setInReview(inReviewCount);
   };
 
   // Run the aggregation when weeks data changes
@@ -59,6 +67,7 @@ const TeamProgressCard = ({ weeks }) => {
     { name: "Completed", tasks: completed },
     { name: "In Progress", tasks: inProgress },
     { name: "To Do", tasks: todo },
+    { name: "In Review", tasks: inReview }
   ];
 
   const totalTasks = data.reduce((sum, entry) => sum + entry.tasks, 0);
@@ -68,7 +77,7 @@ const TeamProgressCard = ({ weeks }) => {
   };
 
   const handleMouseLeave = () => {
-    setActiveIndex(0); 
+    setActiveIndex(0);
   };
 
   const getCenterLabel = () => {
