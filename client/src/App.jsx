@@ -17,10 +17,27 @@ import { useEffect, useState } from "react";
 import Loader from "./components/Loader.jsx";
 import NotFound from "./components/NotFound.jsx";
 import useLenisScroll from "./Hooks/useLenisScroll.jsx";
+import Footer from "./components/Footer.jsx";
+import GlobalStyle from "../GlobalStyles.js";
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode'
 
 function App() {
+  const token = Cookies.get('jwt_token')
+  // let userRole = localStorage.getItem("role");
+  let userRole = null;
+  
+  if (token) {
+    // console.log(jwtDecode(token));
+    const { role } = jwtDecode(token);
+    console.log(role);
+    userRole = role
+  }
+
+
   const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("role") != null
+    // localStorage.getItem("role") != null
+    userRole != null
   );
   const [loading, setLoading] = useState(true);
 
@@ -41,20 +58,21 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const role = localStorage.getItem("role");
-    if (role) {
+    // const role = localStorage.getItem("role");
+    if (userRole) {
       setIsLoggedIn(true);
     }
-  }, [localStorage.getItem("role")]);
+  }, [userRole]);
 
   if (loading) {
     return <Loader />;
   }
 
-  let userRole = localStorage.getItem("role");
+
 
   return (
     <Router>
+      <GlobalStyle />
       <Navbar loginStatus={isLoggedIn} />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -75,7 +93,7 @@ function App() {
 
         <Route
           path="/s/dashboard/*"
-          
+
           element={
             isLoggedIn && userRole === "student" ? (
               <DashboardS setLoginStatus={setIsLoggedIn} />

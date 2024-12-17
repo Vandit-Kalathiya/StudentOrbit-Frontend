@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import ProjectCardItem from "./ProjectCardItem";
 import { motion } from 'framer-motion';
 import axios from "axios";
+import { getUsernameFromToken } from "../../../authToken";
 
 const ProjectCard = () => {
   const [projects, setProject] = useState([]);
 
   useEffect(() => {
+    const fetchedUsername = getUsernameFromToken();
     axios
-      .get(`http://localhost:1818/students/g/${localStorage.getItem("username")}`)
+      .get(`http://localhost:1818/students/g/${fetchedUsername}`,{ withCredentials: true, })
       .then((res) => {
         const demo = res.data;
         setProject(demo);
@@ -17,6 +19,9 @@ const ProjectCard = () => {
         console.error("There was an error while getting all batches: ", error);
       });
   }, []);
+
+  // console.log(projects);
+  
 
   const containerVariants = {
     hidden: { opacity: 0 },

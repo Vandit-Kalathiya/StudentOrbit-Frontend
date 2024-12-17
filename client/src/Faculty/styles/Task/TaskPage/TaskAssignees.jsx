@@ -17,7 +17,7 @@ const TaskAssignees = ({ assignees, showModal, taskId }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/tasks/assignees/${taskId}`)
+      .get(`http://localhost:1818/tasks/assignees/${taskId}`, { withCredentials: true })
       .then((res) => {
         setAssigneeMembers(res.data);
       })
@@ -28,7 +28,7 @@ const TaskAssignees = ({ assignees, showModal, taskId }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/tasks/assignees/${taskId}`)
+      .get(`http://localhost:1818/tasks/assignees/${taskId}`, { withCredentials: true })
       .then((res) => {
         setAssigneeMembers(res.data);
       })

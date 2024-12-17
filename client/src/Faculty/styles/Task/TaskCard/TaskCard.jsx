@@ -7,39 +7,38 @@ import TaskAssignees from "./TaskAssignees";
 import TaskActions from "./TaskActions";
 import TaskCompletionModal from "./TaskCompletionModal";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
-const TaskCard = ({ singleTask, updateTaskStatus, members}) => {
+const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [task,setTask] = useState(singleTask)
+  const [task, setTask] = useState(singleTask)
   const [currentAssignees, setCurrentAssignees] = useState(singleTask.assignee);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const location = useLocation();
   const { batch, projectName, week } = useParams();
 
-  useEffect(()=>{
-  },[currentAssignees,task])
+  useEffect(() => {
+  }, [currentAssignees, task])
 
   const handleAssign = async (assigneeIds, taskId) => {
     try {
-      const res = await axios.post(`http://localhost:1818/tasks/${taskId}`, assigneeIds);
-  
+      const res = await axios.post(`http://localhost:1818/tasks/${taskId}`, assigneeIds, { withCredentials: true });
       setTask(res.data);
       setCurrentAssignees(res.data.assignee);
-      
       return res.data;
     } catch (error) {
-      console.error("There was an error while assigning assignees: ", error);
-      throw error; 
+      return error
     }
   };
-  
+
+
   const cardVariants = {
     initial: { opacity: 0, scale: 0.8 },
     animate: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 0.8 },
   };
 
-  
+
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -60,7 +59,7 @@ const TaskCard = ({ singleTask, updateTaskStatus, members}) => {
       });
     } else if (location.pathname.startsWith('/s/dashboard')) {
       navigate(`/s/dashboard/projects/${projectName}/${week}/${task.id}`, {
-        state: { task , members},
+        state: { task, members },
       });
     }
   };
@@ -72,7 +71,7 @@ const TaskCard = ({ singleTask, updateTaskStatus, members}) => {
       initial="initial"
       animate="animate"
       exit="exit"
-      transition={{ duration: 0.3 }} 
+      transition={{ duration: 0.3 }}
     >
       <TaskStatus status={task.status} title={task.name} />
       <TaskDescription description={task.description} onReadMore={handleReadMore} />

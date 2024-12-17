@@ -3,19 +3,19 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const FacultyComments = ({taskId}) => {
+const FacultyComments = ({ taskId }) => {
   const [comments, setComments] = useState([]);
-  
+
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/tasks/comments/${taskId}`)
+      .get(`http://localhost:1818/tasks/comments/${taskId}`, { withCredentials: true })
       .then((res) => {
         setComments(res.data)
       })
       .catch((error) => {
         console.error("There was an error while fetching comments : ", error);
       });
-  },[])  
+  }, [])
 
   return (
     <div className="mt-8">

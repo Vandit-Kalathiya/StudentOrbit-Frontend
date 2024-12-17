@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Select, Button, Input, Radio } from "antd";
+import axios from "axios";
+import { getUsernameFromToken } from "../../../../authToken";
 
 const { Option } = Select;
 
@@ -10,6 +12,7 @@ const BatchReportDropdown = () => {
   const [studentId, setStudentId] = useState(null);
   const [weekType, setWeekType] = useState(null);
   const [weekNumber, setWeekNumber] = useState(null);
+  const fetchedUsername = getUsernameFromToken()
 
   // Sample Data
   const batchData = [
@@ -28,27 +31,46 @@ const BatchReportDropdown = () => {
   };
 
   const handleGenerateReport = () => {
-    // Logic to generate report based on the selected options
-    if (reportType === "Individual Student" && studentId) {
-      console.log(
-        `Generating report for Student ID: ${studentId}, ${weekType} ${
-          weekNumber ? `- Week ${weekNumber}` : ""
-        }`
-      );
-    } else if (
-      reportType === "One Group of Any Batch" &&
-      selectedBatch &&
-      selectedGroup
-    ) {
-      console.log(
-        `Generating report for ${selectedBatch} - ${selectedGroup}, ${weekType} ${
-          weekNumber ? `- Week ${weekNumber}` : ""
-        }`
-      );
-    } else {
-      console.log("Please complete the selections for report generation.");
-    }
+    axios
+      .get(`http://localhost:1819/pdf/create/${fetchedUsername}`, {
+        responseType: "blob", withCredentials: true
+      })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "StudentOrbitReport.pdf");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
   };
+
+  // const handleGenerateReport = () => {
+  //   // Logic to generate report based on the selected options
+  //   if (reportType === "Individual Student" && studentId) {
+  //     console.log(
+  //       `Generating report for Student ID: ${studentId}, ${weekType} ${
+  //         weekNumber ? `- Week ${weekNumber}` : ""
+  //       }`
+  //     );
+  //   } else if (
+  //     reportType === "One Group of Any Batch" &&
+  //     selectedBatch &&
+  //     selectedGroup
+  //   ) {
+  //     console.log(
+  //       `Generating report for ${selectedBatch} - ${selectedGroup}, ${weekType} ${
+  //         weekNumber ? `- Week ${weekNumber}` : ""
+  //       }`
+  //     );
+  //   } else {
+  //     console.log("Please complete the selections for report generation.");
+  //   }
+  // };
 
   return (
     <div className="p-5 bg-white rounded-lg shadow-lg space-y-4 mb-2 ">
@@ -113,32 +135,32 @@ const BatchReportDropdown = () => {
 
       {(reportType === "Individual Student" ||
         reportType === "One Group of Any Batch") && (
-        <div className="mt-4 flex items-center space-x-4 w-full">
-          <Radio.Group
-            onChange={(e) => setWeekType(e.target.value)}
-            value={weekType}
-            className="flex items-center w-1/2"
-          >
-            <Radio value="Week-wise" className="w-1/2">
-              Week-wise
-            </Radio>
-            <Radio value="All Weeks" className="w-1/2">
-              All Weeks
-            </Radio>
-          </Radio.Group>
+          <div className="mt-4 flex items-center space-x-4 w-full">
+            <Radio.Group
+              onChange={(e) => setWeekType(e.target.value)}
+              value={weekType}
+              className="flex items-center w-1/2"
+            >
+              <Radio value="Week-wise" className="w-1/2">
+                Week-wise
+              </Radio>
+              <Radio value="All Weeks" className="w-1/2">
+                All Weeks
+              </Radio>
+            </Radio.Group>
 
-          {/* Week Number Input (only for Week-wise selection) */}
-          {weekType === "Week-wise" && (
-            <Input
-              placeholder="Enter Week Number"
-              onChange={(e) => setWeekNumber(e.target.value)}
-              value={weekNumber}
-              type="number"
-              className="text-gray-700 ml-2 flex-grow w-1/2"
-            />
-          )}
-        </div>
-      )}
+            {/* Week Number Input (only for Week-wise selection) */}
+            {weekType === "Week-wise" && (
+              <Input
+                placeholder="Enter Week Number"
+                onChange={(e) => setWeekNumber(e.target.value)}
+                value={weekNumber}
+                type="number"
+                className="text-gray-700 ml-2 flex-grow w-1/2"
+              />
+            )}
+          </div>
+        )}
 
       {/* Generate Report Button */}
       <Button

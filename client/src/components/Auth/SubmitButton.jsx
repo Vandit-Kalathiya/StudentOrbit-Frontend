@@ -12,6 +12,7 @@ function SubmitButton({ handleOtpSend, formData, isStudent }) {
           password: formData.password,
           email: formData.email,
           isStudent: isStudent,
+          name: formData.name
         }}
       >
         <Button size="large" className="btn w-full bg-[#5B6DF3] text-white">

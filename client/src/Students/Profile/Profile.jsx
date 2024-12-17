@@ -10,6 +10,7 @@ import Mentors from "./Mentors";
 import Projects from "./Projects";
 import { MdOutlineEdit } from "react-icons/md";
 import axios from "axios";
+import { getUsernameFromToken } from "../../../authToken";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -31,23 +32,37 @@ const sectionVariants = {
 function Profile() {
   const [modalType, setModalType] = useState(null);
   const [profileData, setProfileData] = useState({
-    profileImage: "",
     github: "",
     linkedin: "",
   });
   const [newSkill, setNewSkill] = useState([]);
   const [skills, setSkills] = useState([]);
   const [userData, setUserData] = useState({});
+  const [image, setImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
+  const fetchedUsername = getUsernameFromToken();
 
   useEffect(() => {
     const username = localStorage.getItem("username");
-    axios.get(`http://localhost:1818/students/u/${username}`)
+    axios.get(`http://localhost:1818/students/u/${fetchedUsername}`, { withCredentials: true, })
       .then((res) => {
         setUserData(res.data);
       })
       .catch(() => console.log("Error while fetching user data"));
+    axios.get(`http://localhost:1818/students/${fetchedUsername}/image`, { withCredentials: true, responseType: "blob" })
+      .then((res) => {
+        // console.log(URL.createObjectURL(res.data));
+        setProfileImage(URL.createObjectURL(res.data))
+      })
   }, [])
 
+  useEffect(() => {
+    axios.get(`http://localhost:1818/students/${getUsernameFromToken()}/image`, { withCredentials: true, responseType: "blob" })
+      .then((res) => {
+        // console.log(URL.createObjectURL(res.data));
+        setProfileImage(URL.createObjectURL(res.data))
+      })
+  }, [userData])
 
 
   const handleModalOpen = (type) => {
@@ -67,21 +82,17 @@ function Profile() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileData((prev) => ({ ...prev, profileImage: reader.result }));
-      };
-      reader.readAsDataURL(file);
+      setImage(file)
     }
   };
+
 
 
   const addSkill = () => {
     let t = []
     if (newSkill) {
-      const username = localStorage.getItem("username");
       t.push(newSkill)
-      axios.post(`http://localhost:1818/students/skills/${username}`, t)
+      axios.post(`http://localhost:1818/students/skills/${fetchedUsername}`, t, { withCredentials: true, })
         .then((res) => {
           setSkills(res.data.skills);
         })
@@ -95,13 +106,24 @@ function Profile() {
 
   const handleSubmitProfile = (e) => {
     e.preventDefault();
-    const username = localStorage.getItem("username");
-
-    axios.put(`http://localhost:1818/students/profile/${username}`, { "gitHubUrl": profileData.github, "linkedInUrl": profileData.linkedin })
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append(
+      "profileUpdateRequest",
+      new Blob([JSON.stringify(profileData)], { type: "application/json" })
+    );
+    // console.log(image);
+    axios.put(`http://localhost:1818/students/profile/${fetchedUsername}`, formData, {
+      withCredentials: true, headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
       .then((res) => {
-        setSkills(res.data.skills);
+        setUserData(res.data)
       })
-      .catch(() => console.log("Error while updating profile.!"));
+      .catch(() => {
+        console.error("Error while updating profile.!")
+      });
 
     console.log("Updated Profile Data:", profileData);
     handleModalClose();
@@ -120,12 +142,12 @@ function Profile() {
       initial="hidden"
       animate="visible"
     >
-      <div className="relative">
+      <div className="relative font-poppins">
         <motion.div
           className="bg-white p-5 md:p-0 md:mb-7 w-full md:h-[30vh] rounded-xl flex flex-col md:flex-row items-center justify-evenly"
           variants={sectionVariants}
         >
-          <ProfileImage />
+          <ProfileImage image={profileImage} />
           <ProfileDetails student={userData} />
           <div className="divider"></div>
           <ContactInfo student={userData} />
@@ -160,7 +182,7 @@ function Profile() {
       >
         <form onSubmit={handleSubmitProfile} className="mb-4">
           <div className="mb-3">
-            <label className="block text-gray-700" htmlFor="profileImage">
+            <label className="block text-gray-700" htmlFor="image">
               Profile Image:
             </label>
             <input

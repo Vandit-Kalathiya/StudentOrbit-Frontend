@@ -3,13 +3,25 @@ import React from 'react'
 import Hero from './Hero'
 import About from './About'
 import Contact from './Contact'
+import Footer from './Footer'
+import ServicesSection from './ServiceCard'
+import CreativeHeroSlider from './CreativeHeroSlider'
+import IntroSection from './IntroSection'
+import KeewayFeatures from './KeeWayFeatures'
+import EndPart from './EndPart'
+import MainSection from './MainSection'
 
 function Home() {
   return (
     <>
       <Hero />
-      <About />
-      <Contact />
+      <ServicesSection/>
+      <CreativeHeroSlider/>
+      <IntroSection/>
+      <KeewayFeatures/>
+      <EndPart/>
+      <MainSection/>
+      <Footer/>
     </>
   )
 }

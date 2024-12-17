@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getTokenFromCookie } from '../../../../authToken';
 
 const MenuList = ({ darkTheme, setLoginStatus }) => {
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(false);
@@ -35,15 +36,16 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
   const handleLogout = () => {
     axios
       .post("http://localhost:1818/auth/logout", null, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("f_jwt")}`,
-        },
+        withCredentials: true,
+        headers:{
+          Authorization:"Bearer " + getTokenFromCookie()
+        }
       })
       .then(() => {
         console.log("Logged out successfully");
-        localStorage.removeItem("f_jwt");
-        localStorage.removeItem("role");
-        localStorage.removeItem('username');
+        // localStorage.removeItem("f_jwt");
+        // localStorage.removeItem("role");
+        // localStorage.removeItem('username');
         console.log("Logging out user");
         
         setLoginStatus(false);

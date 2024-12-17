@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { NavLink, useNavigate, useLocation, matchPath } from "react-router-dom";
 import axios from "axios";
+import { getTokenFromCookie } from "../../authToken";
 
 const MenuList = ({ darkTheme, setLoginStatus }) => {
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
@@ -19,14 +20,15 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
   const handleLogout = async () => {
     try {
       await axios.post("http://localhost:1818/auth/logout", null, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("s_jwt")}`,
-        },
+        withCredentials: true,
+        headers:{
+          Authorization:"Bearer " + getTokenFromCookie()
+        }
       });
       console.log("Logged out successfully");
-      localStorage.removeItem("s_jwt");
-      localStorage.removeItem("role");
-      localStorage.removeItem('username');
+      // localStorage.removeItem("s_jwt");
+      // localStorage.removeItem("role");
+      // localStorage.removeItem('username');
       setLoginStatus(false);
       navigate("/");
     } catch (error) {
@@ -49,33 +51,40 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
   const getNavLinkClass = ({ isActive }) => 
     isActive ? "text-[#4859DA]" : "";
 
+  // Defining the menu items array
+  const menuItems = [
+    {
+      key: "1",
+      icon: <DashboardOutlined />,
+      label: <NavLink to="/s/dashboard" className={getNavLinkClass}>Dashboard</NavLink>,
+    },
+    {
+      key: "2",
+      icon: <ProjectOutlined />,
+      label: <NavLink to="/s/dashboard/projects" className={getNavLinkClass}>Projects</NavLink>,
+    },
+    {
+      key: "3",
+      icon: <UserOutlined />,
+      label: <NavLink to="/s/dashboard/profile" className={getNavLinkClass}>Profile</NavLink>,
+    },
+    {
+      key: "4",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      onClick: showLogoutModal,
+    },
+  ];
+
   return (
     <>
       <Menu
         theme={darkTheme ? "dark" : "light"}
         mode="inline"
         selectedKeys={[selectedKey]}
+        items={menuItems} // Using the items prop instead of children
         className="min-h-[100vh] mt-0 flex flex-col gap-[15px] text-[1rem] relative"
-      >
-        <Menu.Item key="1" icon={<DashboardOutlined />}>
-          <NavLink to="/s/dashboard" className={getNavLinkClass}>
-            Dashboard
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="2" icon={<ProjectOutlined />}>
-          <NavLink to="/s/dashboard/projects" className={getNavLinkClass}>
-            Projects
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="3" icon={<UserOutlined />}>
-          <NavLink to="/s/dashboard/profile" className={getNavLinkClass}>
-            Profile
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="4" icon={<LogoutOutlined />} onClick={showLogoutModal}>
-          Logout
-        </Menu.Item>
-      </Menu>
+      />
 
       <Modal
         title="Confirm Logout"

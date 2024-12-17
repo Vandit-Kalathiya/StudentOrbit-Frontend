@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Select, Button } from "antd";
 import axios from "axios";
 import { useState } from "react";
+import { getUsernameFromToken } from "../../../../authToken";
 
 const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
   const [batchName, setBatchName] = useState("");
@@ -8,6 +9,7 @@ const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
   const [startId, setStartId] = useState("");
   const [endId, setEndId] = useState("");
   const [loading, setLoading] = useState(false);
+  const fetchedUsername = getUsernameFromToken()
 
   const handleBatchName = (e) => {
     setBatchName(e.target.value);
@@ -29,6 +31,7 @@ const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
       semester: semester,
       startId: startId,
       endId: endId,
+      assignedFacultyUsername: fetchedUsername
     };
     console.log(batchData);
 
@@ -43,7 +46,7 @@ const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
     } catch (error) {
       console.error("There was an error submitting the batch:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Form, Input, Select } from "antd";
+import { Modal, Form, Input, Select, message } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -17,17 +17,22 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
 
   const handleTasks = async () => {
     try {
+      if (project.mentor == null) {
+        return message.error("Please select a mentor first..!");
+      }
+
       const res = await axios.post(
         `http://localhost:1818/tasks/add/${project.id}/${currentWeekId}`,
-        tasks, 
+        tasks,
         {
           withCredentials: true,
         }
       );
 
       console.log("Task added successfully", res.data);
+
       axios
-        .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-"," ")}`)
+        .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`, { withCredentials: true })
         .then((res) => {
           const demo = res.data;
           handleOk(demo);
@@ -35,11 +40,12 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
         .catch((error) => {
           console.error("There was an error while getting all batches: ", error);
         });
-        
+
     } catch (error) {
       console.error("Error adding task", error);
     }
   };
+
 
   return (
     <Modal
@@ -75,7 +81,7 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
           <Input
             rows={4}
             placeholder="Enter task description"
-            name="taskDescription" 
+            name="taskDescription"
             onChange={handleInputChange}
           />
         </Form.Item>

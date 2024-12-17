@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Avatar, Button, Modal, Form, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const { Option } = Select;
 
@@ -26,7 +27,7 @@ const TaskAssignees = ({
   const location = useLocation();
 
   useEffect(() => {
-    
+
   }, [assigneeMembers]);
 
   const showModal = () => {
@@ -44,15 +45,15 @@ const TaskAssignees = ({
   const handleFormSubmit = async (values) => {
     setSelectedAssignees(values.assignees);
     setIsModalVisible(false);
-
-    try {
-        const data = await handleAssign(values.assignees, taskId);
-        console.log(data);
-        setAssigneeMembers(data.assignee);
-    } catch (error) {
-        console.error("There was an error while assigning assignees: ", error);
+    const data = await handleAssign(values.assignees, taskId);
+    console.log(data);
+    if (data.assignee) {
+      setAssigneeMembers(data.assignee);
+      toast.success('Task assignees added successfully..')
+    } else {
+      toast.error(data.response.data?.message || "Error while assigning assignees.");
     }
-};
+  };
 
 
   const handleSelect = () => {
@@ -79,6 +80,7 @@ const TaskAssignees = ({
                   backgroundColor: color.backgroundColor,
                   color: color.color,
                   border: `2px solid ${color.border}`,
+                  marginLeft: 3,
                 }}
               >
                 {assignee.username.substring(4, 7).toUpperCase()}

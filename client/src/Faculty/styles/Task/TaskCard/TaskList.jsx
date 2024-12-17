@@ -22,23 +22,23 @@ const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees, members })
           ))}
         </Row>
       ) : (
-        <Empty description={`No tasks in ${status.toLowerCase()}`} />
+        <Empty description={`No tasks in ${status.toUpperCase()}`} />
       )}
     </div>
   );
 };
 
-TaskList.propTypes = {
-  tasks: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
-      description: PropTypes.string,
-      status: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  status: PropTypes.string.isRequired,
-  updateTaskStatus: PropTypes.func.isRequired,
-};
+// TaskList.propTypes = {
+//   tasks: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       // id: PropTypes.number.isRequired,
+//       title: PropTypes.string.isRequired,
+//       description: PropTypes.string,
+//       status: PropTypes.string.isRequired,
+//     })
+//   ).isRequired,
+//   status: PropTypes.string.isRequired,
+//   updateTaskStatus: PropTypes.func.isRequired,
+// };
 
 export default TaskList;

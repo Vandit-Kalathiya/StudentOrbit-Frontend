@@ -16,28 +16,42 @@ const TodoList = () => (
   <div className="bg-white rounded-lg shadow-sm p-4 w-full">
     <div className="font-semibold text-lg mb-4 flex items-center">
       <FcTodoList className="mr-2 text-xl" />
-      <NavLink to='/s/dashboard/projects'>
-        To-Do List for This Week
-      </NavLink>
+      <NavLink to="/s/dashboard/projects">To-Do List for This Week</NavLink>
     </div>
     <div className="max-h-[106px] overflow-y-auto no-scrollbar">
       <List
         dataSource={todoListData}
         renderItem={(item, index) => (
           <List.Item
-            className={`flex justify-between items-center border-b border-gray-200 py-2`}
+            className={`flex justify-between items-center border-b border-gray-200 rounded-2xl ${item.completed ? "bg-green-50" : ""
+              }`}
           >
-            <div className="flex items-center">
+            <div className="flex items-center px-2">
               <div className="bg-blue-100 rounded-full w-8 h-8 flex items-center justify-center mr-3">
                 {index + 1}
               </div>
-              <div className={`flex items-center ${item.completed ? 'line-through text-gray-400' : ''}`}>
+              <div
+                className={`flex items-center ${item.completed ? "line-through text-gray-400" : ""
+                  }`}
+              >
                 {item.task}
-                {item.completed && <FaCheckCircle className="ml-2 text-green-500" />}
               </div>
             </div>
-            <div className="text-gray-400 text-sm">
-              {item.completed ? 'Completed' : `Due: ${moment(item.deadline).format("MMM DD, YYYY")}`}
+            <div
+              className={`text-sm px-2 flex items-center ${item.completed ? "text-green-600 font-bold" : "text-gray-400"
+                }`}
+            >
+              {item.completed ? (
+                <>
+                  <div className="flex items-center border-2 rounded-lg py-1 border-green-200 px-2">
+                    <div><FaCheckCircle className="mr-2 text-green-500" />
+                    </div>
+                    <div>Completed</div>
+                  </div>
+                </>
+              ) : (
+                `Due: ${moment(item.deadline).format("MMM DD, YYYY")}`
+              )}
             </div>
           </List.Item>
         )}

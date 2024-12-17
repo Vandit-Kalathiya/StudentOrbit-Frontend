@@ -7,6 +7,8 @@ import axios from "axios";
 import ToggleRole from "./ToggleRole";
 import LoginForm from "./LoginForm";
 import { openNotification } from "../../Utils/Notification";
+import Cookies from 'js-cookie';  
+import toast from "react-hot-toast";
 
 function Login({ setLoginStatus }) {
   const [loginData, setLoginData] = useState({
@@ -17,25 +19,28 @@ function Login({ setLoginStatus }) {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const { username, password } = loginData; 
+    const { username, password } = loginData;
 
     try {
-      const response = await axios.post(`http://localhost:1818/auth/login`, { username, password });
-      const { jwtToken, role } = response.data;
+      const response = await axios.post(`http://localhost:1818/auth/login`, { username, password }, {
+        withCredentials: true,
+      });
+      // const { jwtToken, role } = response.data;
 
-      localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
-      localStorage.setItem("username", username);
-      localStorage.setItem("role", role);
+      // localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
+      // localStorage.setItem("username", username);
+      // localStorage.setItem("role", role);
 
       setLoginStatus(true);
-      
+
+      openNotification('success', 'Login Successful', 'You have successfully logged in.!');
       const redirectPath = role === "student" ? "/s/dashboard" : "/f/dashboard";
       navigate(redirectPath);
-
-      openNotification('success', 'Login Successful', 'You have successfully logged in!');
+      // toast.success('You have successfully logged in..!')
     } catch (error) {
       console.error('Login error:', error);
-      openNotification('error', 'Login Failed', 'Invalid username or password. Please try again.');
+      // toast.error(error.response.data)
+      openNotification('error', 'Login Failed', error.response.data);
     }
   };
 

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Accordion from "./Accordion";
 import TaskModal from "./TaskModal";
-import { Form } from "antd";
+import { Form, message } from "antd";
 import axios from "axios";
 import useLenisScroll from "../../../../Hooks/useLenisScroll";
 
@@ -25,7 +25,7 @@ function GroupRight({ project }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`)
+      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`,{ withCredentials: true, })
       .then((res) => {
         setWeekTasks(res.data.weeks);
       });
@@ -33,7 +33,7 @@ function GroupRight({ project }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`)
+      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`,{ withCredentials: true, })
       .then((res) => {
         const demo = res.data;
         setProjectData(demo);

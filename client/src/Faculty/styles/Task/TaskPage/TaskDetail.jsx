@@ -17,16 +17,16 @@ function TaskDetail() {
   const [assigneeMembers, setAssigneeMembers] = useState(task.assignee);
   // const [submittedFiles, setSubmittedFiles] = useState([]);
 
-  useEffect(() => {}, [assigneeMembers]);
+  useEffect(() => { }, [assigneeMembers]);
 
   const handleAssign = (assigneeIds) => {
     axios
-      .post(`http://localhost:1818/tasks/${task.id}`, assigneeIds)
+      .post(`http://localhost:1818/tasks/${task.id}`, assigneeIds, { withCredentials: true })
       .then((res) => {
         setAssigneeMembers(res.data.assignee);
       })
       .catch((error) => {
-        console.error("There was an error while assigning assignees: ", error);
+        console.error(res.data.message," ",res.data.status);
       });
   };
 
@@ -92,7 +92,7 @@ function TaskDetail() {
         taskId={task.id}
       />
 
-        <SubmittedFiles files={dummyFiles} />
+      <SubmittedFiles files={dummyFiles} />
 
       <FacultyComments taskId={task.id} />
       <AssigneesModal

@@ -4,6 +4,7 @@ import { GiAlarmClock } from "react-icons/gi";
 import verification from "../../assets/verification.jpg";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const OTPVerification = ({ setLoginStatus }) => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
@@ -57,37 +58,47 @@ const OTPVerification = ({ setLoginStatus }) => {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  const { username, email, password, isStudent } = location.state || {};
+  const { username, email, password, isStudent, name } = location.state || {};
   const isOtpComplete = otp.every((digit) => digit !== "");
 
   const handleSignup = (e) => {
-    console.log(username, " ", password, " ", email, " ", otp.join(""));
-    const signUpData = { username, password, email };
+    console.log(username, " ", password, " ", email, " ", otp.join(""), " ", name);
+    const signUpData = {
+      username,
+      password,
+      email,
+      ...(isStudent ? { studentName: name } : { facultyName: name })
+    };
+
 
     axios
-      .post("http://localhost:1818/otp/verify", { otp: otp.join(""), email })
+      .post("http://localhost:1818/otp/verify", { otp: otp.join(""), email }, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res.data);
         return axios.post(
           "http://localhost:1818/auth/" + (isStudent ? "student/register" : "faculty/register"),
-          signUpData
+          signUpData, {
+          withCredentials: true,
+        }
         );
       })
       .then((response) => {
         console.log("Signed up successfully:", response.data);
-        return axios.post("http://localhost:1818/auth/login", { username, password });
+        return axios.post("http://localhost:1818/auth/login", { username, password }, {
+          withCredentials: true,
+        });
       })
       .then((response) => {
-        const { jwtToken, role } = response.data;
-        localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
-        localStorage.setItem("username", username);
-        localStorage.setItem("role", role);
         setLoginStatus(true);
+        toast.success('Signed up successfully...')
         navigate(isStudent ? "/s/dashboard" : "/f/dashboard");
       })
       .catch((error) => {
-        if (error.response && error.response.status === 500) {
-          setErrorMessage("Student already exists with given ID..!");
+        if (error.response && (error.response.status === 500 || error.response.status === 400)) {
+          // setErrorMessage("Student already exists with given ID..!");
+          toast.error(error.response.data)
         } else {
           console.error("There was an error signing up:", error);
           setErrorMessage("An error occurred during signup. Please try again.");

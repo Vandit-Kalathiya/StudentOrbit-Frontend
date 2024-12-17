@@ -6,6 +6,7 @@ import AOS from "aos";
 import { IoLocationOutline, IoCallOutline } from "react-icons/io5";
 import { TfiEmail } from "react-icons/tfi";
 import { LuClock4 } from "react-icons/lu";
+import Footer from "./Footer";
 
 // Contact Information
 
@@ -79,9 +80,9 @@ function Contact() {
 
   return (
     <>
-      <div className="min-h-screen items-center justify-center flex flex-col py-20">
+      <div className="min-h-screen items-center justify-center flex flex-col py-20 font-poppins">
         <div className="mt-10">
-          <h1 className="text-4xl text-center font-semibold">Contact</h1>
+          <h1 className="text-4xl text-center font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-blue-600">Contact</h1>
         </div>
 
         <div
@@ -150,7 +151,7 @@ function Contact() {
                   <div className="w-full px-4 text-center">
                     <button
                       type="submit"
-                      className="inline-flex items-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#5B6DF3] hover:bg-[#4859da] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      className="inline-flex items-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-blue-500 to-purple-700 hover:from-blue-400 hover:to-purple-600"
                     >
                       Send Message
                     </button>
@@ -161,6 +162,7 @@ function Contact() {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

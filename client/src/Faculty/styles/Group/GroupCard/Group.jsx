@@ -7,15 +7,15 @@ import axios from "axios";
 const Group = () => {
   const [data, setData] = useState([]);
   const { batch } = useParams();
-  
-  
+
+
   useEffect(() => {
-    
+
     axios
-    .post(`http://localhost:1818/faculty/groups/${batch}`)
-    .then((res) => {
+      .get(`http://localhost:1818/faculty/groups/b/${batch}`, { withCredentials: true })
+      .then((res) => {
         const demo = res.data;
-        console.log(demo);
+        // console.log(demo);
         setData(demo);
       })
       .catch((error) => {
@@ -24,13 +24,13 @@ const Group = () => {
   }, [batch]);
 
   const handleAddGroup = (newGroup) => {
-    setData((prevData) => [...prevData, newGroup]); 
+    setData((prevData) => [...prevData, newGroup]);
   };
 
   return (
     <div className="my-4 mx-3 md:m-8 md:pl-0 pl-3">
-      <GroupHeader batch={batch} onGroupAdded={handleAddGroup}/>
-      <GroupList data={data} batch={batch}/>
+      <GroupHeader batch={batch} onGroupAdded={handleAddGroup} />
+      <GroupList data={data} batch={batch} />
     </div>
   );
 };

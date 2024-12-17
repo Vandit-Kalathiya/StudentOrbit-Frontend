@@ -15,7 +15,7 @@ const ToDoPage = () => {
 
   const fetchTasks = () => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`)
+      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`, { withCredentials: true, })
       .then((res) => {
         let demo = res.data;
         setProjectData(demo);
@@ -33,11 +33,11 @@ const ToDoPage = () => {
   }, [projectName, week]);
 
   useEffect(() => {
-  }, [tasks,projectData,members])
+  }, [tasks, projectData, members])
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`)
+      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`, { withCredentials: true, })
       .then((res) => {
         let demo = res.data;
         setProjectData(demo);
@@ -50,19 +50,19 @@ const ToDoPage = () => {
       });
   }, []);
 
-  const updateTaskStatus = (id, newStatus, assignees) => {
+  const updateTaskStatus = async (id, newStatus, assignees) => {
 
     if (assignees.length === 0) {
       openNotification('error', `Can't move to in progress.!`, 'No assignees are present in task. Please assign at least one assignee.!');
     } else {
-      changeStatus(id, newStatus)
+      await changeStatus(id, newStatus)
       openNotification('success', 'Update Successful', `Task is moved to ${newStatus == "IN_PROGRESS" ? "In Progress" : newStatus == "IN_REVIEW" ? "In Review" : "Completed"}.!`);
     }
   };
 
-  const changeStatus = (id, status) => {
-    axios
-      .post(`http://localhost:1818/tasks/${id}/${status}`)
+  const changeStatus = async (id, status) => {
+    await axios
+      .post(`http://localhost:1818/tasks/${id}/${status}`, {}, { withCredentials: true })
       .then((res) => {
         console.log("Status changed successfully...", res.data);
         fetchTasks();

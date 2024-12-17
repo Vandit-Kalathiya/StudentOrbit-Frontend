@@ -16,7 +16,7 @@ function Hero() {
   return (
     <section
       id="hero"
-      className="w-full min-h-[100vh] relative flex items-center justify-center overflow-hidden md:pt-[90px] pt-32 pb-[40px] scroll-mt-24"
+      className="w-full min-h-[100vh] relative flex items-center justify-center overflow-hidden md:pt-[90px] pt-32 pb-[40px] scroll-mt-24 px-5"
     >
       <div className="hero-bg absolute inset-0 z-0">
         <img
@@ -32,9 +32,9 @@ function Hero() {
         }}
       ></div>
       <div className="container flex text-center items-center relative z-10 md:flex-row flex-col md:px-16 px-4">
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center font-poppins">
           <h1
-            className="md:text-6xl text-[#012970] font-semibold mb-4 text-4xl tracking-tight"
+            className="md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-blue-600 font-semibold mb-4 text-4xl tracking-tight"
             data-aos="fade-down"
           >
             Welcome to{" "}
@@ -49,7 +49,7 @@ function Hero() {
             place.
             <br />
           </p>
-          <div className="flex" data-aos="fade-up" data-aos-delay="300">
+          <div className="flex " data-aos="fade-up" data-aos-delay="300">
             {role == null ? (
               <Link to="/signup">
                 <Button text="Get Started" />

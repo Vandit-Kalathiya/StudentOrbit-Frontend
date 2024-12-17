@@ -6,9 +6,13 @@ export default {
     "./node_modules/flowbite/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        poppins: '"Poppins", sans-serif',
+      }
+    },
   },
   plugins: [
-    
+
   ]
 }

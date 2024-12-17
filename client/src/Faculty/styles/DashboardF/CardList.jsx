@@ -1,8 +1,11 @@
 import { CheckCircleOutlined, SyncOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { getUsernameFromToken } from "../../../../authToken";
 
 const cardData = [
   {
-    title: "12 done",
+    title: "Done",
     description: "Total tasks Approved 🎉",
     icon: <CheckCircleOutlined />,
     borderColor: "border-green-200",
@@ -10,7 +13,7 @@ const cardData = [
     iconColor: "text-green-500",
   },
   {
-    title: "5 In Review",
+    title: "In Review",
     description: "Total tasks Pending 🔄",
     icon: <SyncOutlined />,
     borderColor: "border-orange-200",
@@ -19,30 +22,61 @@ const cardData = [
   },
 ];
 
-const CardList = () => (
-  <div className="flex flex-wrap justify-between">
-    {cardData.map((card, index) => (
-      <div key={index} className="w-full lg:w-[49%] md:mb-2 mb-5">
-        <div
-          className={`w-full p-4 rounded-lg shadow-md flex items-center bg-white h-28 ${card.borderColor}`}
-        >
+const CardList = () => {
+
+  const [pendingTasks, setPendingTasks] = useState(0);
+  const [completedTask, setCompletedTasks] = useState(0);
+  const fetchedUsername = getUsernameFromToken()
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:1818/faculty/batches/g/${fetchedUsername}`, { withCredentials: true })
+      .then((res) => {
+        const tasksInReview = [];
+        const tasksCompleted = [];
+
+        res.data.forEach((group) => {
+          group.weeks.forEach((week) => {
+            week.tasks.forEach((task) => {
+              if (task.status === "IN_REVIEW") {
+                tasksInReview.push(task);
+              } else if (task.status === 'COMPLETED') {
+                tasksCompleted.push(task)
+              }
+            });
+          });
+        });
+        setPendingTasks(tasksInReview.length);
+        setCompletedTasks(tasksCompleted.length)
+      })
+      .catch((error) => console.error("Error fetching groups:", error));
+  }, []);
+
+  return (
+    <div className="flex flex-wrap justify-between">
+      {cardData.map((card, index) => (
+        <div key={index} className="w-full lg:w-[49%] md:mb-2 mb-5">
           <div
-            className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 ${card.avatarColor}`}
+            className={`w-full p-4 rounded-lg shadow-md flex items-center bg-white h-28 ${card.borderColor}`}
           >
-            <span className={`text-2xl ${card.iconColor}`}>
-              {card.icon}
-            </span>
-          </div>
-          <div>
-            <div className={`font-semibold text-lg ${card.iconColor}`}>
-              {card.title}
+            <div
+              className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 ${card.avatarColor}`}
+            >
+              <span className={`text-2xl ${card.iconColor}`}>
+                {card.icon}
+              </span>
             </div>
-            <div className="text-gray-500">{card.description}</div>
+            <div>
+              <div className={`font-semibold text-lg ${card.iconColor}`}>
+                {card.title == 'In Review' ? pendingTasks : completedTask} {card.title}
+              </div>
+              <div className="text-gray-500">{card.description}</div>
+            </div>
           </div>
         </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  )
+};
 
 export default CardList;

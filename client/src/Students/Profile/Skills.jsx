@@ -10,6 +10,7 @@ import {
   FaJs,
   FaJava,
 } from "react-icons/fa";
+import { getUsernameFromToken } from "../../../authToken";
 
 function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill }) {
   // const [skills, setSkills] = useState([]);
@@ -23,14 +24,17 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
     html: <FaHtml5 className="text-orange-600" />,
     css: <FaCss3Alt className="text-blue-500" />,
     javascript: <FaJs className="text-yellow-500" />,
-    java:<FaJava className="text-blue-600 text-xl" />
+    java: <FaJava className="text-blue-600 text-xl" />
   };
 
+  const fetchedUsername = getUsernameFromToken();
+
   useEffect(() => {
-    const username = localStorage.getItem("username")
-    axios.get(`http://localhost:1818/students/skills/${username}`)
+    axios.get(`http://localhost:1818/students/skills/${fetchedUsername}`, { withCredentials: true, })
       .then((res) => {
         const demo = res.data;
+        // console.log(demo);
+
         setSkills(demo);
       })
       .catch(() => console.log("Error while fetching projects in profile")
@@ -49,8 +53,7 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
   // }, [skills])
 
   const removeSkill = (skillToRemove) => {
-    const username = localStorage.getItem("username");
-    axios.delete(`http://localhost:1818/students/skills/${username}/${skillToRemove}`)
+    axios.delete(`http://localhost:1818/students/skills/${fetchedUsername}/${skillToRemove}`, { withCredentials: true, })
       .then((res) => {
         setSkills(res.data)
       })
@@ -58,8 +61,8 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
   };
 
   return (
-    <div className="skills p-5 bg-white rounded-lg">
-      <h2 className="text-xl font-bold mb-4">My Skills</h2>
+    <div className="skills p-5 bg-white rounded-lg font-poppins">
+      <h2 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">My Skills</h2>
       <div className="mt-5 flex flex-wrap gap-2">
         {skills.map((skill, index) => (
           <div
@@ -71,8 +74,8 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
             ) : (
               <FaJs className="text-gray-400" />
             )}
-            <span className="text-lg font-medium flex-1 text-center">
-            {skill.name.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
+            <span className="text-lg font-medium flex-1 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+              {skill.name.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
             </span>
             <CloseOutlined
               onClick={() => removeSkill(skill.name)}

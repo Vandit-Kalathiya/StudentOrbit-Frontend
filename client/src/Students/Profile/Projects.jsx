@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getUsernameFromToken } from "../../../authToken";
 
 function Projects() {
 
@@ -8,9 +9,10 @@ function Projects() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const username = localStorage.getItem("username")
+    const fetchedUsername = getUsernameFromToken();
 
-    axios.get(`http://localhost:1818/students/g/${username}`)
+
+    axios.get(`http://localhost:1818/students/g/${fetchedUsername}`, { withCredentials: true, })
       .then((res) => {
         const demo = res.data;
         setProjects(demo);
@@ -22,8 +24,8 @@ function Projects() {
 
 
   return (
-    <div className="projects p-5 bg-white rounded-lg w-full">
-      <h1 className="text-2xl font-bold mb-4">Projects</h1>
+    <div className="projects p-5 bg-white rounded-lg w-full font-poppins">
+      <h1 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">Projects</h1>
       {projects.length == 0 ? <p className="text-lg text-gray-600 font-semibold rounded-lg py-3 flex justify-center">
         You don't have any projects yet..! Start by developing one to see it here. 🚀
       </p> :
@@ -34,15 +36,15 @@ function Projects() {
               onClick={() => navigate(`/s/dashboard/projects/${project.groupName.replaceAll(" ", "-")}`, { state: project })}
               className="project-card p-4 border-[1px] border-[#8694ff] rounded-lg shadow-md"
             >
-              <h2 className="text-lg font-semibold mb-2">{project.groupName}</h2>
-              <p className="text-sm text-gray-700 mb-3">{project.groupDescription}</p>
-              <p className="text-sm text-gray-500">Semester: {project.batchName.substring(0, 1)}</p>
+              <h2 className="text-lg font-semibold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">{project.groupName}</h2>
+              <p className="text-sm text-gray-700 mb-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">{project.groupDescription}</p>
+              <p className="text-sm text-gray-500">Semester : {project.batchName.substring(0, 1)}</p>
             </div>
           ))}
         </div>
       }
       {projects.length == 0 ? "" : <div className="more-projects mt-8 flex flex-col items-center justify-center">
-        <h2 className="text-xl font-bold">More Projects to Go! 🚀</h2>
+        <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">More Projects to Go! <span className="text-black">🚀</span></h2>
       </div>}
     </div>
   );

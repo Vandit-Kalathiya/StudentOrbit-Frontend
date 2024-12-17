@@ -7,6 +7,7 @@ import WorkloadCard from "./WorkloadCard";
 import { useEffect, useRef, useState } from 'react';
 import useLenisScroll from '../../Hooks/useLenisScroll';
 import axios from "axios";
+import { getUsernameFromToken } from "../../../authToken";
 
 const DashboardDetails = () => {
 
@@ -21,7 +22,10 @@ const DashboardDetails = () => {
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:1818/students/gs/${localStorage.getItem("username")}`)
+    const fetchedUsername = getUsernameFromToken();
+    // console.log(fetchedUsername);
+
+    axios.get(`http://localhost:1818/students/gs/${fetchedUsername}`, { withCredentials: true, })
       .then((res) => {
         setWeeks(res.data[0].weeks)
         setMembers(res.data[0].students)
@@ -29,8 +33,8 @@ const DashboardDetails = () => {
       )
   }, []);
 
-  console.log(members);
-  
+  // console.log(members);
+
 
   const containerVariants = {
     hidden: {
@@ -57,16 +61,17 @@ const DashboardDetails = () => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/TO_DO`)
+    const fetchedUsername = getUsernameFromToken();
+    axios.get(`http://localhost:1818/tasks/count/${fetchedUsername}/TO_DO`, { withCredentials: true, })
       .then((res) => setTodo(res.data));
 
-    axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/IN_PROGRESS`)
+    axios.get(`http://localhost:1818/tasks/count/${fetchedUsername}/IN_PROGRESS`, { withCredentials: true, })
       .then((res) => setInProgress(res.data));
 
-    axios.get(`http://localhost:1818/tasks/count/${localStorage.getItem("username")}/COMPLETED`)
+    axios.get(`http://localhost:1818/tasks/count/${fetchedUsername}/COMPLETED`, { withCredentials: true, })
       .then((res) => setCompleted(res.data));
   }, []);
-
+  
   return (
     <motion.div
       className="overflow-hidden mt-10 px-8 md:mt-8 md:px-8"

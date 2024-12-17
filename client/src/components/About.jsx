@@ -1,13 +1,14 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Footer from "./Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const WorkInfo = ({ title, description }) => (
   <div className="work_info h-[100vh] flex flex-col justify-center p-4 md:p-0">
     <div className="work_left-bl p-2">
-      <h2 className="title text-4xl md:text-6xl uppercase font-semibold">{title}</h2>
+      <h2 className="title text-4xl md:text-5xl uppercase font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">{title}</h2>
       <p className="text-base md:text-xl mt-4">{description}</p>
     </div>
   </div>
@@ -82,7 +83,7 @@ function About() {
   ];
 
   return (
-    <div className="wrapp relative w-full px-4 z-1">
+    <div className="wrapp relative w-full z-1 font-poppins">
       <section className="work flex flex-col md:flex-row md:px-24">
         <div className="work_left relative w-full md:w-[60%] z-2">
           <div className="work_text w-full md:w-[80%]">
@@ -109,6 +110,7 @@ function About() {
         </div>
       </section>
       <div className="spacer"></div>
+      <Footer/>
     </div>
   );
 }

@@ -45,7 +45,15 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
     setTechnologies(newTechnologiesSet);
   };
 
-  const validateStudentIds = (rule, value) => {
+  const validateStudentIds = async (rule, value) => {
+    const fetchedBatchResponse = await axios.get(
+      `http://localhost:1818/faculty/batches/${batch.substring(0, 1)}/${batch.substring(1)}`, { withCredentials: true }
+    );
+
+    const startId = fetchedBatchResponse.data.startId
+    const endId = fetchedBatchResponse.data.endId
+    // setFetchedBatch(fetchedBatchResponse.data);
+
     if (!value) {
       return Promise.reject("Please input the student IDs!");
     }
@@ -60,6 +68,9 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
       if (!idPattern.test(id)) {
         return Promise.reject("Each Student ID must be in the format YYCEXXX");
       }
+      // if(id.toUpperCase() < startId.toUpperCase() || id.toUpperCase() > endId.toUpperCase()){
+      //   return Promise.reject(`Each Student ID must be in range ${startId} to ${endId}`);
+      // }
     }
     return Promise.resolve();
   };
@@ -83,10 +94,12 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
       groupLeaderId,
       students: Array.from(students),
       technologies: Array.from(technologies),
-      // startDate,
+      startDate,
     };
-    console.log(batch)
-    console.log(groupData);
+    console.log(startDate)
+    // console.log(groupData);
+
+    const fetchedBatch = await axios.get(`http://localhost:1818/faculty/batches/${batch.substring(0, 1)}/${batch.substring(1)}`, { withCredentials: true })
 
     try {
       const res = await axios.post(

@@ -2,10 +2,12 @@ import { useLocation, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import GroupLeft from "./GroupLeft";
 import GroupRight from "./GroupRight/GroupRight";
+import { getUsernameFromToken } from "../../../../authToken";
 
 function GroupDetailsNew({ collapsed }) {
   const { batch, projectName } = useParams();
   const location = useLocation();
+  const fetchedUsername = getUsernameFromToken();
 
   const project = location.state;
   
@@ -31,7 +33,7 @@ function GroupDetailsNew({ collapsed }) {
           className="text-5xl font-semibold text-center"
           variants={itemVariants}
         >
-          {batch || (localStorage.getItem("username").toUpperCase())}
+          {batch || fetchedUsername.toUpperCase()}
 
         </motion.h1>
       </div>

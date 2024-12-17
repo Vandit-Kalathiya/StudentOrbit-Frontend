@@ -6,17 +6,18 @@ import { useState } from "react";
 import axios from "axios";
 import SubmitButton from "./SubmitButton";
 import ToggleRole from "./ToggleRole";
-import EmailInput from "./EmailInput"; 
-import IDInput from "./IDInput"; 
-import PasswordStrength from "./PasswordStrength"; 
+import EmailInput from "./EmailInput";
+import IDInput from "./IDInput";
+import PasswordStrength from "./PasswordStrength";
 import { openNotification } from "../../Utils/Notification";
+import toast from "react-hot-toast";
 
 function Signup() {
   const [formData, setFormData] = useState({
-    username: "", 
+    username: "",
     password: "",
     email: "",
-    // name: "",
+    name: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -62,10 +63,12 @@ function Signup() {
   };
 
   const handleOtpSend = () => {
-    const otpData = { email: formData.email };
+    const otpData = { email: formData.email, username: formData.username };
 
     axios
-      .post("http://localhost:1818/otp/send", otpData)
+      .post("http://localhost:1818/otp/send", otpData, {
+        withCredentials: true,
+      })
       .then((response) => {
         console.log("OTP sent:", response.data);
         openNotification(
@@ -76,22 +79,10 @@ function Signup() {
       })
       .catch((error) => {
         if (error.response && error.response.status === 500) {
-          setErrorMessage("Student already exists with the given ID.");
-          openNotification(
-            "error",
-            "Signup Error",
-            "Student already exists with the given ID."
-          );
-        } else {
-          console.error("Error during OTP send:", error);
-          setErrorMessage("An error occurred during signup. Please try again.");
-          openNotification(
-            "error",
-            "Signup Error",
-            "An error occurred during signup. Please try again."
-          );
+          console.log(error);
+          navigate("/signup");
+          toast.error(error.response.data)
         }
-        navigate("/signup");
       });
   };
 
@@ -120,7 +111,7 @@ function Signup() {
                 )}
 
                 <Form layout="vertical" autoComplete="off">
-                  {/* <Form.Item
+                  <Form.Item
                     label={isStudent ? "Student Name" : "Faculty Name"}
                     name="name"
                     rules={[{ required: true, message: "Please enter your name" }]}
@@ -132,7 +123,7 @@ function Signup() {
                       name="name"
                       onChange={(e) => handleInputChange("name", e.target.value)}
                     />
-                  </Form.Item> */}
+                  </Form.Item>
                   <IDInput
                     isStudent={isStudent}
                     handleInputChange={handleInputChange}
@@ -173,8 +164,8 @@ function Signup() {
                       }}
                       onKeyPress={(e) => {
                         if (e.key === "Enter") {
-                          e.preventDefault(); 
-                          handleOtpSend(); 
+                          e.preventDefault();
+                          handleOtpSend();
                         }
                       }}
                       style={{ marginBottom: 15 }}

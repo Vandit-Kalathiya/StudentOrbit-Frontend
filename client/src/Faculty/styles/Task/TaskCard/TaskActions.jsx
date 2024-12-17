@@ -3,6 +3,7 @@ import { Modal, Input, message } from "antd";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { getUsernameFromToken } from "../../../../../authToken";
 
 const TaskActions = ({
   status,
@@ -36,16 +37,17 @@ const TaskActions = ({
   };
 
   const addComment = (comment) => {
+    const fetchedUsername = getUsernameFromToken()
     const commentRequest = {
       commentDescription: comment,
-      facultyId: localStorage.getItem("username"),
+      facultyId: fetchedUsername,
       taskId: taskId,
     };
     axios
-      .post("http://localhost:1818/comment/add", commentRequest)
+      .post("http://localhost:1818/comment/add", commentRequest, { withCredentials: true })
       .then(() => {
         axios
-          .get(`http://localhost:1818/tasks/assignees/${taskId}`)
+          .get(`http://localhost:1818/tasks/assignees/${taskId}`, { withCredentials: true })
           .then((res) => {
             setAssigneeMembers(res.data);
           })
@@ -89,6 +91,7 @@ const TaskActions = ({
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true
         });
         message.success("File uploaded successfully!");
         console.log("File uploaded:", response.data);

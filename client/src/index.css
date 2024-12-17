@@ -2,23 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: 'Poppins', sans-serif !important;
+}
 
 ::selection {
-    color: #5B6DF3; 
-    background-color: rgba(91, 109, 243, 0.3); 
+  color: #5B6DF3;
+  background-color: rgba(91, 109, 243, 0.3);
 }
 
 .custom-sidebar {
-    background: transparent !important;
+  background: transparent !important;
 }
 
 .ant-menu-item-selected {
-    background-color: #5B6DF3 !important;
-    color: #fff !important;
+  background-color: #5B6DF3 !important;
+  color: #fff !important;
 }
 
 .transition-margin {
-    transition: margin-left ease-in-out;
+  transition: margin-left ease-in-out;
 }
 
 /* @media (max-width: 768px) {
@@ -33,17 +36,17 @@
   }
 } */
 
-.no-scrollbar{
-  &::-webkit-scrollbar{
+.no-scrollbar {
+  &::-webkit-scrollbar {
     opacity: 0;
-  }  
+  }
 }
 
 .divider {
   height: 55%;
-  width: 1.5px; 
+  width: 1.5px;
   background-color: #8694ff;
-  margin: 0 10px; 
+  margin: 0 10px;
 }
 
 /* styles.css */
@@ -78,3 +81,26 @@
   opacity: 0;
   transform: translateY(50px) scale(0.5) rotate(-15deg);
 } */
+
+.gradient-icon svg {
+  /* Use a gradient fill */
+  fill: url(#purpleBlueGradient);
+}
+
+/* Define the gradient */
+.gradient-icon svg defs {
+  display: none;
+}
+
+.gradient-icon svg {
+  position: relative;
+}
+
+.gradient-icon svg:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #7b2cbf, #5a00d6);
+  -webkit-background-clip: text;
+  color: transparent
+}

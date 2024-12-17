@@ -7,6 +7,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import { openNotification } from "../../../Utils/Notification";
+import { getUsernameFromToken } from "../../../../authToken";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -22,12 +23,13 @@ const Batch = () => {
   const [showModal, setShowModal] = useState(false);
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
+  const fetchedUsername = getUsernameFromToken()
 
   useEffect(() => {
     axios
-      .get("http://localhost:1818/faculty/batches/allBatches")
+      .get(`http://localhost:1818/faculty/batches/b/${fetchedUsername}`,{withCredentials:true})
       .then((res) => {
-        const demo = res.data;
+        const demo = res.data;        
         setData(demo);
       })
       .catch((error) => {

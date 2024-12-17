@@ -19,11 +19,11 @@ const WorkloadCard = ({ members }) => {
     const fetchProgress = async () => {
       const data = await Promise.all(members.map(async (member) => {
         // Fetch task counts for each member
-        const todoCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/TO_DO`);
-        const inProgressCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/IN_PROGRESS`);
-        const completedCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/COMPLETED`);
-        const inReviewCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/IN_REVIEW`);
-        
+        const todoCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/TO_DO`, { withCredentials: true, });
+        const inProgressCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/IN_PROGRESS`, { withCredentials: true, });
+        const completedCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/COMPLETED`, { withCredentials: true, });
+        const inReviewCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/IN_REVIEW`, { withCredentials: true, });
+
         const totalTasks = todoCount.data + inProgressCount.data + completedCount.data + inReviewCount.data;
         const progress = totalTasks > 0 ? (completedCount.data / totalTasks) * 100 : 0;
 
