@@ -5,13 +5,14 @@ import "aos/dist/aos.css";
 import AOS from "aos";
 import Button from "../Styles/Button";
 import { Link } from "react-router-dom";
+import { getRole } from "../../authToken";
 
 function Hero() {
   useEffect(() => {
     AOS.init();
   }, []);
 
-  let role = localStorage.getItem("role");
+  let role = getRole();
 
   return (
     <section
