@@ -32,7 +32,7 @@ const BatchReportDropdown = () => {
 
   const handleGenerateReport = () => {
     axios
-      .get(`http://localhost:1819/pdf/create/${fetchedUsername}`, {
+      .get(`http://localhost:1819/pdf/create/${studentId}/${studentId}`, {
         responseType: "blob", withCredentials: true
       })
       .then((response) => {
