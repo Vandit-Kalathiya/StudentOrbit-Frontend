@@ -5,10 +5,19 @@ const AccordionItem = ({
   onDoubleClick,
   showModal,
 }) => {
-  const isTokenPresent = () => {
-    const token = localStorage.getItem("f_jwt");
-    return token !== null;
+
+  const isCurrentWeek = (week) => {
+    if (!week || !week.startDate || !week.endDate) {
+      return false;
+    }
+  
+    const currentDate = new Date();
+    const startDate = new Date(week.startDate);
+    const endDate = new Date(week.endDate);
+  
+    return currentDate >= startDate && currentDate <= endDate;
   };
+  
 
   return (
     <div className={`${week.weekNumber === 1 ? "rounded rtl xl bg-gray-100" : ""}`}>
@@ -61,7 +70,7 @@ const AccordionItem = ({
           ) : (
             <p className="mb-2 text-gray-700">{week.tasks}</p>
           )}
-          {!isTokenPresent() && (
+          {isCurrentWeek(week) && (
             <button
               className="mt-3 text-[#5B6DF2] text-sm border-2 p-[0.4rem] rounded-md border-[#5B6DF2]"
               onClick={showModal}

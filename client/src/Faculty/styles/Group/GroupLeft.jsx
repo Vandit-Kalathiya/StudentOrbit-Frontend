@@ -124,6 +124,10 @@ function GroupLeft() {
   const showAddMemberModal = () => setIsModalVisible(true);
 
   const addMember = () => {
+    if (project.projectStatus == "COMPLETED") {
+      return toast.error("Project is already Completed")
+    }
+    
     let memberUsername = []
     memberUsername.push(username)
     axios.post(`http://localhost:1818/faculty/groups/add/member/${project.id}`, memberUsername, { withCredentials: true })

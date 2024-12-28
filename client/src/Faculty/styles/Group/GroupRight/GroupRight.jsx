@@ -21,7 +21,7 @@ function GroupRight({ project }) {
 
   const navigate = useNavigate();
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm();  
 
   useEffect(() => {
     axios

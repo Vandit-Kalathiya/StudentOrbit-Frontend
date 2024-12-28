@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Modal, Form, Input, Select, message } from "antd";
+import { Modal, Form, Input } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project, currentWeekId }) => {
   const [tasks, setTasks] = useState({
@@ -18,7 +19,11 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
   const handleTasks = async () => {
     try {
       if (project.mentor == null) {
-        return message.error("Please select a mentor first..!");
+        return toast.error("Please select a mentor first..!");
+      }
+
+      if (project.projectStatus == "COMPLETED") {
+        return toast.error("Project is already Completed");
       }
 
       const res = await axios.post(
