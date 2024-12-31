@@ -10,14 +10,21 @@ const AccordionItem = ({
     if (!week || !week.startDate || !week.endDate) {
       return false;
     }
-  
+
+    // Normalize the dates by removing the time component
     const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
     const startDate = new Date(week.startDate);
+    startDate.setHours(0, 0, 0, 0);
+
     const endDate = new Date(week.endDate);
-  
+    endDate.setHours(0, 0, 0, 0);
+
     return currentDate >= startDate && currentDate <= endDate;
   };
-  
+
+
 
   return (
     <div className={`${week.weekNumber === 1 ? "rounded rtl xl bg-gray-100" : ""}`}>
