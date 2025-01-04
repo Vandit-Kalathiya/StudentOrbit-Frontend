@@ -57,7 +57,7 @@ const CardList = () => {
       {cardData.map((card, index) => (
         <div key={index} className="w-full lg:w-[49%] md:mb-2 mb-5">
           <div
-            className={`w-full p-4 rounded-lg shadow-md flex items-center bg-white h-28 ${card.borderColor}`}
+            className={`flex items-center bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-xl shadow-xl p-8 w-full h-28 ${card.borderColor}`}
           >
             <div
               className={`flex items-center justify-center w-12 h-12 rounded-full mr-4 ${card.avatarColor}`}

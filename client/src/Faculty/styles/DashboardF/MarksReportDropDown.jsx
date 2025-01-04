@@ -36,7 +36,7 @@ const MarksReportDropdown = () => {
   };
 
   return (
-    <div className="p-5 bg-white rounded-lg shadow-lg space-y-4">
+    <div className="p-5 bg-gradient-to-br from-blue-50 via-white to-purple-50 w-full rounded-lg shadow-lg space-y-4">
       <h2 className="text-xl font-semibold text-gray-700">Generate Marks Report</h2>
 
       {/* Report Type Selection */}

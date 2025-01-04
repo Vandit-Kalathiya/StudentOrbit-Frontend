@@ -8,17 +8,17 @@ const ProjectCardItem = ({ project }) => {
   const navigate = useNavigate();
 
   const handleReadMore = () => {
-    navigate(`/s/dashboard/projects/${project.groupName.replaceAll(" ", "-")}`, { state: project });
+    navigate(`/s/dashboard/projects/${project.groupName}`, { state: project });
   };
 
   // console.log(project.students);
 
 
   return (
-    <div className="flex justify-center ">
+    <div className="flex justify-center p-2">
       <Card
         bordered={false}
-        className="max-w-sm w-full shadow-lg rounded-lg cursor-pointer border bg-gradient-to-b from-blue-50 to-purple-50 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 shadow-sm hover:shadow-lg"
+        className="max-w-md w-full shadow-lg rounded-lg cursor-pointer border  hover:shadow-lg"
         onClick={handleReadMore}
       >
         <div className="flex justify-between items-center mb-4">

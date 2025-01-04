@@ -11,7 +11,6 @@ const AccordionItem = ({
       return false;
     }
 
-    // Normalize the dates by removing the time component
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
 
@@ -21,7 +20,7 @@ const AccordionItem = ({
     const endDate = new Date(week.endDate);
     endDate.setHours(0, 0, 0, 0);
 
-    return currentDate >= startDate && currentDate <= endDate;
+    return currentDate <= endDate;
   };
 
 

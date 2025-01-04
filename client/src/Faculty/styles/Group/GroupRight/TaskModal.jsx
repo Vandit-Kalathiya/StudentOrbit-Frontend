@@ -37,7 +37,7 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
       console.log("Task added successfully", res.data);
 
       axios
-        .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`, { withCredentials: true })
+        .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true })
         .then((res) => {
           const demo = res.data;
           handleOk(demo);

@@ -6,7 +6,7 @@ const Banner = ({ project, batch }) => {
 
   const handleReadMore = () => {
     navigate(
-      `/f/dashboard/batches/${batch}/${project.groupName.replaceAll(" ", "-")}`,
+      `/f/dashboard/batches/${batch}/${project.groupName}`,
       { state: project }
     );
   };

@@ -87,7 +87,7 @@ const TaskActions = ({
     try {
       // If a file is present, upload it
       if (file) {
-        const response = await axios.post("http://localhost:8080/upload", formData, {
+        const response = await axios.post(`http://localhost:1820/upload/${taskId}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

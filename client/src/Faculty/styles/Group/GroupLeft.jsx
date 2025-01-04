@@ -55,7 +55,7 @@ function GroupLeft() {
   // Fetch project details from backend
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`, { withCredentials: true, })
+      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("%", " ")}`, { withCredentials: true, })
       .then((response) => {
         setProject(response.data);
         setMentor(response.data.mentor);
@@ -74,7 +74,7 @@ function GroupLeft() {
       content: `Are you sure you want to select ${selectedMentor} as your mentor?`,
       onOk: () => {
         axios
-          .post(`http://localhost:1818/faculty/mentor/${selectedMentor}/${project.id}`, { withCredentials: true, })
+          .post(`http://localhost:1818/faculty/mentor/${selectedMentor}/${project.id}`, null ,{ withCredentials: true, })
           .then(() => {
             message.success("Mentor selected successfully!");
             setTemp((p) => !p);
@@ -127,7 +127,7 @@ function GroupLeft() {
     if (project.projectStatus == "COMPLETED") {
       return toast.error("Project is already Completed")
     }
-    
+
     let memberUsername = []
     memberUsername.push(username)
     axios.post(`http://localhost:1818/faculty/groups/add/member/${project.id}`, memberUsername, { withCredentials: true })
@@ -145,7 +145,7 @@ function GroupLeft() {
       })
   }
 
-  if (!project) return <div>Loading...</div>;
+  if (!project) return <div className="flex justify-center items-center m-auto h-full">Loading...</div>;
 
   return (
     <div className="md:px-6 my-6 w-full">

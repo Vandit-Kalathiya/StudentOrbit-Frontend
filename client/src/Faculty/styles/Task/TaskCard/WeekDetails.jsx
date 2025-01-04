@@ -15,7 +15,7 @@ const ToDoPage = () => {
 
   const fetchTasks = () => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`, { withCredentials: true, })
+      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true, })
       .then((res) => {
         let demo = res.data;
         setProjectData(demo);
@@ -37,7 +37,7 @@ const ToDoPage = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("-", " ")}`, { withCredentials: true, })
+      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true, })
       .then((res) => {
         let demo = res.data;
         setProjectData(demo);
