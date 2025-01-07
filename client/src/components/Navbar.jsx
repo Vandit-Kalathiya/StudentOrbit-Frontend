@@ -96,14 +96,14 @@ function Navbar({ loginStatus }) {
                 </NavLink>
               </li>
             ) : null}
-            <li>
+            {/* <li>
               <NavLink
                 to="/about"
                 className={getNavLinkClass}
               >
                 About
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/contact"

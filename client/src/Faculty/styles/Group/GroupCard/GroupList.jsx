@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Banner from "./Banner";
+import Loader from "../../../../components/Loader";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -17,7 +18,14 @@ const cardVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const GroupList = ({ data, batch }) => {
+const GroupList = ({ data, batch, loading }) => {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <Loader />
+      </div>
+    );
+  }
   return (
     <motion.div
       className="grid grid-cols-1 gap-4 md:mt-4 md:grid-cols-2 lg:grid-cols-2"

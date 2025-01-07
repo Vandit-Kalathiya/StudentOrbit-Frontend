@@ -146,7 +146,9 @@ const BatchReportDropdown = () => {
       const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "StudentOrbitReport.pdf");
+      if (reportTypeValue === "student") {
+        link.setAttribute("download", `${studentId.toUpperCase()}_${selectedProject}.pdf`)
+      } else link.setAttribute("download", `${selectedBatch }_${selectedProject}.pdf`)
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -204,13 +206,13 @@ const BatchReportDropdown = () => {
           <Form.Item
             validateStatus={
               studentId &&
-              !/^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/.test(studentId)
+                !/^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/.test(studentId)
                 ? "error"
                 : ""
             }
             help={
               studentId &&
-              !/^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/.test(studentId)
+                !/^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/.test(studentId)
                 ? "Invalid Student ID. Format should be YYCEXXX."
                 : ""
             }
@@ -275,14 +277,13 @@ const BatchReportDropdown = () => {
           {selectedProject && renderWeekSelection()}
         </>
       )}
-            <div className="relative">
+      <div className="relative">
         <Button
           type="primary"
           onClick={handleGenerateReport}
           disabled={!selectedProject || selectedWeeks.length === 0 || loading}
-          className={`w-full mt-4  h-10 flex items-center justify-center ${
-            loading ? "bg-blue-400" : "bg-blue-500 hover:bg-blue-600"
-          } text-white`}
+          className={`w-full mt-4  h-10 flex items-center justify-center ${loading ? "bg-blue-400" : "bg-blue-500 hover:bg-blue-600"
+            } text-white`}
         >
           {loading ? (
             <div className="flex items-center justify-center gap-2 text-blue-500">

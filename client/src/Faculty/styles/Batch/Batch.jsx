@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import { openNotification } from "../../../Utils/Notification";
 import { getUsernameFromToken } from "../../../../authToken";
+import Loader from "../../../components/Loader";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -16,26 +17,35 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0,  transition: { duration: 0.4 } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
 const Batch = () => {
   const [showModal, setShowModal] = useState(false);
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
-  const fetchedUsername = getUsernameFromToken()
+  const [loading, setLoading] = useState(false);
+  const fetchedUsername = getUsernameFromToken();
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:1818/faculty/batches/b/${fetchedUsername}`,{withCredentials:true})
-      .then((res) => {
-        const demo = res.data;        
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `http://localhost:1818/faculty/batches/b/${fetchedUsername}`,
+          { withCredentials: true }
+        );
+        const demo = response.data;
         setData(demo);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("There was an error while getting all batches: ", error);
-      });
-  }, []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [fetchedUsername]);
 
   const handleBatchAdded = (values) => {
     setData([...data, values]);
@@ -65,23 +75,29 @@ const Batch = () => {
           </Button>
         </div>
       </div>
-      <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 md:mt-4"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {data.map((item, index) => (
-          <motion.div key={index} variants={itemVariants}>
-            <BatchCard
-              batch={item.batchName}
-              sem={item.semester}
-              id1={item.startId}
-              id2={item.endId}
-            />
-          </motion.div>
-        ))}
-      </motion.div>
+      {loading ? (
+        <div className="text-center h-10">
+          <Loader />
+        </div>
+      ) : (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 md:mt-4"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {data.map((item, index) => (
+            <motion.div key={index} variants={itemVariants}>
+              <BatchCard
+                batch={item.batchName}
+                sem={item.semester}
+                id1={item.startId}
+                id2={item.endId}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
       <AddBatchModal
         visible={showModal}
         onCancel={() => setShowModal(false)}

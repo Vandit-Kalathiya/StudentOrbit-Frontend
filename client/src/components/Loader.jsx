@@ -1,6 +1,6 @@
 const Loader = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center h-screen">
       <div className="loader relative w-16 aspect-square rounded-full border-2 border-[#012970] box-border transform-origin-left animate-[l2_1s_infinite_linear]">
         <style>
           {`

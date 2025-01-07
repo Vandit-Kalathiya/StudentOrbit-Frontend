@@ -6,9 +6,11 @@ import { getUsernameFromToken } from "../../../authToken";
 
 const ProjectCard = () => {
   const [projects, setProject] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchedUsername = getUsernameFromToken();
+    setLoading(true);
     axios
       .get(`http://localhost:1818/students/g/${fetchedUsername}`,{ withCredentials: true, })
       .then((res) => {
@@ -17,6 +19,9 @@ const ProjectCard = () => {
       })
       .catch((error) => {
         console.error("There was an error while getting all batches: ", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 

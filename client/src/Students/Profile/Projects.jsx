@@ -33,7 +33,7 @@ function Projects() {
           {projects.map((project, index) => (
             <div
               key={index}
-              onClick={() => navigate(`/s/dashboard/projects/${project.groupName.replaceAll(" ", "-")}`, { state: project })}
+              onClick={() => navigate(`/s/dashboard/projects/${project.groupName}`, { state: project })}
               className="project-card p-4 border-[1px] border-[#8694ff] rounded-lg shadow-md"
             >
               <h2 className="text-lg font-semibold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">{project.groupName}</h2>

@@ -55,7 +55,7 @@ function GroupLeft() {
   // Fetch project details from backend
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName.replaceAll("%", " ")}`, { withCredentials: true, })
+      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true, })
       .then((response) => {
         setProject(response.data);
         setMentor(response.data.mentor);
@@ -88,7 +88,7 @@ function GroupLeft() {
   };
 
   const getMonthAbbreviation = (month) => {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return months[month - 1];
   };
 
@@ -152,7 +152,29 @@ function GroupLeft() {
       <h2 className="md:text-3xl text-2xl mb-4 font-semibold">{project.groupName}</h2>
       <p className="md:text-xl text-base mb-4 md:w-[85%] w-full">{project.groupDescription}</p>
 
-      <div className="flex flex-wrap items-center gap-2 mb-2 mt-9">
+      {/* Technologies */}
+      <div className="flex flex-wrap gap-2">
+          {project.technologies?.map((tech, index) => (
+            <span
+              key={index}
+              className="px-4 py-1.5 text-sm rounded-full border-2 border-[#5B6DF3]/30 text-[#5B6DF3] 
+                       hover:bg-[#5B6DF3] hover:text-white transition-all duration-300 
+                       cursor-default transform hover:-translate-y-0.5"
+            >
+              {tech}
+            </span>
+          ))}
+          {/* {getRole() == "student" ? <Button
+          type="dashed"
+          shape="circle"
+          icon={<PlusOutlined />}
+          // onClick={showTechnologyModal}
+          title="Add Member"
+        /> : ""} */}
+        </div>
+
+
+      <div className="flex flex-wrap items-center gap-2 mb-2 mt-5">
         <h3 className="md:text-lg text-base font-semibold">Project Lead :</h3>
         <h3 className="md:text-lg text-base">{project.groupLeader?.toUpperCase() || "N/A"}</h3>
       </div>

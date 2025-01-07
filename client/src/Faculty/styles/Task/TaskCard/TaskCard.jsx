@@ -27,7 +27,7 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
       setCurrentAssignees(res.data.assignee);
       return res.data;
     } catch (error) {
-      return error
+      toast.error(error.response?.data?.message || "An error occurred while assigning tasks.")
     }
   };
 

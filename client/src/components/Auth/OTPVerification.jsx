@@ -72,23 +72,17 @@ const OTPVerification = ({ setLoginStatus }) => {
 
 
     axios
-      .post("http://localhost:1818/otp/verify", { otp: otp.join(""), email }, {
-        withCredentials: true,
-      })
+      .post("http://localhost:1818/otp/verify", { otp: otp.join(""), email })
       .then((res) => {
         console.log(res.data);
         return axios.post(
           "http://localhost:1818/auth/" + (isStudent ? "student/register" : "faculty/register"),
-          signUpData, {
-          withCredentials: true,
-        }
+          signUpData
         );
       })
       .then((response) => {
         console.log("Signed up successfully:", response.data);
-        return axios.post("http://localhost:1818/auth/login", { username, password }, {
-          withCredentials: true,
-        });
+        return axios.post("http://localhost:1818/auth/login", { username, password });
       })
       .then((response) => {
         setLoginStatus(true);

@@ -6,20 +6,24 @@ import axios from "axios";
 
 const Group = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { batch } = useParams();
 
-
   useEffect(() => {
-
+    setLoading(true);
     axios
-      .get(`http://localhost:1818/faculty/groups/b/${batch}`, { withCredentials: true })
+      .get(`http://localhost:1818/faculty/groups/b/${batch}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         const demo = res.data;
-        // console.log(demo);
         setData(demo);
       })
       .catch((error) => {
         console.error("There was an error while getting all batches: ", error);
+      })
+      .finally(() => {
+        setLoading(false); 
       });
   }, [batch]);
 
@@ -30,7 +34,7 @@ const Group = () => {
   return (
     <div className="my-4 mx-3 md:m-8 md:pl-0 pl-3">
       <GroupHeader batch={batch} onGroupAdded={handleAddGroup} />
-      <GroupList data={data} batch={batch} />
+      <GroupList data={data} batch={batch} loading={loading} />
     </div>
   );
 };

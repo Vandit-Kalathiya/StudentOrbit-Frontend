@@ -46,13 +46,14 @@ const TaskAssignees = ({
     setSelectedAssignees(values.assignees);
     setIsModalVisible(false);
     const data = await handleAssign(values.assignees, taskId);
-    console.log(data);
+    // console.log(data);
     if (data.assignee) {
       setAssigneeMembers(data.assignee);
       toast.success('Task assignees added successfully..')
-    } else {
-      toast.error(data.response.data?.message || "Error while assigning assignees.");
     }
+    //  else {
+    //   toast.error(data.response.data?.message || "Error while assigning assignees.");
+    // }
   };
 
 

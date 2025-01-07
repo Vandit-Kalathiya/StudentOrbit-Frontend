@@ -12,14 +12,16 @@ const TodoList = ({ projects }) => {
     .flatMap((project) =>
       project.weeks.flatMap((week) => {
         const isCurrentWeek =
-          currentDate.isSameOrAfter(moment(week.startDate)) &&
-          currentDate.isSameOrBefore(moment(week.endDate));
+          currentDate.isSameOrAfter(moment(week.startDate), 'day') &&
+          currentDate.isSameOrBefore(moment(week.endDate), 'day');
+
+        console.log(isCurrentWeek);
 
         return isCurrentWeek
           ? week.tasks.map((task) => ({
             ...task,
             groupName: project.groupName,
-            week: week, // Include the week details
+            week: week, 
           }))
           : [];
       })
@@ -34,6 +36,9 @@ const TodoList = ({ projects }) => {
   const handleTaskClick = (groupName, weekNumber) => {
     navigate(`/s/dashboard/projects/${groupName}/week${weekNumber}`);
   };
+
+  console.log(todoListData);
+
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-4 w-full">

@@ -66,9 +66,7 @@ function Signup() {
     const otpData = { email: formData.email, username: formData.username };
 
     axios
-      .post("http://localhost:1818/otp/send", otpData, {
-        withCredentials: true,
-      })
+      .post("http://localhost:1818/otp/send", otpData)
       .then((response) => {
         console.log("OTP sent:", response.data);
         openNotification(

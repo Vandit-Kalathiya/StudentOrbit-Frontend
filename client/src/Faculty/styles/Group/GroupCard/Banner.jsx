@@ -1,8 +1,15 @@
-import React from 'react';
+import { message, Modal, Button} from 'antd';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getRole } from '../../../../../authToken';
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 
 const Banner = ({ project, batch }) => {
   const navigate = useNavigate();
+
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const role = getRole();
 
   const handleReadMore = () => {
     navigate(
@@ -11,14 +18,15 @@ const Banner = ({ project, batch }) => {
     );
   };
 
-  return (
-    <div className="w-full rounded-xl border bg-white shadow-sm hover:shadow-lg transition-all duration-300 p-8 relative overflow-hidden">
-      {/* Decorative background element */}
-      {/* <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#5B6DF3] opacity-5 rounded-full blur-2xl" />
-      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#5B6DF3] opacity-5 rounded-full blur-2xl" /> */}
+  const handleDelete = () => {
+    // onDelete(batch);
+    setDeleteModalVisible(false);
+    message.success("Project deleted successfully!");
+  };
 
+  return (
+    <div className="w-full rounded-xl border bg-white shadow-sm hover:shadow-lg transition-all duration-300 p-8 py-7 relative overflow-hidden">
       <div className="relative">
-        {/* Header Section */}
         <div className="flex justify-between items-start mb-3">
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 hover:text-[#5B6DF3] transition-colors">
             {project.groupName}
@@ -28,12 +36,10 @@ const Banner = ({ project, batch }) => {
           </div>
         </div>
 
-        {/* Description */}
         <p className="text-gray-600 mb-5 leading-relaxed text-base">
           {project.groupDescription}
         </p>
 
-        {/* Technologies */}
         <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies?.map((tech, index) => (
             <span
@@ -47,7 +53,6 @@ const Banner = ({ project, batch }) => {
           ))}
         </div>
 
-        {/* Group Leader with enhanced styling */}
         <div className="flex items-center gap-2 mb-4 bg-gray-50 p-3 rounded-lg border w-[14rem]">
           <div className="h-8 w-8 rounded-full bg-[#5B6DF3]/10 flex items-center justify-center">
             <svg
@@ -71,8 +76,7 @@ const Banner = ({ project, batch }) => {
           </span>
         </div>
 
-        {/* Action Button with animation */}
-        <div className="flex">
+        <div className="flex justify-between items-center">
           <button
             onClick={handleReadMore}
             className="group w-full sm:w-auto px-4 py-3 bg-[#5B6DF3] text-white rounded-lg
@@ -96,8 +100,49 @@ const Banner = ({ project, batch }) => {
               />
             </svg>
           </button>
+          {
+            role === "faculty" && (
+              <div className="flex space-x-3">
+                <Button
+                  type="text"
+                  size="medium"
+                  icon={<EditOutlined style={{ color: "blue" }} />}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // setEditModalVisible(true);
+                    form.setFieldsValue({
+                      semester: sem,
+                      batchName: batch,
+                      startId: id1,
+                      endId: id2,
+                    });
+                  }}
+                />
+                <Button
+                  type="text"
+                  size="medium"
+                  icon={<DeleteOutlined style={{ color: "red" }} />}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setDeleteModalVisible(true);
+                  }}
+                />
+              </div>
+            )
+          }
         </div>
       </div>
+
+      <Modal
+        title="Confirm Delete"
+        open={isDeleteModalVisible}
+        onOk={handleDelete}
+        onCancel={() => setDeleteModalVisible(false)}
+        okText="Yes, Delete"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete the group <strong>{project.groupName}</strong>?</p>
+      </Modal>
     </div>
   );
 };

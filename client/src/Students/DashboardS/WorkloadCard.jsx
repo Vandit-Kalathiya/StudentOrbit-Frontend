@@ -73,7 +73,7 @@ const WorkloadCard = ({ members }) => {
       ),
     },
     {
-      title: 'Task',
+      title: 'Completed',
       dataIndex: 'task',
       key: 'task',
       render: (task) => (

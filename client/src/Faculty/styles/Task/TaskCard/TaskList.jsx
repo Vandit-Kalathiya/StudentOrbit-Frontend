@@ -28,17 +28,4 @@ const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees, members })
   );
 };
 
-// TaskList.propTypes = {
-//   tasks: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       // id: PropTypes.number.isRequired,
-//       title: PropTypes.string.isRequired,
-//       description: PropTypes.string,
-//       status: PropTypes.string.isRequired,
-//     })
-//   ).isRequired,
-//   status: PropTypes.string.isRequired,
-//   updateTaskStatus: PropTypes.func.isRequired,
-// };
-
 export default TaskList;

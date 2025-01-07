@@ -84,7 +84,7 @@ function Sidebar({ setLoginStatus }) {
         }}
       >
         <Content
-          className="transition-margin md:h-full mt-20"
+          className="transition-margin mt-20"
           style={{
             marginLeft: !isMobile ? (collapsed ? "1vw" : "4vw") : 0,
             transition: !isMobile ? "margin-left 0.3s ease-in-out" : "none",

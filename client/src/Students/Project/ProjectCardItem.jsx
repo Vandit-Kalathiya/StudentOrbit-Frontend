@@ -6,7 +6,7 @@ import { BookOutlined, TeamOutlined } from "@ant-design/icons";
 
 const ProjectCardItem = ({ project }) => {
   const navigate = useNavigate();
-
+  
   const handleReadMore = () => {
     navigate(`/s/dashboard/projects/${project.groupName}`, { state: project });
   };
@@ -29,11 +29,11 @@ const ProjectCardItem = ({ project }) => {
         <ProjectDescription description={project.groupDescription} onReadMore={handleReadMore} />
 
         <div className="mb-2">
-          <span className="font-semibold"><BookOutlined className="text-purple-500" /> Semester :</span> {project.batchName.substring(0, 1)}
+          <span className="font-semibold"><BookOutlined className="text-purple-500" /> Semester : </span> {project.batchName.substring(0, 1)}
         </div>
 
         <div className="mb-2">
-          <span className="font-semibold"><TeamOutlined className="text-purple-500" /> Group Members :</span>
+          <span className="font-semibold"><TeamOutlined className="text-purple-500" /> Group Members : </span>
           <div className="ml-5"><ProjectAvatarList members={project.students} /></div>
         </div>
       </Card>

@@ -21,9 +21,7 @@ const AccordionItem = ({
     endDate.setHours(0, 0, 0, 0);
 
     return currentDate <= endDate;
-  };
-
-
+  };  
 
   return (
     <div className={`${week.weekNumber === 1 ? "rounded rtl xl bg-gray-100" : ""}`}>

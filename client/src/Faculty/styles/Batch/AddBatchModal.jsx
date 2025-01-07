@@ -1,9 +1,9 @@
 import { Modal, Form, Input, Select, Button } from "antd";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getUsernameFromToken } from "../../../../authToken";
 
-const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
+const AddBatchModal = ({ visible, onCancel, form, onBatchAdded, onBatchEdited, mode = "add", batchDetails = {} }) => {
   const [batchName, setBatchName] = useState("");
   const [semester, setSemester] = useState(0);
   const [startId, setStartId] = useState("");
@@ -24,27 +24,87 @@ const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
     setEndId(e.target.value);
   };
 
-  const handleAddBatch = async () => {
+  // const handleAddBatch = async () => {
+  //   setLoading(true);
+  //   const batchData = {
+  //     batchName: batchName,
+  //     semester: semester,
+  //     startId: startId,
+  //     endId: endId,
+  //     assignedFacultyUsername: fetchedUsername
+  //   };
+  //   console.log(batchData);
+
+  //   try {
+  //     const response = await axios.post("http://localhost:1818/faculty/batches/add", batchData, {
+  //       withCredentials: true,
+  //     });
+  //     onBatchAdded(response.data);
+  //     form.resetFields();
+  //     console.log("Batch added...");
+  //     onCancel();
+  //   } catch (error) {
+  //     console.error("There was an error submitting the batch:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (mode === "edit" && batchDetails) {
+      setBatchName(batchDetails.batchName || "");
+      setSemester(batchDetails.semester || null);
+      setStartId(batchDetails.startId || "");
+      setEndId(batchDetails.endId || "");
+
+      form.setFieldsValue({
+        batch: batchDetails.batchName,
+        sem: batchDetails.semester,
+        id1: batchDetails.startId,
+        id2: batchDetails.endId,
+      });
+    } else {
+      setBatchName("");
+      setSemester(null);
+      setStartId("");
+      setEndId("");
+      form.resetFields();
+    }
+  }, [batchDetails, mode, form]);
+
+
+  const handleSubmit = async () => {
     setLoading(true);
     const batchData = {
-      batchName: batchName,
-      semester: semester,
-      startId: startId,
-      endId: endId,
-      assignedFacultyUsername: fetchedUsername
+      batchName,
+      semester,
+      startId,
+      endId,
+      assignedFacultyUsername: fetchedUsername,
     };
     console.log(batchData);
 
     try {
-      const response = await axios.post("http://localhost:1818/faculty/batches/add", batchData, {
-        withCredentials: true,
-      });
-      onBatchAdded(response.data);
+      if (mode === "add") {
+        const response = await axios.post("http://localhost:1818/faculty/batches/add", batchData, {
+          withCredentials: true,
+        });
+        onBatchAdded(response.data);
+        message.success("Batch added successfully!");
+      } else {
+        // const response = await axios.put(
+        //   `http://localhost:1818/faculty/batches/edit/${batchDetails.id}`,
+        //   batchData,
+        //   { withCredentials: true }
+        // );
+        // onBatchEdited(response.data);
+        message.success("Batch updated successfully!");
+      }
       form.resetFields();
-      console.log("Batch added...");
       onCancel();
     } catch (error) {
-      console.error("There was an error submitting the batch:", error);
+      console.error("Error submitting the batch:", error);
+      message.error("There was an error processing your request.");
     } finally {
       setLoading(false);
     }
@@ -52,7 +112,7 @@ const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
 
   return (
     <Modal
-      title="Add New Batch"
+      title={mode === "add" ? "Add New Batch" : "Edit Batch"}
       open={visible}
       onCancel={onCancel}
       footer={null}
@@ -60,8 +120,13 @@ const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
       <Form
         form={form}
         layout="vertical"
-        onFinish={handleAddBatch}
-        initialValues={{ batch: "", sem: "", id1: "", id2: "" }}
+        onFinish={handleSubmit}
+        initialValues={{
+          batch: batchName,
+          sem: semester,
+          id1: startId,
+          id2: endId,
+        }}
       >
         <Form.Item
           name="batch"
@@ -122,7 +187,7 @@ const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
         </Form.Item>
         <Form.Item>
           <Button className="bg-[#4859DA] text-white" htmlType="submit" loading={loading}>
-            Add Batch
+            {mode === "add" ? "Add Batch" : "Update Batch"}
           </Button>
         </Form.Item>
       </Form>

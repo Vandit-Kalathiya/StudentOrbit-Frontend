@@ -1,21 +1,17 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
 import AOS from "aos";
 import { IoLocationOutline, IoCallOutline } from "react-icons/io5";
 import { TfiEmail } from "react-icons/tfi";
 import { LuClock4 } from "react-icons/lu";
 import Footer from "./Footer";
 
-// Contact Information
-
 const infoItems = [
   {
     id: 1,
     icon: <IoLocationOutline size={45} />,
     title: "Address",
-    details: ["A108 Adam Street", "New York, NY 535022"],
+    details: ["Charusat University", "Changa, Gujarat"],
     delay: 200,
   },
   {
@@ -29,7 +25,7 @@ const infoItems = [
     id: 3,
     icon: <TfiEmail size={45} />,
     title: "Email Us",
-    details: ["info@example.com", "contact@example.com"],
+    details: ["info@studentorbit.com", "contact@example.com"],
     delay: 400,
   },
   {
@@ -41,9 +37,6 @@ const infoItems = [
   },
 ];
 
-// Contact form
-
-// eslint-disable-next-line react/prop-types
 function FormInput({ type, name, placeholder, required }) {
   return (
     <div className="w-full md:w-1/2 px-4 mb-4">
@@ -58,7 +51,6 @@ function FormInput({ type, name, placeholder, required }) {
   );
 }
 
-// eslint-disable-next-line react/prop-types
 function FormTextarea({ name, rows, placeholder, required }) {
   return (
     <div className="w-full px-4 mb-4">
@@ -74,15 +66,49 @@ function FormTextarea({ name, rows, placeholder, required }) {
 }
 
 function Contact() {
+  const [showPopup, setShowPopup] = useState(false);
+
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    formData.append("access_key", "04d0da77-8858-4b04-9138-eb6d83bb291a");
+
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: json,
+      }).then((res) => res.json());
+
+      if (res.success) {
+        setShowPopup(true); // Show the popup
+        event.target.reset(); // Clear the form fields
+      } else {
+        alert("Failed to send the message. Please try again.");
+      }
+    } catch (error) {
+      alert("An error occurred. Please try again.");
+    }
+  };
 
   return (
     <>
       <div className="min-h-screen items-center justify-center flex flex-col py-20 font-poppins">
         <div className="mt-10">
-          <h1 className="text-4xl text-center font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-blue-600">Contact</h1>
+          <h1 className="text-4xl text-center font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-blue-600">
+            Contact
+          </h1>
         </div>
 
         <div
@@ -122,6 +148,7 @@ function Contact() {
                 className="email-form h-full flex flex-col justify-between"
                 data-aos="fade-up"
                 data-aos-delay="200"
+                onSubmit={onSubmit}
               >
                 <div className="flex flex-wrap -mx-4 mb-8 p-8 bg-[#fafafa] flex-grow">
                   <FormInput
@@ -162,7 +189,27 @@ function Contact() {
           </div>
         </div>
       </div>
-      <Footer/>
+
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+            <h2 className="text-2xl font-semibold text-green-600">
+              Message Sent Successfully!
+            </h2>
+            <p className="mt-4 text-gray-700">
+              Thank you for reaching out. We'll get back to you soon!
+            </p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      <Footer />
     </>
   );
 }
