@@ -116,7 +116,7 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
       onClose();
       navigate(`/f/dashboard/batches/${batch}`);
     } catch (error) {
-      openNotification("error", "Group Creation Failed", "There was an issue while adding the group. Please try again.");
+      openNotification("error", "Group Creation Failed", error.response.data.message);
       console.error("There was an error submitting the group:", error);
     }
   };

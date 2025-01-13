@@ -1,27 +1,31 @@
-import { message, Modal, Button} from 'antd';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getRole } from '../../../../../authToken';
+import { message, Modal, Button } from "antd";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import { getRole } from "../../../../../authToken";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { RiDeleteBin6Fill } from "react-icons/ri";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Banner = ({ project, batch }) => {
   const navigate = useNavigate();
-
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const role = getRole();
 
   const handleReadMore = () => {
-    navigate(
-      `/f/dashboard/batches/${batch}/${project.groupName}`,
-      { state: project }
-    );
+    navigate(`/f/dashboard/batches/${batch}/${project.groupName}`, {
+      state: project,
+    });
   };
 
   const handleDelete = () => {
     // onDelete(batch);
+    axios.delete(`http://localhost:1818/faculty/groups/${project.id}`,{withCredentials:true})
+    .then((res)=>{
+      toast.success(res.data);
+    })
     setDeleteModalVisible(false);
-    message.success("Project deleted successfully!");
+    // message.success("Project deleted successfully!");
   };
 
   return (
@@ -48,7 +52,7 @@ const Banner = ({ project, batch }) => {
                        hover:bg-[#5B6DF3] hover:text-white transition-all duration-300 
                        cursor-default transform hover:-translate-y-0.5"
             >
-              {tech}
+              {tech.name}
             </span>
           ))}
         </div>
@@ -100,51 +104,62 @@ const Banner = ({ project, batch }) => {
               />
             </svg>
           </button>
-          {
-            role === "faculty" && (
-              <div className="flex space-x-3">
-                <Button
-                  type="text"
-                  size="medium"
-                  icon={<EditOutlined style={{ color: "blue" }} />}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // setEditModalVisible(true);
-                    form.setFieldsValue({
-                      semester: sem,
-                      batchName: batch,
-                      startId: id1,
-                      endId: id2,
-                    });
-                  }}
-                />
-                <Button
-                  type="text"
-                  size="medium"
-                  icon={<DeleteOutlined style={{ color: "red" }} />}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setDeleteModalVisible(true);
-                  }}
-                />
-              </div>
-            )
-          }
+          {role === "faculty" && (
+            <div className="flex space-x-3">
+              <Button
+                type="text"
+                size="medium"
+                icon={<EditOutlined style={{ color: "blue" }} />}
+                onClick={(e) => {
+                  e.preventDefault();
+                  message.info("Edit functionality not implemented yet.");
+                }}
+              />
+              <Button
+                type="text"
+                size="medium"
+                icon={<DeleteOutlined style={{ color: "red" }} />}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setDeleteModalVisible(true);
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
 
       <Modal
-        title="Confirm Delete"
+        title="Confirm Delete.? It's very sensitive..."
         open={isDeleteModalVisible}
         onOk={handleDelete}
         onCancel={() => setDeleteModalVisible(false)}
         okText="Yes, Delete"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete the group <strong>{project.groupName}</strong>?</p>
+        <p>
+          Are you sure you want to delete the group{" "}
+          <strong>{project.groupName}</strong>?
+        </p>
       </Modal>
     </div>
   );
+};
+
+Banner.propTypes = {
+  project: PropTypes.shape({
+    groupName: PropTypes.string.isRequired,
+    uniqueGroupId: PropTypes.string.isRequired,
+    groupDescription: PropTypes.string,
+    technologies: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      })
+    ),
+    groupLeader: PropTypes.string,
+  }).isRequired,
+  batch: PropTypes.string.isRequired,
+  onDelete: PropTypes.func,
 };
 
 export default Banner;

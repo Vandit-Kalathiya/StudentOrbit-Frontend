@@ -14,8 +14,8 @@ const colorCombinations = [
   { backgroundColor: "#f9f0ff", color: "#531dab", border: "#531dab" },
 ];
 
-function GroupLeft() {
-  const { projectName } = useParams(); // Assuming projectName is a route parameter
+function GroupLeft({projectName}) {
+  // const { projectName } = useParams(); // Assuming projectName is a route parameter
   const [project, setProject] = useState(null);
   const [mentor, setMentor] = useState(null);
   const [selectedMentor, setSelectedMentor] = useState(null);
@@ -33,7 +33,7 @@ function GroupLeft() {
   const handleOk = () => {
     form.validateFields() // Validate the form fields before proceeding
       .then(() => {
-        addMember()
+        addMember();
         setIsModalVisible(false);
         setUsername("");
       })
@@ -47,7 +47,7 @@ function GroupLeft() {
   // Fetch mentors from backend on component mount
   useEffect(() => {
     axios
-      .get("http://localhost:1818/faculty/all", { withCredentials: true, })
+      .get("http://localhost:1818/faculty/all", { withCredentials: true })
       .then((response) => setMentors(response.data))
       .catch((error) => console.error("Failed to fetch mentors:", error));
   }, []);
@@ -55,11 +55,11 @@ function GroupLeft() {
   // Fetch project details from backend
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true, })
+      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true })
       .then((response) => {
         setProject(response.data);
         setMentor(response.data.mentor);
-        setUsername("")
+        setUsername("");
       })
       .catch((error) => console.error("Failed to fetch project details:", error));
   }, [temp]);
@@ -74,7 +74,11 @@ function GroupLeft() {
       content: `Are you sure you want to select ${selectedMentor} as your mentor?`,
       onOk: () => {
         axios
-          .post(`http://localhost:1818/faculty/mentor/${selectedMentor}/${project.id}`, null ,{ withCredentials: true, })
+          .post(
+            `http://localhost:1818/faculty/mentor/${selectedMentor}/${project.id}`,
+            null,
+            { withCredentials: true }
+          )
           .then(() => {
             message.success("Mentor selected successfully!");
             setTemp((p) => !p);
@@ -88,17 +92,34 @@ function GroupLeft() {
   };
 
   const getMonthAbbreviation = (month) => {
-    const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const months = [
+      "Jan",
+      "Feb",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     return months[month - 1];
   };
 
   const getOrdinalSuffix = (day) => {
     if (day > 3 && day < 21) return "th";
     switch (day % 10) {
-      case 1: return "st";
-      case 2: return "nd";
-      case 3: return "rd";
-      default: return "th";
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
     }
   };
 
@@ -108,7 +129,7 @@ function GroupLeft() {
       content: `Are you sure you want to mark the project "${project.groupName}" as completed?`,
       onOk: () => {
         axios
-          .put(`http://localhost:1818/faculty/groups/complete/${project.id}`, {}, { withCredentials: true, })
+          .put(`http://localhost:1818/faculty/groups/complete/${project.id}`, {}, { withCredentials: true })
           .then(() => {
             message.success("Project marked as completed!");
             setTemp((prev) => !prev);
@@ -121,29 +142,31 @@ function GroupLeft() {
     });
   };
 
-  const showAddMemberModal = () => setIsModalVisible(true);
-
   const addMember = () => {
-    if (project.projectStatus == "COMPLETED") {
-      return toast.error("Project is already Completed")
+    if (project.projectStatus === "COMPLETED") {
+      return toast.error("Project is already Completed");
     }
 
-    let memberUsername = []
-    memberUsername.push(username)
-    axios.post(`http://localhost:1818/faculty/groups/add/member/${project.id}`, memberUsername, { withCredentials: true })
+    let memberUsername = [];
+    memberUsername.push(username);
+    axios
+      .post(`http://localhost:1818/faculty/groups/add/member/${project.id}`, memberUsername, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res.data);
-        setTemp((p) => !p)
-        toast.success(`${username} added in ${projectName}.`)
-      }).catch((e) => {
+        setTemp((p) => !p);
+        toast.success(`${username} added in ${projectName}.`);
+      })
+      .catch((e) => {
         if (e.response && e.response.status === 500) {
           setIsModalVisible(false);
           setUsername("");
-          setTemp((p) => !p)
-          toast.error(e.response.data)
+          setTemp((p) => !p);
+          toast.error(e.response.data);
         }
-      })
-  }
+      });
+  };
 
   if (!project) return <div className="flex justify-center items-center m-auto h-full">Loading...</div>;
 
@@ -154,25 +177,17 @@ function GroupLeft() {
 
       {/* Technologies */}
       <div className="flex flex-wrap gap-2">
-          {project.technologies?.map((tech, index) => (
-            <span
-              key={index}
-              className="px-4 py-1.5 text-sm rounded-full border-2 border-[#5B6DF3]/30 text-[#5B6DF3] 
+        {project.technologies?.map((tech, index) => (
+          <span
+            key={index}
+            className="px-4 py-1.5 text-sm rounded-full border-2 border-[#5B6DF3]/30 text-[#5B6DF3] 
                        hover:bg-[#5B6DF3] hover:text-white transition-all duration-300 
                        cursor-default transform hover:-translate-y-0.5"
-            >
-              {tech}
-            </span>
-          ))}
-          {/* {getRole() == "student" ? <Button
-          type="dashed"
-          shape="circle"
-          icon={<PlusOutlined />}
-          // onClick={showTechnologyModal}
-          title="Add Member"
-        /> : ""} */}
-        </div>
-
+          >
+            {tech.name}
+          </span>
+        ))}
+      </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-2 mt-5">
         <h3 className="md:text-lg text-base font-semibold">Project Lead :</h3>
@@ -196,13 +211,15 @@ function GroupLeft() {
             </Avatar>
           );
         })}
-        {getRole() == "faculty" ? <Button
-          type="dashed"
-          shape="circle"
-          icon={<PlusOutlined />}
-          onClick={showAddMemberModal}
-          title="Add Member"
-        /> : ""}
+        {getRole() === "faculty" && (
+          <Button
+            type="dashed"
+            shape="circle"
+            icon={<PlusOutlined />}
+            onClick={showModal}
+            title="Add Member"
+          />
+        )}
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -232,77 +249,48 @@ function GroupLeft() {
 
       <div className="flex flex-wrap items-center gap-2 mb-2 mt-4">
         <h3 className="md:text-lg text-base font-semibold">Project Start Date : </h3>
-        <h3 className="md:text-lg text-base italic">{parseInt(project.startDate.substring(8, 10), 10)}
-          <sup>{getOrdinalSuffix(parseInt(project.startDate.substring(8, 10), 10))}</sup> {getMonthAbbreviation(parseInt(project.startDate.substring(5, 7), 10))}'{parseInt(project.startDate.substring(0, 4), 10)}</h3>
+        <h3 className="md:text-lg text-base italic">
+          {parseInt(project.startDate.substring(8, 10), 10)}
+          {getOrdinalSuffix(parseInt(project.startDate.substring(8, 10), 10))}{" "}
+          {getMonthAbbreviation(parseInt(project.startDate.substring(5, 7), 10))},{" "}
+          {project.startDate.substring(0, 4)}
+        </h3>
       </div>
 
-      <div className="flex justify-between mb-1 mt-8 md:w-[70%] w-full">
-        <span className="font-medium text-lg">Progress</span>
-        <span className="text-sm font-medium text-blue-700">45%</span>
-      </div>
-      <div className="md:w-[70%] w-full bg-gray-200 rounded-full h-2.5">
-        <div className="bg-[#5B6DF2] h-2.5 rounded-full" style={{ width: "45%" }}></div>
-      </div>
+      {getRole() === "faculty" && project.projectStatus === "INPROGRESS" && (
+        <div className="flex justify-start items-center mt-6">
+          <Button type="primary" icon={<FaCheckCircle />} onClick={markProjectAsCompleted}>
+            Mark Completed
+          </Button>
+        </div>
+      )}
 
+      {/* Add Member Modal */}
       <Modal
-        title="Add Member"
-        open={isModalVisible}
+        title="Add New Member"
+        visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
-            Invite
-          </Button>,
-        ]}
+        okText="Add"
+        cancelText="Cancel"
       >
         <Form form={form}>
           <Form.Item
-            label="Student ID"
             name="username"
             rules={[
-              { required: true, message: "Please enter a Student ID.!" },
-              {
-                pattern: /^\d{2}[Cc][Ee](00[1-9]|0[1-9]\d|1[0-7]\d|180)$/,
-                message: "Username must follow the format YYCEXXX, where YY is two digits and XXX is 001 to 180.",
-              },
+              { required: true, message: "Please enter a valid username!" },
+              { min: 4, message: "Username must be at least 4 characters." },
             ]}
           >
             <Input
-              placeholder={`Enter Student ID (e.g., ${new Date().getFullYear().toString().slice(-2) - 1}CEXXX)`}
+              placeholder="Enter Username"
               value={username}
               onChange={handleUsernameChange}
             />
           </Form.Item>
         </Form>
       </Modal>
-
-
-      {project.groupLeader?.toUpperCase() === fetchedUsername.toUpperCase() ?
-        (
-          <div className={`mt-[11rem]`}>
-            <Button
-              type="primary"
-              className={`flex items-center justify-center  border rounded-lg ${project.projectStatus === "COMPLETED" ? "px-0 py-0" : "px-3 py-2"
-                }`}
-              onClick={markProjectAsCompleted}
-              disabled={project.projectStatus === "COMPLETED"}
-            >
-              {project.projectStatus === "COMPLETED" ? (
-                <div className={`flex items-center px-3 py-2 ${project.projectStatus === "COMPLETED" ? "border border-green-500 rounded-lg bg-white" : "border border-gray-500 rounded-lg"
-                  }`}>
-                  <FaCheckCircle className="mr-2 text-green-500" />
-                  <span className="text-green-500 font-semibold">Project Completed</span>
-                </div>
-              ) : (
-                <span>Mark as Completed</span>
-              )}
-            </Button>
-          </div>
-        ) : ""}
-    </div >
+    </div>
   );
 }
 

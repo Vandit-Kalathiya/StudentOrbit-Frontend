@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Form, Input } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -10,7 +10,22 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
     taskDescription: "",
   });
 
+  const [projectData, setProjectData] = useState([]);
+
   const { projectName } = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:1818/faculty/groups/g/${projectName}`,{ withCredentials: true})
+      .then((res) => {
+        const demo = res.data;
+        setProjectData(demo);
+        console.log(demo);
+      })
+      .catch((error) => {
+        console.error("There was an error while getting group : ", error);
+      });
+  }, []);
 
   const handleInputChange = (e) => {
     setTasks({ ...tasks, [e.target.name]: e.target.value });
@@ -18,23 +33,23 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
 
   const handleTasks = async () => {
     try {
-      if (project.mentor == null) {
+      if (projectData.mentor == null) {
         return toast.error("Please select a mentor first..!");
       }
 
-      if (project.projectStatus == "COMPLETED") {
+      if (projectData.projectStatus == "COMPLETED") {
         return toast.error("Project is already Completed");
       }
 
       const res = await axios.post(
-        `http://localhost:1818/tasks/add/${project.id}/${currentWeekId}`,
+        `http://localhost:1818/tasks/add/${projectData.id}/${currentWeekId}`,
         tasks,
         {
           withCredentials: true,
         }
       );
 
-      console.log("Task added successfully", res.data);
+      console.log("Task added successfully");
 
       axios
         .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true })
@@ -43,7 +58,7 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
           handleOk(demo);
         })
         .catch((error) => {
-          console.error("There was an error while getting all batches: ", error);
+          console.error("There was an error while getting group : ", error);
         });
 
     } catch (error) {

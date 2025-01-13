@@ -24,6 +24,7 @@ const Batch = () => {
   const [showModal, setShowModal] = useState(false);
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
+  const [temp, setTemp] = useState(0);
   const [loading, setLoading] = useState(false);
   const fetchedUsername = getUsernameFromToken();
 
@@ -45,7 +46,7 @@ const Batch = () => {
     };
 
     fetchData();
-  }, [fetchedUsername]);
+  }, [fetchedUsername,temp]);
 
   const handleBatchAdded = (values) => {
     setData([...data, values]);
@@ -80,23 +81,32 @@ const Batch = () => {
           <Loader />
         </div>
       ) : (
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 md:mt-4"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {data.map((item, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <BatchCard
-                batch={item.batchName}
-                sem={item.semester}
-                id1={item.startId}
-                id2={item.endId}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+        data.length === 0 ?
+          <div
+            className="col-span-full text-center p-10 text-gray-500 text-xl font-medium"
+          >
+            <p className="bg-gray-100 rounded-lg p-5 shadow-sm ">
+              You don't have any batches yet..! Start by creating one to see it here.🚀
+            </p>
+          </div> : <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 md:mt-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {data.map((item, index) => (
+              <motion.div key={index} variants={itemVariants}>
+                <BatchCard
+                  batch={item.batchName}
+                  sem={item.semester}
+                  id1={item.startId}
+                  id2={item.endId}
+                  id={item.id}
+                  setTemp={setTemp}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
       )}
       <AddBatchModal
         visible={showModal}

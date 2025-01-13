@@ -18,6 +18,8 @@ const cardVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
+
+
 const GroupList = ({ data, batch, loading }) => {
   if (loading) {
     return (

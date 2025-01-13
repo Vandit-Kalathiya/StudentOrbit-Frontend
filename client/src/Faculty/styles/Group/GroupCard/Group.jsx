@@ -23,18 +23,25 @@ const Group = () => {
         console.error("There was an error while getting all batches: ", error);
       })
       .finally(() => {
-        setLoading(false); 
+        setLoading(false);
       });
   }, [batch]);
 
   const handleAddGroup = (newGroup) => {
     setData((prevData) => [...prevData, newGroup]);
-  };
+  };  
 
   return (
     <div className="my-4 mx-3 md:m-8 md:pl-0 pl-3">
       <GroupHeader batch={batch} onGroupAdded={handleAddGroup} />
-      <GroupList data={data} batch={batch} loading={loading} />
+
+      {data.length === 0 ? <div
+        className="col-span-full text-center p-10 text-gray-500 text-xl font-medium"
+      >
+        <p className="bg-gray-100 rounded-lg p-5 shadow-sm ">
+          You don't have any groups yet..! Start by creating one to see it here.🚀
+        </p>
+      </div> : <GroupList data={data} batch={batch} loading={loading} />}
     </div>
   );
 };

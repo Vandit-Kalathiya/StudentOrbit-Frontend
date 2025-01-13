@@ -61,7 +61,7 @@ const OTPVerification = ({ setLoginStatus }) => {
   const { username, email, password, isStudent, name } = location.state || {};
   const isOtpComplete = otp.every((digit) => digit !== "");
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     console.log(username, " ", password, " ", email, " ", otp.join(""), " ", name);
     const signUpData = {
       username,
@@ -71,33 +71,45 @@ const OTPVerification = ({ setLoginStatus }) => {
     };
 
 
-    axios
-      .post("http://localhost:1818/otp/verify", { otp: otp.join(""), email })
-      .then((res) => {
-        console.log(res.data);
-        return axios.post(
-          "http://localhost:1818/auth/" + (isStudent ? "student/register" : "faculty/register"),
-          signUpData
-        );
-      })
-      .then((response) => {
-        console.log("Signed up successfully:", response.data);
-        return axios.post("http://localhost:1818/auth/login", { username, password });
-      })
-      .then((response) => {
-        setLoginStatus(true);
-        toast.success('Signed up successfully...')
-        navigate(isStudent ? "/s/dashboard" : "/f/dashboard");
-      })
-      .catch((error) => {
-        if (error.response && (error.response.status === 500 || error.response.status === 400)) {
-          // setErrorMessage("Student already exists with given ID..!");
-          toast.error(error.response.data)
+    try {
+      // Verify OTP
+      const otpVerifyResponse = await axios.post("http://localhost:1818/otp/verify", {
+        otp: otp.join(""),
+        email,
+      });
+      console.log(otpVerifyResponse.data);
+
+      // Register user
+      const registerEndpoint = `http://localhost:1818/auth/${isStudent ? "student/register" : "faculty/register"}`;
+      const registerResponse = await axios.post(registerEndpoint, signUpData);
+      console.log("Signed up successfully:", registerResponse.data);
+
+      // Login user
+      const loginResponse = await axios.post("http://localhost:1818/auth/login", {
+        username,
+        password,
+      }, { withCredentials: true });
+      console.log("Login response:", loginResponse.data);
+
+      // Update login status and navigate
+      setLoginStatus(true);
+      toast.success("Signed up successfully...");
+      navigate(isStudent ? "/s/dashboard" : "/f/dashboard");
+    } catch (error) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 500 || status === 400) {
+          toast.error(data);
         } else {
-          console.error("There was an error signing up:", error);
+          console.error("Unexpected response error:", data);
           setErrorMessage("An error occurred during signup. Please try again.");
         }
-      });
+      } else {
+        console.error("Error signing up:", error);
+        setErrorMessage("A network or unexpected error occurred. Please try again.");
+      }
+    }
+
   };
 
   return (

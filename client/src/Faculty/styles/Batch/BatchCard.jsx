@@ -1,21 +1,35 @@
-import { Card, Button, Modal, Form, message } from "antd";
-import { useState } from "react";
+import { Card, Button, Modal, Form, Input, message } from "antd";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { getRole } from "../../../../authToken";
 import AddBatchModal from "./AddBatchModal";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import axios from "axios";
 
-const BatchCard = ({ batch, sem, id1, id2, onEdit, onDelete }) => {
+const BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
   const role = getRole();
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [form] = Form.useForm();
 
   const handleDelete = () => {
-    // onDelete(batch);
-    setDeleteModalVisible(false);
-    message.success("Batch deleted successfully!");
+    axios.delete(`http://localhost:1818/faculty/batches/${id}`, { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
+        setDeleteModalVisible(false);
+        setTemp((p) => !p)
+        message.success("Batch deleted successfully!");
+      })
+      .catch((err) => console.log('Batch not deleted', err))
   };
+
+  // useEffect(() => {
+  //   axios.get(`http://localhost:1818/faculty/batches/${id}`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => console.log(err))
+  // }, [batch])
 
   return (
     <>
@@ -23,7 +37,7 @@ const BatchCard = ({ batch, sem, id1, id2, onEdit, onDelete }) => {
         <Card
           title={`Batch ${batch?.toUpperCase()}`}
           bordered={false}
-          className="mx-auto w-[100%] hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 shadow-sm hover:shadow-lg transition-all duration-100 hover:border-l-4 hover:border-blue-400 to-purple-400"
+          className="mx-auto w-[100%]"
           headStyle={{ fontSize: "clamp(1.4rem, 1.5vw, 1.75rem)" }}
           extra={
             role === "faculty" && (
@@ -55,6 +69,7 @@ const BatchCard = ({ batch, sem, id1, id2, onEdit, onDelete }) => {
               </div>
             )
           }
+
         >
           <p className="p-1 pt-0 text-sm sm:text-base md:text-lg inline font-semibold">
             Semester :
@@ -78,12 +93,59 @@ const BatchCard = ({ batch, sem, id1, id2, onEdit, onDelete }) => {
         okText="Yes, Delete"
         cancelText="Cancel"
       >
-        <p>
-          Are you sure you want to delete the batch <strong>{sem}{batch}</strong>?
-        </p>
+        <p>Are you sure you want to delete the batch <strong>{sem}{batch}</strong>?</p>
       </Modal>
-      
-      <AddBatchModal
+
+      <Modal
+        title="Edit Batch"
+        open={isEditModalVisible}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              handleEdit(values);
+            })
+            .catch((info) => {
+              console.error("Validation Failed:", info);
+            });
+        }}
+        onCancel={() => setEditModalVisible(false)}
+        okText="Save"
+        cancelText="Cancel"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label="Semester"
+            name="semester"
+            rules={[{ required: true, message: "Please enter the semester" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Batch Name"
+            name="batchName"
+            rules={[{ required: true, message: "Please enter the batch name" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Start ID"
+            name="startId"
+            rules={[{ required: true, message: "Please enter the start ID" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="End ID"
+            name="endId"
+            rules={[{ required: true, message: "Please enter the end ID" }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* <AddBatchModal
         visible={isEditModalVisible}
         onCancel={() => setEditModalVisible(false)}
         form={form}
@@ -99,7 +161,8 @@ const BatchCard = ({ batch, sem, id1, id2, onEdit, onDelete }) => {
           onEdit(updatedBatch); 
           setEditModalVisible(false);
         }}
-      />
+      /> */}
+
     </>
   );
 };

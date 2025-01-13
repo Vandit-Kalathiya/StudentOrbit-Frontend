@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import GroupLeft from "./GroupLeft";
 import GroupRight from "./GroupRight/GroupRight";
 import { getUsernameFromToken } from "../../../../authToken";
+import { useEffect } from "react";
 
 function GroupDetailsNew({ collapsed }) {
   const { batch, projectName } = useParams();
@@ -10,6 +11,10 @@ function GroupDetailsNew({ collapsed }) {
   const fetchedUsername = getUsernameFromToken();
 
   const project = location.state;
+
+  useEffect(()=>{
+    console.log("loaded...");
+  },[project])
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -48,7 +53,7 @@ function GroupDetailsNew({ collapsed }) {
           }}
           variants={itemVariants}
         >
-          <GroupLeft projectName={projectName.replaceAll("-"," ")} />
+          <GroupLeft projectName={projectName} />
         </motion.div>
 
         <motion.div

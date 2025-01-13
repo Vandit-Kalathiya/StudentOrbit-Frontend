@@ -25,7 +25,7 @@ function Login({ setLoginStatus }) {
       const response = await axios.post(`http://localhost:1818/auth/login`, { username, password }, {
         withCredentials: true,
       });
-      // const { jwtToken, role } = response.data;
+      const { jwtToken, role } = response.data;
 
       // localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
       // localStorage.setItem("username", username);

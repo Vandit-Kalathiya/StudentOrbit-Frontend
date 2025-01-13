@@ -14,7 +14,7 @@ function GroupRight({ project }) {
   const [weekTasks, setWeekTasks] = useState(project.weeks);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentWeekId, setCurrentWeekId] = useState(null);
-  const [projectData, setProjectData] = useState([]);
+  const [projectData, setProjectData] = useState([]);  
 
   const accordionRef = useRef(null);
   useLenisScroll([accordionRef]);
@@ -25,21 +25,21 @@ function GroupRight({ project }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`,{ withCredentials: true, })
-      .then((res) => {
+      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`,{withCredentials: true})
+      .then((res) => {        
         setWeekTasks(res.data.weeks);
       });
   }, []);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`,{ withCredentials: true, })
+      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`,{ withCredentials: true})
       .then((res) => {
         const demo = res.data;
         setProjectData(demo);
       })
       .catch((error) => {
-        console.error("There was an error while getting all batches: ", error);
+        console.error("There was an error while getting group : ", error);
       });
   }, [weekTasks]);
 
