@@ -1,8 +1,7 @@
 import { Card, Button, Modal, Form, Input, message } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { getRole } from "../../../../authToken";
-import AddBatchModal from "./AddBatchModal";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 
@@ -13,14 +12,17 @@ const BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
   const [form] = Form.useForm();
 
   const handleDelete = () => {
-    axios.delete(`http://localhost:1818/faculty/batches/${id}`, { withCredentials: true })
+    axios
+      .delete(`http://localhost:1818/faculty/batches/${id}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res.data);
         setDeleteModalVisible(false);
-        setTemp((p) => !p)
+        setTemp((p) => !p);
         message.success("Batch deleted successfully!");
       })
-      .catch((err) => console.log('Batch not deleted', err))
+      .catch((err) => console.log("Batch not deleted", err));
   };
 
   // useEffect(() => {
@@ -37,7 +39,7 @@ const BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
         <Card
           title={`Batch ${batch?.toUpperCase()}`}
           bordered={false}
-          className="mx-auto w-[100%]"
+          className="relative group mx-auto w-[100%] transition-all duration-300 border-0 rounded-xl mb-4 cursor-pointer bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 shadow-sm hover:shadow-lg"
           headStyle={{ fontSize: "clamp(1.4rem, 1.5vw, 1.75rem)" }}
           extra={
             role === "faculty" && (
@@ -69,13 +71,12 @@ const BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
               </div>
             )
           }
-
         >
+          <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-400 to-purple-400 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <p className="p-1 pt-0 text-sm sm:text-base md:text-lg inline font-semibold">
             Semester :
           </p>
-          <p className="inline text-sm sm:text-base md:text-lg">{sem}</p>{" "}
-          <br />
+          <p className="inline text-sm sm:text-base md:text-lg">{sem}</p> <br />
           <p className="p-1 text-sm sm:text-base md:text-lg inline font-semibold">
             Id :
           </p>
@@ -93,7 +94,14 @@ const BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
         okText="Yes, Delete"
         cancelText="Cancel"
       >
-        <p>Are you sure you want to delete the batch <strong>{sem}{batch}</strong>?</p>
+        <p>
+          Are you sure you want to delete the batch{" "}
+          <strong>
+            {sem}
+            {batch}
+          </strong>
+          ?
+        </p>
       </Modal>
 
       <Modal
@@ -162,7 +170,6 @@ const BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
           setEditModalVisible(false);
         }}
       /> */}
-
     </>
   );
 };

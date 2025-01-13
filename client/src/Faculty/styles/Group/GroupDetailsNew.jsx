@@ -11,6 +11,7 @@ function GroupDetailsNew({ collapsed }) {
   const fetchedUsername = getUsernameFromToken();
 
   const project = location.state;
+  console.log(project)
 
   useEffect(()=>{
     console.log("loaded...");
