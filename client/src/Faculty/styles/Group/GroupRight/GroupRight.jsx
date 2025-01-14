@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Accordion from "./Accordion";
 import TaskModal from "./TaskModal";
-import { Form, message } from "antd";
+import { Form } from "antd";
 import axios from "axios";
 import useLenisScroll from "../../../../Hooks/useLenisScroll";
 
 
 function GroupRight({ project }) {
-  const location = useLocation();
-  const { projectName } = useParams();
+  // const location = useLocation();
+  // const { projectName } = useParams();
 
   const [weekTasks, setWeekTasks] = useState(project.weeks);
   const [isModalOpen, setIsModalOpen] = useState(false);

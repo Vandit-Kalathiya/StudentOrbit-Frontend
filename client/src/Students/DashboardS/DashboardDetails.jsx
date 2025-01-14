@@ -4,11 +4,12 @@ import TodoList from "./TodoList";
 import CalendarWrapper from "./CalendarWrapper";
 import TeamProgressCard from "./TeamProgressCard";
 import WorkloadCard from "./WorkloadCard";
-import { useEffect, useRef, useState } from 'react';
-import useLenisScroll from '../../Hooks/useLenisScroll';
+import { useEffect, useRef, useState } from "react";
+import useLenisScroll from "../../Hooks/useLenisScroll";
 import axios from "axios";
 import { getUsernameFromToken } from "../../../authToken";
 import { Select } from "antd";
+import StudentDashboardSkeleton from "../../skeleton/StudentDashboardSkeleton";
 
 const DashboardDetails = () => {
   const todoListRef = useRef(null);
@@ -18,34 +19,45 @@ const DashboardDetails = () => {
   const [inProgress, setInProgress] = useState(0);
   const [completed, setCompleted] = useState(0);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [projects, setProjects] = useState([]); // Store all projects
-  const [selectedProject, setSelectedProject] = useState(null); // Track selected project
+  const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
     const fetchedUsername = getUsernameFromToken();
-
-    // Fetch all projects
-    axios.get(`http://localhost:1818/students/gs/${fetchedUsername}`, { withCredentials: true })
+    setLoading(true);
+    axios
+      .get(`http://localhost:1818/students/gs/${fetchedUsername}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         setProjects(res.data);
-        setSelectedProject(res.data[0]); // Set the first project as default
+        setSelectedProject(res.data[0]);
       });
 
-    // Fetch task counts
-    axios.get(`http://localhost:1818/tasks/count/${fetchedUsername}/TO_DO`, { withCredentials: true })
+    axios
+      .get(`http://localhost:1818/tasks/count/${fetchedUsername}/TO_DO`, {
+        withCredentials: true,
+      })
       .then((res) => setTodo(res.data));
 
-    axios.get(`http://localhost:1818/tasks/count/${fetchedUsername}/IN_PROGRESS`, { withCredentials: true })
+    axios
+      .get(`http://localhost:1818/tasks/count/${fetchedUsername}/IN_PROGRESS`, {
+        withCredentials: true,
+      })
       .then((res) => setInProgress(res.data));
 
-    axios.get(`http://localhost:1818/tasks/count/${fetchedUsername}/COMPLETED`, { withCredentials: true })
-      .then((res) => setCompleted(res.data));
+    axios
+      .get(`http://localhost:1818/tasks/count/${fetchedUsername}/COMPLETED`, {
+        withCredentials: true,
+      })
+      .then((res) => setCompleted(res.data))
+      .finally(() => setLoading(false));
   }, []);
 
-  // Update selected project based on dropdown selection
   const handleProjectChange = (projectId) => {
-    const project = projects.find(p => p.id === projectId);
+    const project = projects.find((p) => p.id === projectId);
     setSelectedProject(project);
   };
 
@@ -62,7 +74,9 @@ const DashboardDetails = () => {
     setDropdownVisible(open);
   };
 
-  return (
+  return loading ? (
+    <StudentDashboardSkeleton />
+  ) : (
     <motion.div
       className="overflow-hidden mt-10 px-8 md:mt-8 md:px-8"
       variants={containerVariants}
@@ -75,8 +89,12 @@ const DashboardDetails = () => {
           variants={containerVariants}
         >
           <CardList todo={todo} inProgress={inProgress} completed={completed} />
-          <motion.div className="w-full mb-6" ref={todoListRef} variants={containerVariants}>
-            <TodoList projects={projects}/>
+          <motion.div
+            className="w-full mb-6"
+            ref={todoListRef}
+            variants={containerVariants}
+          >
+            <TodoList projects={projects} />
           </motion.div>
         </motion.div>
 
@@ -88,7 +106,10 @@ const DashboardDetails = () => {
         </motion.div>
       </div>
 
-      <motion.div className="grid md:grid-cols-2 gap-8 mb-5" variants={containerVariants}>
+      <motion.div
+        className="grid md:grid-cols-2 gap-8 mb-5"
+        variants={containerVariants}
+      >
         <motion.div className="relative" variants={containerVariants}>
           <div className="relative">
             <div className="absolute top-3 right-3 z-10">
@@ -114,7 +135,6 @@ const DashboardDetails = () => {
           )}
         </motion.div>
 
-        {/* Workload Card */}
         <motion.div variants={containerVariants}>
           <WorkloadCard members={selectedProject?.students || []} />
         </motion.div>

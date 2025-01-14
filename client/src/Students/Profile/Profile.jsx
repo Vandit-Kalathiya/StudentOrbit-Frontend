@@ -11,6 +11,7 @@ import Projects from "./Projects";
 import { MdOutlineEdit } from "react-icons/md";
 import axios from "axios";
 import { getUsernameFromToken } from "../../../authToken";
+import ProfileSkeleton from "../../skeleton/ProfileSkeleton";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -41,29 +42,39 @@ function Profile() {
   const [image, setImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const fetchedUsername = getUsernameFromToken();
+  const [loadings, setLoadings] = useState(false);
 
   useEffect(() => {
-    const username = localStorage.getItem("username");
-    axios.get(`http://localhost:1818/students/u/${fetchedUsername}`, { withCredentials: true, })
+    setLoadings(true);
+    axios
+      .get(`http://localhost:1818/students/u/${fetchedUsername}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         setUserData(res.data);
       })
       .catch(() => console.log("Error while fetching user data"));
-    axios.get(`http://localhost:1818/students/${fetchedUsername}/image`, { withCredentials: true, responseType: "blob" })
-      .then((res) => {
-        // console.log(URL.createObjectURL(res.data));
-        setProfileImage(URL.createObjectURL(res.data))
+    axios
+      .get(`http://localhost:1818/students/${fetchedUsername}/image`, {
+        withCredentials: true,
+        responseType: "blob",
       })
-  }, [])
+      .then((res) => {
+        setProfileImage(URL.createObjectURL(res.data));
+      })
+      .finally(() => setLoadings(false));
+  }, []);
 
   useEffect(() => {
-    axios.get(`http://localhost:1818/students/${getUsernameFromToken()}/image`, { withCredentials: true, responseType: "blob" })
-      .then((res) => {
-        // console.log(URL.createObjectURL(res.data));
-        setProfileImage(URL.createObjectURL(res.data))
+    axios
+      .get(`http://localhost:1818/students/${getUsernameFromToken()}/image`, {
+        withCredentials: true,
+        responseType: "blob",
       })
-  }, [userData])
-
+      .then((res) => {
+        setProfileImage(URL.createObjectURL(res.data));
+      });
+  }, [userData]);
 
   const handleModalOpen = (type) => {
     setModalType(type);
@@ -82,23 +93,24 @@ function Profile() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file)
+      setImage(file);
     }
   };
 
-
-
   const addSkill = () => {
-    let t = []
+    let t = [];
     if (newSkill) {
-      t.push(newSkill)
-      axios.post(`http://localhost:1818/students/skills/${fetchedUsername}`, t, { withCredentials: true, })
+      t.push(newSkill);
+      axios
+        .post(`http://localhost:1818/students/skills/${fetchedUsername}`, t, {
+          withCredentials: true,
+        })
         .then((res) => {
           setSkills(res.data.skills);
         })
         .catch(() => console.log("Error while adding skill"));
     }
-  }
+  };
 
   const handleEditClick = () => {
     handleModalOpen("profileEdit");
@@ -112,17 +124,22 @@ function Profile() {
       "profileUpdateRequest",
       new Blob([JSON.stringify(profileData)], { type: "application/json" })
     );
-    // console.log(image);
-    axios.put(`http://localhost:1818/students/profile/${fetchedUsername}`, formData, {
-      withCredentials: true, headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
+    axios
+      .put(
+        `http://localhost:1818/students/profile/${fetchedUsername}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       .then((res) => {
-        setUserData(res.data)
+        setUserData(res.data);
       })
       .catch(() => {
-        console.error("Error while updating profile.!")
+        console.error("Error while updating profile.!");
       });
 
     console.log("Updated Profile Data:", profileData);
@@ -135,7 +152,9 @@ function Profile() {
     handleModalClose();
   };
 
-  return (
+  return loadings ? (
+    <ProfileSkeleton />
+  ) : (
     <motion.div
       className="mt-10 px-8 md:mt-8 md:px-8"
       variants={containerVariants}

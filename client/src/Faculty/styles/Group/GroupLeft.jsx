@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Avatar, Button, Modal, Input, Form, Select, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
-import { getUsernameFromToken, getRole } from "../../../../authToken";
+import { getRole } from "../../../../authToken";
 import toast from "react-hot-toast";
 
 const colorCombinations = [
@@ -15,7 +14,6 @@ const colorCombinations = [
 ];
 
 function GroupLeft({projectName}) {
-  // const { projectName } = useParams(); // Assuming projectName is a route parameter
   const [project, setProject] = useState(null);
   const [mentor, setMentor] = useState(null);
   const [selectedMentor, setSelectedMentor] = useState(null);
@@ -24,14 +22,13 @@ function GroupLeft({projectName}) {
   const [mentors, setMentors] = useState([]);
   const [temp, setTemp] = useState(0);
 
-  const [form] = Form.useForm(); // Create form instance
+  const [form] = Form.useForm(); 
 
   const extractLastTwoDigits = (member) => member.username.substring(4);
-  const fetchedUsername = getUsernameFromToken();
 
   const showModal = () => setIsModalVisible(true);
   const handleOk = () => {
-    form.validateFields() // Validate the form fields before proceeding
+    form.validateFields()
       .then(() => {
         addMember();
         setIsModalVisible(false);
@@ -44,7 +41,6 @@ function GroupLeft({projectName}) {
   const handleCancel = () => setIsModalVisible(false);
   const handleUsernameChange = (e) => setUsername(e.target.value);
 
-  // Fetch mentors from backend on component mount
   useEffect(() => {
     axios
       .get("http://localhost:1818/faculty/all", { withCredentials: true })
@@ -52,7 +48,6 @@ function GroupLeft({projectName}) {
       .catch((error) => console.error("Failed to fetch mentors:", error));
   }, []);
 
-  // Fetch project details from backend
   useEffect(() => {
     axios
       .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true })
@@ -175,7 +170,6 @@ function GroupLeft({projectName}) {
       <h2 className="md:text-3xl text-2xl mb-4 font-semibold">{project.groupName}</h2>
       <p className="md:text-xl text-base mb-4 md:w-[85%] w-full">{project.groupDescription}</p>
 
-      {/* Technologies */}
       <div className="flex flex-wrap gap-2">
         {project.technologies?.map((tech, index) => (
           <span
@@ -265,10 +259,9 @@ function GroupLeft({projectName}) {
         </div>
       )}
 
-      {/* Add Member Modal */}
       <Modal
         title="Add New Member"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         okText="Add"
@@ -283,7 +276,7 @@ function GroupLeft({projectName}) {
             ]}
           >
             <Input
-              placeholder="Enter Username"
+              placeholder="Enter studentId"
               value={username}
               onChange={handleUsernameChange}
             />

@@ -8,6 +8,7 @@ import FacultyComments from "./FacultyComments";
 import AssigneesModal from "./AssigneesModal";
 import axios from "axios";
 import SubmittedFiles from "./SubmittedFiles";
+import TaskDetailSkeleton from "../../../../skeleton/TaskDetailSkeleton";
 
 function TaskDetail() {
   const location = useLocation();
@@ -15,9 +16,13 @@ function TaskDetail() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedAssignees, setSelectedAssignees] = useState([]);
   const [assigneeMembers, setAssigneeMembers] = useState(task.assignee);
-  // const [submittedFiles, setSubmittedFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => { }, [assigneeMembers]);
+
+  setTimeout(() => { 
+    setLoading(true);
+  }, 2000);
 
   const handleAssign = (assigneeIds) => {
     axios
@@ -26,7 +31,7 @@ function TaskDetail() {
         setAssigneeMembers(res.data.assignee);
       })
       .catch((error) => {
-        console.error(res.data.message," ",res.data.status);
+       console.log(error)
       });
   };
 
@@ -81,31 +86,34 @@ function TaskDetail() {
   };
 
   return (
-    <div className="m-5 mt-10 px-5">
-      <TaskHeader task={task} />
-      <TaskDescription description={task.description} />
-      <TaskStatus status={task.status} />
-      <TaskAssignees
-        assignees={assigneeMembers}
-        showModal={showModal}
-        handleFormSubmit={handleFormSubmit}
-        taskId={task.id}
-      />
-
-      <SubmittedFiles files={dummyFiles} />
-
-      <FacultyComments taskId={task.id} />
-      <AssigneesModal
-        isModalVisible={isModalVisible}
-        handleOk={handleOk}
-        handleCancel={handleCancel}
-        assignees={assigneeMembers}
-        selectedAssignees={selectedAssignees}
-        handleFormSubmit={handleFormSubmit}
-        members={members}
-      />
-    </div>
+    loading ? (
+      <TaskDetailSkeleton />
+    ) : (
+      <div className="m-5 mt-10 px-5">
+        <TaskHeader task={task} />
+        <TaskDescription description={task.description} />
+        <TaskStatus status={task.status} />
+        <TaskAssignees
+          assignees={assigneeMembers}
+          showModal={showModal}
+          handleFormSubmit={handleFormSubmit}
+          taskId={task.id}
+        />
+        <SubmittedFiles files={dummyFiles} />
+        <FacultyComments taskId={task.id} />
+        <AssigneesModal
+          isModalVisible={isModalVisible}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          assignees={assigneeMembers}
+          selectedAssignees={selectedAssignees}
+          handleFormSubmit={handleFormSubmit}
+          members={members}
+        />
+      </div>
+    )
   );
+  
 }
 
 export default TaskDetail;

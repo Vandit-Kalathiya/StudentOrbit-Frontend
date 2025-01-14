@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Row, Col, Button, Typography, Form } from "antd";
+import { Row, Col, Button, Typography, Form, Skeleton } from "antd";
 import TaskList from "./TaskList";
 import axios from "axios";
 import { openNotification } from "../../../../Utils/Notification";
@@ -8,6 +8,8 @@ import Loader from "../../../../components/Loader";
 import { Plus } from "lucide-react";
 import TaskModal from "../../Group/GroupRight/TaskModal";
 import { getRole } from "../../../../../authToken";
+import TaskSkeleton from "../../../../skeleton/TaskSkeleton";
+import TaskSkeletonList from "../../../../skeleton/TaskSkeleton";
 
 const ToDoPage = () => {
   const [tasks, setTasks] = useState([]);
@@ -112,7 +114,8 @@ const ToDoPage = () => {
     <div className="md:p-4 py-4 m-3">
       {loading ? ( 
         <div className="flex items-center justify-center min-h-screen">
-          <Loader />
+          {/* <Skeleton /> */}
+          <TaskSkeletonList />
         </div>
       ) : (
         <>
@@ -130,8 +133,8 @@ const ToDoPage = () => {
                 Add Task
               </Button>
             </div>}
-            
           </div>
+          
           <Row gutter={16}>
             <Col span={24}>
               <h3 className="text-xl mb-4 font-semibold">To-do Tasks</h3>

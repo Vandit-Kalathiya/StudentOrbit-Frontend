@@ -1,24 +1,38 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import { forwardRef } from "react";
 import { List } from "antd";
-import { Clock, Users, Folder, CheckCircle } from 'lucide-react';
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { RiGraduationCapFill } from "react-icons/ri";
+import { Clock, Users, Folder, CheckCircle } from "lucide-react";
 import { SlGraduation } from "react-icons/sl";
-import { getUsernameFromToken } from "../../../../authToken";
+import { useNavigate } from "react-router-dom";
 
 const getMonthAbbreviation = (month) => {
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const months = [
+    "Jan",
+    "Feb",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   return months[month - 1];
 };
 
 const getOrdinalSuffix = (day) => {
   if (day > 3 && day < 21) return "th";
   switch (day % 10) {
-    case 1: return "st";
-    case 2: return "nd";
-    case 3: return "rd";
-    default: return "th";
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
   }
 };
 
@@ -31,35 +45,20 @@ const formatTime = (dateString) => {
 };
 
 const PendingTask = forwardRef((props, ref) => {
-  const [pendingTasks, setPendingTasks] = useState([]);
+  const { pendingTasks } = props;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:1818/faculty/batches/g/${getUsernameFromToken()}`, { withCredentials: true })
-      .then((res) => {
-        const tasksInReview = [];
-        res.data.forEach((group) => {
-          group.weeks.forEach((week) => {
-            week.tasks.forEach((task) => {
-              if (task.status === "IN_REVIEW") {
-                tasksInReview.push({ ...task, groupName: group.groupName, batchName: group.batchName, weekNumber: week.weekNumber });
-              }
-            });
-          });
-        });
-        tasksInReview.sort((a, b) => new Date(a.submittedDate) - new Date(b.submittedDate));
-        setPendingTasks(tasksInReview);
-      })
-      .catch((error) => console.error("Error fetching groups:", error));
-  }, []);
-
   const handleTaskClick = (batchName, groupName, weekNumber) => {
-    navigate(`/f/dashboard/batches/${batchName}/${groupName}/week${weekNumber}`);
+    navigate(
+      `/f/dashboard/batches/${batchName}/${groupName}/week${weekNumber}`
+    );
   };
 
   return (
-    <div ref={ref} className="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl shadow-xl p-8 w-full">
+    <div
+      ref={ref}
+      className="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl shadow-xl p-8 w-full"
+    >
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
           <div className="bg-blue-600 text-white p-3 rounded-xl shadow-lg mr-4">
@@ -67,11 +66,15 @@ const PendingTask = forwardRef((props, ref) => {
           </div>
           <div>
             <h2 className="font-bold text-2xl text-gray-800">Pending Tasks</h2>
-            <p className="text-gray-500 text-sm">Review and manage submissions</p>
+            <p className="text-gray-500 text-sm">
+              Review and manage submissions
+            </p>
           </div>
         </div>
         <div className="bg-blue-100 px-4 py-2 rounded-lg">
-          <span className="font-semibold text-blue-600">{pendingTasks.length} Tasks</span>
+          <span className="font-semibold text-blue-600">
+            {pendingTasks.length} Tasks
+          </span>
         </div>
       </div>
 
@@ -87,7 +90,13 @@ const PendingTask = forwardRef((props, ref) => {
             return (
               <List.Item
                 className="group relative transition-all duration-300 flex justify-between items-center border-0 rounded-xl mb-4 cursor-pointer bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 shadow-sm hover:shadow-lg"
-                onClick={() => handleTaskClick(task.batchName, task.groupName, task.weekNumber)}
+                onClick={() =>
+                  handleTaskClick(
+                    task.batchName,
+                    task.groupName,
+                    task.weekNumber
+                  )
+                }
               >
                 <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-400 to-purple-400 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -95,7 +104,9 @@ const PendingTask = forwardRef((props, ref) => {
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
                     <div className="relative bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl w-10 h-10 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-white font-bold text-sm">{(index + 1).toString().padStart(2, '0')}</span>
+                      <span className="text-white font-bold text-sm">
+                        {(index + 1).toString().padStart(2, "0")}
+                      </span>
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -103,7 +114,11 @@ const PendingTask = forwardRef((props, ref) => {
                       {task.name}
                     </span>
                     <span className="flex items-center text-sm text-gray-500 mt-2">
-                      <SlGraduation className='w-4 h-4 text-purple-400' />&nbsp;&nbsp;Sem : {task.batchName.substring(0, 1)} &nbsp;&nbsp;<Folder className="w-4 h-4 mr-2 text-purple-400" />Batch : {task.batchName.substring(1)}
+                      <SlGraduation className="w-4 h-4 text-purple-400" />
+                      &nbsp;&nbsp;Sem : {task.batchName.substring(0, 1)}{" "}
+                      &nbsp;&nbsp;
+                      <Folder className="w-4 h-4 mr-2 text-purple-400" />
+                      Batch : {task.batchName.substring(1)}
                     </span>
                   </div>
                 </div>
@@ -114,18 +129,25 @@ const PendingTask = forwardRef((props, ref) => {
                       <Users className="w-4 h-4 mr-2 text-blue-400" />
                       {task.groupName}
                     </div>
-                    {task.assignee && task.assignee.map((assignee, idx) => (
-                      <div key={idx} className="text-sm text-gray-500 flex items-center justify-start">
-                        <span className="inline-block w-2 h-2 rounded-full bg-purple-400 mr-2" />
-                        {assignee.username}
-                      </div>
-                    ))}
+                    {task.assignee &&
+                      task.assignee.map((assignee, idx) => (
+                        <div
+                          key={idx}
+                          className="text-sm text-gray-500 flex items-center justify-start"
+                        >
+                          <span className="inline-block w-2 h-2 rounded-full bg-purple-400 mr-2" />
+                          {assignee.username}
+                        </div>
+                      ))}
                   </div>
 
                   <div className="text-right min-w-[100px] rounded-xl shadow-sm mr-2">
                     <div className="text-xs font-semibold text-gray-600 flex items-center justify-end">
                       <Clock className="w-3 h-3 mr-2 text-blue-400" />
-                      Submitted at : {day}<sup>{getOrdinalSuffix(day)}</sup> &nbsp; {getMonthAbbreviation(month)} '{year.substring(2)} &nbsp;{formattedTime}
+                      Submitted at : {day}
+                      <sup>{getOrdinalSuffix(day)}</sup> &nbsp;{" "}
+                      {getMonthAbbreviation(month)} '{year.substring(2)} &nbsp;
+                      {formattedTime}
                     </div>
                     {/* <div className="text-xs text-gray-500 font-medium">
                     </div>

@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 
-const GroupHeader = ({ batch, onGroupAdded }) => {
+const GroupHeader = ({ batch, onGroupAdded, date }) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => setShowModal(true);
@@ -20,7 +20,7 @@ const GroupHeader = ({ batch, onGroupAdded }) => {
           icon={<Plus />}
           className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center mt-2"
           onClick={handleOpenModal}
-          block 
+          block
         >
           <span className="hidden md:inline">Add Group</span>
         </Button>
