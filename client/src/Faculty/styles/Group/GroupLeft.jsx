@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Avatar, Button, Modal, Input, Form, Select, message } from "antd";
+import {
+  Avatar,
+  Button,
+  Modal,
+  Input,
+  Form,
+  Select,
+  message,
+  Progress,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
@@ -13,7 +22,7 @@ const colorCombinations = [
   { backgroundColor: "#f9f0ff", color: "#531dab", border: "#531dab" },
 ];
 
-function GroupLeft({projectName}) {
+function GroupLeft({ projectName }) {
   const [project, setProject] = useState(null);
   const [mentor, setMentor] = useState(null);
   const [selectedMentor, setSelectedMentor] = useState(null);
@@ -22,13 +31,16 @@ function GroupLeft({projectName}) {
   const [mentors, setMentors] = useState([]);
   const [temp, setTemp] = useState(0);
 
-  const [form] = Form.useForm(); 
+  const [form] = Form.useForm();
+
+  const role = getRole();
 
   const extractLastTwoDigits = (member) => member.username.substring(4);
 
   const showModal = () => setIsModalVisible(true);
   const handleOk = () => {
-    form.validateFields()
+    form
+      .validateFields()
       .then(() => {
         addMember();
         setIsModalVisible(false);
@@ -50,13 +62,17 @@ function GroupLeft({projectName}) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true })
+      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, {
+        withCredentials: true,
+      })
       .then((response) => {
         setProject(response.data);
         setMentor(response.data.mentor);
         setUsername("");
       })
-      .catch((error) => console.error("Failed to fetch project details:", error));
+      .catch((error) =>
+        console.error("Failed to fetch project details:", error)
+      );
   }, [temp]);
 
   const handleMentorChange = (username) => {
@@ -124,7 +140,11 @@ function GroupLeft({projectName}) {
       content: `Are you sure you want to mark the project "${project.groupName}" as completed?`,
       onOk: () => {
         axios
-          .put(`http://localhost:1818/faculty/groups/complete/${project.id}`, {}, { withCredentials: true })
+          .put(
+            `http://localhost:1818/faculty/groups/complete/${project.id}`,
+            {},
+            { withCredentials: true }
+          )
           .then(() => {
             message.success("Project marked as completed!");
             setTemp((prev) => !prev);
@@ -145,9 +165,13 @@ function GroupLeft({projectName}) {
     let memberUsername = [];
     memberUsername.push(username);
     axios
-      .post(`http://localhost:1818/faculty/groups/add/member/${project.id}`, memberUsername, {
-        withCredentials: true,
-      })
+      .post(
+        `http://localhost:1818/faculty/groups/add/member/${project.id}`,
+        memberUsername,
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         console.log(res.data);
         setTemp((p) => !p);
@@ -163,29 +187,46 @@ function GroupLeft({projectName}) {
       });
   };
 
-  if (!project) return <div className="flex justify-center items-center m-auto h-full">Loading...</div>;
+  if (!project)
+    return (
+      <div className="flex justify-center items-center m-auto h-full">
+        Loading...
+      </div>
+    );
 
   return (
     <div className="md:px-6 my-6 w-full">
-      <h2 className="md:text-3xl text-2xl mb-4 font-semibold">{project.groupName}</h2>
-      <p className="md:text-xl text-base mb-4 md:w-[85%] w-full">{project.groupDescription}</p>
+      <h2 className="md:text-3xl text-2xl mb-4 font-semibold">
+        {project.groupName}
+      </h2>
+      <p className="md:text-xl text-base mb-4 md:w-[85%] w-full">
+        {project.groupDescription}
+      </p>
 
       <div className="flex flex-wrap gap-2">
         {project.technologies?.map((tech, index) => (
           <span
             key={index}
             className="px-4 py-1.5 text-sm rounded-full border-2 border-[#5B6DF3]/30 text-[#5B6DF3] 
-                       hover:bg-[#5B6DF3] hover:text-white transition-all duration-300 
-                       cursor-default transform hover:-translate-y-0.5"
+                 hover:bg-[#5B6DF3] hover:text-white transition-all duration-300 
+                 cursor-default transform hover:-translate-y-0.5"
           >
-            {tech.name}
+            {tech.name
+              .split(" ")
+              .map(
+                (word) =>
+                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              )
+              .join(" ")}
           </span>
         ))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-2 mt-5">
         <h3 className="md:text-lg text-base font-semibold">Project Lead :</h3>
-        <h3 className="md:text-lg text-base">{project.groupLeader?.toUpperCase() || "N/A"}</h3>
+        <h3 className="md:text-lg text-base">
+          {project.groupLeader?.toUpperCase() || "N/A"}
+        </h3>
       </div>
 
       <div className="flex flex-wrap items-center gap-4 my-4">
@@ -205,7 +246,7 @@ function GroupLeft({projectName}) {
             </Avatar>
           );
         })}
-        {getRole() === "faculty" && (
+        {role === "faculty" && (
           <Button
             type="dashed"
             shape="circle"
@@ -234,28 +275,44 @@ function GroupLeft({projectName}) {
                 </Select.Option>
               ))}
             </Select>
-            <Button type="primary" onClick={submitMentorSelection} disabled={!selectedMentor}>
+            <Button
+              type="primary"
+              onClick={submitMentorSelection}
+              disabled={!selectedMentor}
+            >
               Submit Mentor
             </Button>
           </>
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-2 mt-4">
-        <h3 className="md:text-lg text-base font-semibold">Project Start Date : </h3>
+      <div className="flex flex-wrap items-center gap-2 mb-6 mt-4">
+        <h3 className="md:text-lg text-base font-semibold">
+          Project Start Date :{" "}
+        </h3>
         <h3 className="md:text-lg text-base italic">
           {parseInt(project.startDate.substring(8, 10), 10)}
-          {getOrdinalSuffix(parseInt(project.startDate.substring(8, 10), 10))}{" "}
-          {getMonthAbbreviation(parseInt(project.startDate.substring(5, 7), 10))},{" "}
-          {project.startDate.substring(0, 4)}
+          {getOrdinalSuffix(
+            parseInt(project.startDate.substring(8, 10), 10)
+          )}{" "}
+          {getMonthAbbreviation(
+            parseInt(project.startDate.substring(5, 7), 10)
+          )}
+          , {project.startDate.substring(0, 4)}
         </h3>
       </div>
 
-      {getRole() === "faculty" && project.projectStatus === "INPROGRESS" && (
-        <div className="flex justify-start items-center mt-6">
-          <Button type="primary" icon={<FaCheckCircle />} onClick={markProjectAsCompleted}>
+      <Progress percent={30} strokeColor="#5A6CF1" className="w-[80%]" />
+
+      {role === "faculty" && project.projectStatus === "IN_PROGRESS" && (
+        <div className="flex justify-start items-center mt-6 absolute bottom-5">
+          <button
+            icon={<FaCheckCircle />}
+            onClick={markProjectAsCompleted}
+            className="bg-[#5A6CF1] text-white p-2 px-4 rounded"
+          >
             Mark Completed
-          </Button>
+          </button>
         </div>
       )}
 
