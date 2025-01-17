@@ -6,10 +6,12 @@ import { getRole } from "../../../../../authToken";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import toast from "react-hot-toast";
+import EditGroupModal from "./EditGroupModal";
 
 const Banner = ({ project, batch }) => {
   const navigate = useNavigate();
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [isEditModalVisible, setEditModalVisible] = useState(false);
   const role = getRole();
 
   const handleReadMore = () => {
@@ -20,13 +22,16 @@ const Banner = ({ project, batch }) => {
 
   const handleDelete = () => {
     // onDelete(batch);
-    axios.delete(`http://localhost:1818/faculty/groups/${project.id}`,{withCredentials:true})
-    .then((res)=>{
-      toast.success(res.data);
-    })
+    axios.delete(`http://localhost:1818/faculty/groups/${project.id}`, { withCredentials: true })
+      .then((res) => {
+        toast.success(res.data);
+      })
     setDeleteModalVisible(false);
     // message.success("Project deleted successfully!");
   };
+
+  console.log(project);
+  
 
   return (
     <div className="w-full rounded-xl border bg-white shadow-sm hover:shadow-lg transition-all duration-300 p-8 py-7 relative overflow-hidden">
@@ -52,7 +57,13 @@ const Banner = ({ project, batch }) => {
                        hover:bg-[#5B6DF3] hover:text-white transition-all duration-300 
                        cursor-default transform hover:-translate-y-0.5"
             >
-              {tech.name}
+              {tech.name
+                .split(" ")
+                .map(
+                  (word) =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                )
+                .join(" ")}
             </span>
           ))}
         </div>
@@ -112,7 +123,8 @@ const Banner = ({ project, batch }) => {
                 icon={<EditOutlined style={{ color: "blue" }} />}
                 onClick={(e) => {
                   e.preventDefault();
-                  message.info("Edit functionality not implemented yet.");
+                  // message.info("Edit functionality not implemented yet.");
+                  setEditModalVisible(true);
                 }}
               />
               <Button
@@ -142,6 +154,14 @@ const Banner = ({ project, batch }) => {
           <strong>{project.groupName}</strong>?
         </p>
       </Modal>
+
+      <EditGroupModal
+        visible={isEditModalVisible}
+        onClose={() => setEditModalVisible(false)}
+        batch={batch}
+        initialGroupData={project}
+        onGroupUpdated={(updatedData) => console.log("Updated group data:", updatedData)}
+      />
     </div>
   );
 };

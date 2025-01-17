@@ -53,6 +53,7 @@ const ToDoPage = () => {
     setShowModal(false); 
     setProjectData(updatedProject); 
     fetchTasks(); 
+    form.resetFields();
   };
 
   const handleModalCancel = () => {
@@ -114,7 +115,6 @@ const ToDoPage = () => {
     <div className="md:p-4 py-4 m-3">
       {loading ? ( 
         <div className="flex items-center justify-center min-h-screen">
-          {/* <Skeleton /> */}
           <TaskSkeletonList />
         </div>
       ) : (

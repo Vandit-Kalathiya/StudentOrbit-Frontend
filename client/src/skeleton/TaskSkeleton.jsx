@@ -27,15 +27,21 @@ const TaskSkeletonList = () => {
   ];
 
   return (
-    <div className="flex flex-col items-start justify-start w-[25rem]">
+    <div className="flex flex-col items-start justify-start w-[100rem]">
       <div className="mt-5 text-center text-4xl md:text-5xl flex-grow font-semibold mb-5">
         Week
       </div>
       {rowTitles.map((title, index) => (
         <div key={index} className="mb-3 w-full flex flex-col justify-start ">
           <h3 className="text-xl text-left mb-2 font-semibold">{title}</h3>
-          <Row gutter={[16, 16]} justify="start">
-            <Col span={24}>
+          <Row gutter={[32, 32]} className="flex flex-start">
+            <Col span={8}>
+              <TaskSkeleton />
+            </Col>
+            <Col span={8}>
+              <TaskSkeleton />
+            </Col>
+            <Col span={8}>
               <TaskSkeleton />
             </Col>
           </Row>

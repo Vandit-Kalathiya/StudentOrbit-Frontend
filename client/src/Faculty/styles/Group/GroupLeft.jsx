@@ -28,8 +28,10 @@ function GroupLeft({ projectName }) {
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [username, setUsername] = useState("");
+  const [technology, setTechnology] = useState("")
   const [mentors, setMentors] = useState([]);
   const [temp, setTemp] = useState(0);
+  const [isTechModalVisible, setIsTechModalVisible] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -38,6 +40,9 @@ function GroupLeft({ projectName }) {
   const extractLastTwoDigits = (member) => member.username.substring(4);
 
   const showModal = () => setIsModalVisible(true);
+
+  const showTechModal = () => setIsTechModalVisible(true);
+
   const handleOk = () => {
     form
       .validateFields()
@@ -50,8 +55,23 @@ function GroupLeft({ projectName }) {
         console.log("Validation failed:", errorInfo);
       });
   };
-  const handleCancel = () => setIsModalVisible(false);
+  const handleCancel = () => { setIsModalVisible(false); setIsTechModalVisible(false) };
   const handleUsernameChange = (e) => setUsername(e.target.value);
+  
+  console.log(project);
+  
+  
+  const handleTechOk = () => {
+    console.log(technology);
+    
+    axios.post(`http://localhost:1818/tech/add/${project.id}`, technology.trim(), { withCredentials: true })
+    .then((res) => console.log(res.data))
+    .catch((err) => console.log(err.message))
+    setIsTechModalVisible(false);
+    toast.success("Technology added successfully!");
+  };
+
+  const handleTechChange = (e) => setTechnology(e.target.value);
 
   useEffect(() => {
     axios
@@ -220,6 +240,13 @@ function GroupLeft({ projectName }) {
               .join(" ")}
           </span>
         ))}
+        <Button
+          type="dashed"
+          shape="circle"
+          icon={<PlusOutlined />}
+          onClick={showTechModal}
+          title="Add a technology"
+        />
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-2 mt-5">
@@ -336,6 +363,27 @@ function GroupLeft({ projectName }) {
               placeholder="Enter studentId"
               value={username}
               onChange={handleUsernameChange}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="Add New Technology"
+        open={isTechModalVisible}
+        onCancel={handleCancel}
+        onOk={handleTechOk}
+        okText="Add"
+        cancelText="Cancel"
+      >
+        <Form form={form}>
+          <Form.Item
+            name="technology"
+          >
+            <Input
+              placeholder="Enter new technology"
+              value={technology}
+              onChange={handleTechChange}
             />
           </Form.Item>
         </Form>
