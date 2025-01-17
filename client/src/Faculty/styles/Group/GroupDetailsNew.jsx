@@ -14,10 +14,9 @@ function GroupDetailsNew({ collapsed }) {
   const [loading, setLoading] = useState(false);
 
   const project = location.state;
-  console.log(project);
 
   useEffect(() => {
-    console.log("loaded...");
+    // console.log("loaded...");
   }, [project]);
 
   const containerVariants = {
@@ -37,7 +36,7 @@ function GroupDetailsNew({ collapsed }) {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data.weeks);
+        // console.log(res.data.weeks);
       })
       .finally(() => setLoading(false));
   }, []);

@@ -9,7 +9,7 @@ import {
   message,
   Progress,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, CloseOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
 import { getRole } from "../../../../authToken";
@@ -28,10 +28,12 @@ function GroupLeft({ projectName }) {
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [username, setUsername] = useState("");
-  const [technology, setTechnology] = useState("")
+  const [technology, setTechnology] = useState("");
   const [mentors, setMentors] = useState([]);
   const [temp, setTemp] = useState(0);
   const [isTechModalVisible, setIsTechModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [technologiesToDelete, setTechnologiesToDelete] = useState([]);
 
   const [form] = Form.useForm();
 
@@ -55,20 +57,75 @@ function GroupLeft({ projectName }) {
         console.log("Validation failed:", errorInfo);
       });
   };
-  const handleCancel = () => { setIsModalVisible(false); setIsTechModalVisible(false) };
-  const handleUsernameChange = (e) => setUsername(e.target.value);
-  
-  console.log(project);
-  
-  
-  const handleTechOk = () => {
-    console.log(technology);
-    
-    axios.post(`http://localhost:1818/tech/add/${project.id}`, technology.trim(), { withCredentials: true })
-    .then((res) => console.log(res.data))
-    .catch((err) => console.log(err.message))
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
     setIsTechModalVisible(false);
-    toast.success("Technology added successfully!");
+  };
+
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+    setTechnologiesToDelete([]);
+  };
+
+  const handleTechnologyDelete = (techId) => {
+    setTechnologiesToDelete(prevTechnologies => {
+      if (prevTechnologies.includes(techId)) {
+        return prevTechnologies.filter(id => id !== techId);
+      } else {
+        return [...prevTechnologies, techId];
+      }
+    });
+  };
+
+  const handleUpdateTechnologies = () => {
+    if (technologiesToDelete.length === 0) {
+      setIsEditMode(false);
+      return;
+    }
+
+    axios
+      .delete(`http://localhost:1818/tech/delete/${project.id}`, {
+        data: technologiesToDelete,
+        withCredentials: true,
+      })
+      .then((res) => {
+        toast.success(res.data);
+        setTemp((prev) => !prev);
+        setIsEditMode(false);
+        setTechnologiesToDelete([]);
+      })
+      .catch((err) => {
+        console.error("Failed to update technologies:", err);
+        toast.error("Failed to update technologies");
+      });
+  };
+
+  const handleTechOk = () => {
+    if (!technology.trim()) {
+      toast.error("Please enter a technology name");
+      return;
+    }
+
+    axios
+      .post(
+        `http://localhost:1818/tech/add/${project.id}`,
+        technology.trim(),
+        { withCredentials: true }
+      )
+      .then((res) => {
+        // console.log(res.data);
+        toast.success("Technology added successfully!");
+        setTemp((prev) => !prev);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        toast.error("Failed to add technology");
+      });
+    setIsTechModalVisible(false);
+    setTechnology("");
   };
 
   const handleTechChange = (e) => setTechnology(e.target.value);
@@ -90,10 +147,8 @@ function GroupLeft({ projectName }) {
         setMentor(response.data.mentor);
         setUsername("");
       })
-      .catch((error) =>
-        console.error("Failed to fetch project details:", error)
-      );
-  }, [temp]);
+      .catch((error) => console.error("Failed to fetch project details:", error));
+  }, [temp, projectName]);
 
   const handleMentorChange = (username) => {
     setSelectedMentor(username);
@@ -157,7 +212,12 @@ function GroupLeft({ projectName }) {
   const markProjectAsCompleted = () => {
     Modal.confirm({
       title: "Mark Project as Completed",
-      content: `Are you sure you want to mark the project "${project.groupName}" as completed?`,
+      content: (
+        <span>
+          Are you sure you want to mark the project{' '}
+          <strong>{project.groupName}</strong> as Completed.?
+        </span>
+      ),
       onOk: () => {
         axios
           .put(
@@ -224,22 +284,45 @@ function GroupLeft({ projectName }) {
       </p>
 
       <div className="flex flex-wrap gap-2">
-        {project.technologies?.map((tech, index) => (
-          <span
-            key={index}
-            className="px-4 py-1.5 text-sm rounded-full border-2 border-[#5B6DF3]/30 text-[#5B6DF3] 
-                 hover:bg-[#5B6DF3] hover:text-white transition-all duration-300 
-                 cursor-default transform hover:-translate-y-0.5"
-          >
-            {tech.name
-              .split(" ")
-              .map(
-                (word) =>
-                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-              )
-              .join(" ")}
-          </span>
-        ))}
+        {project.technologies?.map((tech, index) => {
+          const isMarkedForDeletion = technologiesToDelete.includes(tech.id);
+          return (
+            <span
+              key={index}
+              className={`px-4 py-1.5 text-sm rounded-full border-2 
+              ${isMarkedForDeletion
+                  ? 'border-red-500 text-red-500 bg-red-50'
+                  : 'border-[#5B6DF3]/30 text-[#5B6DF3] hover:bg-[#5B6DF3] hover:text-white'
+                } transition-all duration-300 
+              cursor-default transform hover:-translate-y-0.5 relative group flex items-center gap-2`}
+            >
+              {tech.name
+                .split(" ")
+                .map(
+                  (word) =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                )
+                .join(" ")}
+              {isEditMode && (
+                <button
+                  onClick={() => handleTechnologyDelete(tech.id)}
+                  className="flex items-center justify-center"
+                  title={isMarkedForDeletion ? "Undo remove" : "Remove technology"}
+                >
+                  <CloseOutlined
+                    style={{
+                      fontSize: '12px',
+                      paddingLeft: '2px',
+                      fontWeight: 'bold',
+                      transform: isMarkedForDeletion ? 'rotate(45deg)' : 'none',
+                      transition: 'transform 0.3s ease'
+                    }}
+                  />
+                </button>
+              )}
+            </span>
+          );
+        })}
         <Button
           type="dashed"
           shape="circle"
@@ -247,7 +330,28 @@ function GroupLeft({ projectName }) {
           onClick={showTechModal}
           title="Add a technology"
         />
+        <Button
+          type="dashed"
+          shape="circle"
+          icon={<EditOutlined />}
+          onClick={toggleEditMode}
+          title="Edit technologies"
+          className={isEditMode ? "bg-blue-100" : ""}
+        />
       </div>
+
+      {isEditMode && (
+        <div className="mt-4 space-x-2">
+          <Button
+            type="primary"
+            onClick={handleUpdateTechnologies}
+            disabled={technologiesToDelete.length === 0}
+          >
+            Update
+          </Button>
+          <Button onClick={toggleEditMode}>Cancel</Button>
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-2 mb-2 mt-5">
         <h3 className="md:text-lg text-base font-semibold">Project Lead :</h3>
@@ -255,7 +359,7 @@ function GroupLeft({ projectName }) {
           {project.groupLeader?.toUpperCase() || "N/A"}
         </h3>
       </div>
-
+  
       <div className="flex flex-wrap items-center gap-4 my-4">
         <h3 className="md:text-lg text-base font-semibold">Members :</h3>
         {project.students.map((member, index) => {
@@ -319,13 +423,9 @@ function GroupLeft({ projectName }) {
         </h3>
         <h3 className="md:text-lg text-base italic">
           {parseInt(project.startDate.substring(8, 10), 10)}
-          {getOrdinalSuffix(
-            parseInt(project.startDate.substring(8, 10), 10)
-          )}{" "}
-          {getMonthAbbreviation(
-            parseInt(project.startDate.substring(5, 7), 10)
-          )}
-          , {project.startDate.substring(0, 4)}
+          {getOrdinalSuffix(parseInt(project.startDate.substring(8, 10), 10))}{" "}
+          {getMonthAbbreviation(parseInt(project.startDate.substring(5, 7), 10))},{" "}
+          {project.startDate.substring(0, 4)}
         </h3>
       </div>
 
@@ -377,9 +477,7 @@ function GroupLeft({ projectName }) {
         cancelText="Cancel"
       >
         <Form form={form}>
-          <Form.Item
-            name="technology"
-          >
+          <Form.Item name="technology">
             <Input
               placeholder="Enter new technology"
               value={technology}

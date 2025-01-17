@@ -20,7 +20,7 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project
       .then((res) => {
         const demo = res.data;
         setProjectData(demo);
-        console.log(demo);
+        // console.log(demo);
       })
       .catch((error) => {
         console.error("There was an error while getting group : ", error);
