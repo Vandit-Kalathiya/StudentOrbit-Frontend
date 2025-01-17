@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, members, project, currentWeekId }) => {
+const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, currentWeekId }) => {
   const [tasks, setTasks] = useState({
     taskName: "",
     taskDescription: "",
