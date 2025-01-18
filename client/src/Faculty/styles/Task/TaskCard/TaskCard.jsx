@@ -127,6 +127,8 @@ const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId
     setEditModalVisible(false);
   };
 
+  useEffect(() => {}, [task]);
+
   return (
     <motion.div
       className="border md:min-w-full rounded-lg shadow-md p-4 max-w-md mx-auto bg-white mb-4 cursor-pointer"
