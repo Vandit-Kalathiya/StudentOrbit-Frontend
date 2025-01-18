@@ -82,6 +82,8 @@ const TaskActions = ({
     const formData = new FormData();
     if (file) {
       formData.append("file", file);
+      formData.append("taskDescription", taskDescription);
+      formData.append("reviewLink", reviewLink);
     }
 
     try {

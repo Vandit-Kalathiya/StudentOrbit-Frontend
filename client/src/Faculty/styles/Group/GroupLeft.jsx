@@ -243,7 +243,7 @@ function GroupLeft({ projectName }) {
     }
 
     let memberUsername = [];
-    memberUsername.push(username);
+    memberUsername.push(username);  
     axios
       .post(
         `http://localhost:1818/faculty/groups/add/member/${project.id}`,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TaskCard from './TaskCard';
 import { motion } from 'framer-motion';
 
-const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees, members }) => {
+const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees, members, groupId, onTaskUpdate}) => {
   const filteredTasks = tasks.filter(task => task.status === status);
 
   return (
@@ -16,9 +16,9 @@ const TaskList = ({ tasks, status, updateTaskStatus, updateAssignees, members })
                 layout
                 transition={{ duration: 0.3 }}
               >
-                <TaskCard singleTask={task} updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} />
+                <TaskCard singleTask={task} updateTaskStatus={updateTaskStatus} updateAssignees={updateAssignees} members={members} groupId={groupId} onTaskUpdate={onTaskUpdate} />
               </motion.div>
-            </Col>
+            </Col>  
           ))}
         </Row>
       ) : (

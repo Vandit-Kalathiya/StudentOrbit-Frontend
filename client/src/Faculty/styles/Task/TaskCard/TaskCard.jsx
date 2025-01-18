@@ -13,7 +13,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { getRole } from "../../../../../authToken";
 import EditTaskModal from "./EditTaskModal";
 
-const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
+const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [task, setTask] = useState(singleTask);
   const [currentAssignees, setCurrentAssignees] = useState(singleTask.assignee);
@@ -24,7 +24,14 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const role = getRole();
 
-  useEffect(() => {}, [currentAssignees, task]);
+  let currentWeek = week.length === 5 ? week.slice(4, 5) : week.slice(4, 6);
+  currentWeek = parseInt(currentWeek[0], 10); // Base 10
+
+  useEffect(() => {
+    // Update local state when singleTask prop changes
+    setTask(singleTask);
+    setCurrentAssignees(singleTask.assignee);
+  }, [singleTask]);
 
   const handleAssign = async (assigneeIds, taskId) => {
     try {
@@ -35,15 +42,15 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
       );
       setTask(res.data);
       setCurrentAssignees(res.data.assignee);
+      // onTaskUpdate?.(res.data); // Notify parent component
       return res.data;
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "An error occurred while assigning tasks."
+        "An error occurred while assigning tasks."
       );
     }
   };
-  console.log(singleTask);
 
   const cardVariants = {
     initial: { opacity: 0, scale: 0.8 },
@@ -64,10 +71,25 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
     setIsModalVisible(false);
   };
 
-  const saveTask = (updatedTask) => {
-    console.log("Updated Task:", updatedTask);
-    setTask(updatedTask); // Update task state
-    closeEditModal(); // Close modal
+  const saveTask = async (updatedTask) => {
+    try {
+      updatedTask = { ...updatedTask, taskStatus: task.status };
+      const response = await axios.put(
+        `http://localhost:1818/tasks/${task.id}`,
+        updatedTask,
+        { withCredentials: true }
+      );
+
+      setTask(response.data);
+      onTaskUpdate?.(response.data); // Notify parent component
+      toast.success("Task Updated Successfully");
+      closeEditModal();
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+        "An error occurred while updating the task."
+      );
+    }
   };
 
   const handleReadMore = () => {
@@ -86,8 +108,19 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
   };
 
   const handleDelete = async () => {
-    console.log("delete");
-    setDeleteModalVisible(false);
+    try {
+      await axios.delete(`http://localhost:1818/tasks/${task.id}/${groupId}/${currentWeek}`, {
+        withCredentials: true,
+      });
+      onTaskUpdate?.(task.id); // Notify parent about deletion
+      toast.success("Task Deleted Duccessfully");
+      setDeleteModalVisible(false);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+        "An error occurred while deleting the task."
+      );
+    }
   };
 
   const closeEditModal = () => {
@@ -105,11 +138,12 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
     >
       <div className="flex items-center justify-between">
         <TaskStatus status={task.status} title={task.name} />
-        {role === "student" && (
+        {(role === "student" || role === 'admin') && (task.status === 'TO_DO' || task.status === 'IN_PROGRESS') && (
           <div className="flex space-x-3">
             <Button
               type="text"
               size="medium"
+              title="Edit Task"
               icon={<EditOutlined style={{ color: "blue" }} />}
               onClick={(e) => {
                 e.preventDefault();
@@ -119,6 +153,7 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
             <Button
               type="text"
               size="medium"
+              title="Delete Task"
               icon={<DeleteOutlined style={{ color: "red" }} />}
               onClick={(e) => {
                 e.preventDefault();

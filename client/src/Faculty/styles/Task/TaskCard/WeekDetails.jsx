@@ -20,7 +20,7 @@ const ToDoPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   const role = getRole();
-  console.log(role)
+  // console.log(role)
 
   const currentWeek = week.length === 5 ? week.slice(4, 5) : week.slice(4, 6);
 
@@ -41,7 +41,7 @@ const ToDoPage = () => {
         console.error("There was an error while getting all tasks: ", error);
       })
       .finally(() => {
-        setLoading(false); 
+        setLoading(false);
       });
   };
 
@@ -50,14 +50,14 @@ const ToDoPage = () => {
   }, [projectName, week]);
 
   const handleModalOk = (updatedProject) => {
-    setShowModal(false); 
-    setProjectData(updatedProject); 
-    fetchTasks(); 
+    setShowModal(false);
+    setProjectData(updatedProject);
+    fetchTasks();
     form.resetFields();
   };
 
   const handleModalCancel = () => {
-    setShowModal(false); 
+    setShowModal(false);
   };
 
   const updateTaskStatus = async (id, newStatus, assignees) => {
@@ -72,10 +72,9 @@ const ToDoPage = () => {
       openNotification(
         "success",
         "Update Successful",
-        `Task is moved to ${
-          newStatus === "IN_PROGRESS"
-            ? "In Progress"
-            : newStatus === "IN_REVIEW"
+        `Task is moved to ${newStatus === "IN_PROGRESS"
+          ? "In Progress"
+          : newStatus === "IN_REVIEW"
             ? "In Review"
             : "Completed"
         }.!`
@@ -107,13 +106,19 @@ const ToDoPage = () => {
     );
   };
 
-  const [form] = Form.useForm();  
+  const handleTaskUpdate = (deletedTaskId) => {
+    if (deletedTaskId) {
+      setTasks(prevTasks => prevTasks.filter(task => task.id !== deletedTaskId));
+    }
+  };
+
+  const [form] = Form.useForm();
 
   const weekNumber = currentWeek.replace(currentWeek, "Week " + currentWeek);
 
   return (
     <div className="md:p-4 py-4 m-3">
-      {loading ? ( 
+      {loading ? (
         <div className="flex items-center justify-center min-h-screen">
           <TaskSkeletonList />
         </div>
@@ -134,7 +139,7 @@ const ToDoPage = () => {
               </Button>
             </div>}
           </div>
-          
+
           <Row gutter={16}>
             <Col span={24}>
               <h3 className="text-xl mb-4 font-semibold">To-do Tasks</h3>
@@ -144,6 +149,8 @@ const ToDoPage = () => {
                 updateTaskStatus={updateTaskStatus}
                 updateAssignees={updateAssignees}
                 members={members}
+                groupId={projectData.id}
+                onTaskUpdate={handleTaskUpdate}
               />
             </Col>
             <Col span={24}>
@@ -154,6 +161,8 @@ const ToDoPage = () => {
                 updateTaskStatus={updateTaskStatus}
                 updateAssignees={updateAssignees}
                 members={members}
+                groupId={projectData.id}
+                onTaskUpdate={handleTaskUpdate}
               />
             </Col>
             <Col span={24}>
@@ -164,6 +173,8 @@ const ToDoPage = () => {
                 updateTaskStatus={updateTaskStatus}
                 updateAssignees={updateAssignees}
                 members={members}
+                groupId={projectData.id}
+                onTaskUpdate={handleTaskUpdate}
               />
             </Col>
             <Col span={24}>
@@ -183,7 +194,7 @@ const ToDoPage = () => {
         isModalOpen={showModal}
         handleOk={handleModalOk}
         handleCancel={handleModalCancel}
-        form={form} 
+        form={form}
         project={projectData}
         currentWeekId={currentWeek}
       />

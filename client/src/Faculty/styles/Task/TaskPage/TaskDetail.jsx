@@ -20,9 +20,9 @@ function TaskDetail() {
 
   useEffect(() => { }, [assigneeMembers]);
 
-  setTimeout(() => { 
-    setLoading(true);
-  }, 2000);
+  // setTimeout(() => { 
+  //   setLoading(true);
+  // }, 2000);
 
   const handleAssign = (assigneeIds) => {
     axios
@@ -99,7 +99,7 @@ function TaskDetail() {
           handleFormSubmit={handleFormSubmit}
           taskId={task.id}
         />
-        <SubmittedFiles files={dummyFiles} />
+        <SubmittedFiles files={dummyFiles} taskId={task.id}/>
         <FacultyComments taskId={task.id} />
         <AssigneesModal
           isModalVisible={isModalVisible}

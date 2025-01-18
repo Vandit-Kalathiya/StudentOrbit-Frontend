@@ -61,22 +61,30 @@
 
 
 
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { FaFilePdf, FaFileWord, FaFileImage, FaDownload } from "react-icons/fa";
 
-function SubmittedFiles({ files }) {
+function SubmittedFiles({ files, taskId}) {
+
+  const [submittedFiles, setSubmittedFiles] = useState([]);
+  const [groupFiles, setGroupFiles] = useState([]);
 
   const groupFilesByDate = (files) => {
     return files.reduce((groups, file) => {
-      const date = file.uploadedAt; 
+      const date = file.createDate; 
       if (!groups[date]) {
         groups[date] = [];
       }
       groups[date].push(file);
+      setGroupFiles(groups)
       return groups;
     }, {});
   };
 
   const getFileIcon = (fileType) => {
+    console.log(fileType);
+    
     switch (fileType) {
       case "pdf":
         return <FaFilePdf className="text-red-500" />;
@@ -92,41 +100,56 @@ function SubmittedFiles({ files }) {
   };
 
   // Group the files by date
-  const groupedFiles = groupFilesByDate(files);
+
+  const fetchAllSubmissions = async () => {
+    axios.get(`http://localhost:1820/${taskId}`)
+    .then((res) => {
+      setSubmittedFiles(res.data);
+      groupFilesByDate(res.data)
+    })
+  }
+
+  useEffect(() => {
+    fetchAllSubmissions();
+  }, []);
+
+  console.log(groupFiles);
+  
+  
 
   return (
     <div className="submitted-files">
         <h1 className="text-lg md:text-xl mb-4 font-semibold">
           Submitted Work
         </h1>
-      {Object.keys(groupedFiles).length === 0 ? (
+      {Object.keys(groupFiles).length === 0 ? (
         <p className="text-base text-gray-500">No files submitted yet.</p>
       ) : (
-        Object.keys(groupedFiles).map((date) => (
+        Object.keys(groupFiles).map((date) => (
           <div key={date} className="mb-6">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">{date}</h3> 
             <ul className="space-y-2">
-              {groupedFiles[date].map((file, index) => (
+              {groupFiles[date].map((file, index) => (
                 <li
                   key={index}
                   className="inline-flex items-center justify-between p-3 bg-gray-100 border border-[#5B6DF2] rounded-lg gap-16 mr-4"
                 >
                   <div className="flex items-center space-x-3">
-                    {getFileIcon(file.type)}
+                    {getFileIcon(file.fileType.slice(12))}
                     <a
                       href={file.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:text-[#5B6DF2] font-medium"
                     >
-                      {file.name}
+                      {file.fileName}
                     </a>
                   </div>
 
                   <div className="flex flex-col items-center">
                     <a
-                      href={file.url}
-                      download={file.name}
+                      href={file.downloadUrl}
+                      download={file.fileName}
                       className="text-gray-700 hover:text-[#5B6DF2]"
                     >
                       <FaDownload />
