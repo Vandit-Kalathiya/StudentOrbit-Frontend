@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Row, Col, Button, Typography, Form, Skeleton } from "antd";
+import { Row, Col, Button, Typography, Form } from "antd";
 import TaskList from "./TaskList";
 import axios from "axios";
 import { openNotification } from "../../../../Utils/Notification";
-import Loader from "../../../../components/Loader";
 import { Plus } from "lucide-react";
 import TaskModal from "../../Group/GroupRight/TaskModal";
 import { getRole } from "../../../../../authToken";
-import TaskSkeleton from "../../../../skeleton/TaskSkeleton";
 import TaskSkeletonList from "../../../../skeleton/TaskSkeleton";
 
 const ToDoPage = () => {
@@ -20,7 +18,6 @@ const ToDoPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   const role = getRole();
-  console.log(role)
 
   const currentWeek = week.length === 5 ? week.slice(4, 5) : week.slice(4, 6);
 

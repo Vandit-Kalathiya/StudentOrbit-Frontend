@@ -43,7 +43,6 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
       );
     }
   };
-  console.log(singleTask);
 
   const cardVariants = {
     initial: { opacity: 0, scale: 0.8 },
@@ -66,8 +65,8 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
 
   const saveTask = (updatedTask) => {
     console.log("Updated Task:", updatedTask);
-    setTask(updatedTask); // Update task state
-    closeEditModal(); // Close modal
+    setTask(updatedTask);
+    closeEditModal();
   };
 
   const handleReadMore = () => {
@@ -86,13 +85,23 @@ const TaskCard = ({ singleTask, updateTaskStatus, members }) => {
   };
 
   const handleDelete = async () => {
-    console.log("delete");
+    axios
+      .delete(`http://localhost:1818/tasks/s/delete/${task.id}`, {
+        withCredentials: true,
+      })
+      .then(() => {
+        console.log(" deleted ");
+        toast.success("Task deleted successfully!");
+      })
+      .catch((err) => console.log(err));
     setDeleteModalVisible(false);
   };
 
   const closeEditModal = () => {
     setEditModalVisible(false);
   };
+
+  useEffect(() => {}, [task]);
 
   return (
     <motion.div
