@@ -50,7 +50,7 @@ const ProjectCard = () => {
 
   return (
     <>
-      <h1 className="md:text-5xl text-3xl text-center my-5 mt-10 font-semibold">
+      <h1 className="md:text-[2.5rem] text-3xl text-center my-5 mt-10 font-semibold font-poppins">
         My Projects
       </h1>
       {loading ? (

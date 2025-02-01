@@ -9,6 +9,9 @@ import AssigneesModal from "./AssigneesModal";
 import axios from "axios";
 import SubmittedFiles from "./SubmittedFiles";
 import TaskDetailSkeleton from "../../../../skeleton/TaskDetailSkeleton";
+import { Card, Typography } from "antd";
+
+const { Title } = Typography;
 
 function TaskDetail() {
   const location = useLocation();
@@ -18,11 +21,11 @@ function TaskDetail() {
   const [assigneeMembers, setAssigneeMembers] = useState(task.assignee);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { }, [assigneeMembers]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
 
-  // setTimeout(() => { 
-  //   setLoading(true);
-  // }, 2000);
+  useEffect(() => {}, [assigneeMembers]);
 
   const handleAssign = (assigneeIds) => {
     axios
@@ -31,7 +34,7 @@ function TaskDetail() {
         setAssigneeMembers(res.data.assignee);
       })
       .catch((error) => {
-       console.log(error)
+        console.log(error);
       });
   };
 
@@ -56,17 +59,6 @@ function TaskDetail() {
     },
   ];
 
-  // useEffect(() => {
-  //   axios
-  //     .get(http://localhost:1818/tasks/${task.id}/files)
-  //     .then((res) => {
-  //       setSubmittedFiles(res.data.files);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching submitted files: ", error);
-  //     });
-  // }, [task.id]);
-
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -85,35 +77,83 @@ function TaskDetail() {
     handleAssign(values.assignees);
   };
 
+  if (loading) {
+    return <TaskDetailSkeleton />;
+  }
+
   return (
-    loading ? (
-      <TaskDetailSkeleton />
-    ) : (
-      <div className="m-5 mt-10 px-5">
-        <TaskHeader task={task} />
-        <TaskDescription description={task.description} />
-        <TaskStatus status={task.status} />
-        <TaskAssignees
-          assignees={assigneeMembers}
-          showModal={showModal}
-          handleFormSubmit={handleFormSubmit}
-          taskId={task.id}
-        />
-        <SubmittedFiles files={dummyFiles} taskId={task.id}/>
-        <FacultyComments taskId={task.id} />
-        <AssigneesModal
-          isModalVisible={isModalVisible}
-          handleOk={handleOk}
-          handleCancel={handleCancel}
-          assignees={assigneeMembers}
-          selectedAssignees={selectedAssignees}
-          handleFormSubmit={handleFormSubmit}
-          members={members}
-        />
+    <div className="min-h-screen bg-slate-100">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Task Details */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card
+              className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              bodyStyle={{ padding: "20px 24px" }}
+            >
+              <div className="border-b pb-4 mb-4">
+                <TaskHeader task={task} />
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-100 p-3 rounded-lg">
+                  <TaskDescription description={task.description} />
+                </div>
+                <div className="border-t pt-6">
+                  <TaskStatus status={task.status} />
+                </div>
+                <div className="border-t pt-6">
+                  <TaskAssignees
+                    assignees={assigneeMembers}
+                    showModal={showModal}
+                    handleFormSubmit={handleFormSubmit}
+                    taskId={task.id}
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Right Column - Submitted Work and Comments */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Submitted Work Section */}
+            <Card
+              title={<Title level={4} className="text-primary">Submitted Work</Title>}
+              className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              headStyle={{
+                borderBottom: "2px solid #f0f0f0",
+                fontWeight: "600",
+              }}
+            >
+              <SubmittedFiles files={dummyFiles} taskId={task.id} />
+            </Card>
+
+            {/* Faculty Comments Section */}
+            <Card
+              title={<Title level={4} className="text-primary">Faculty Comments</Title>}
+              className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              headStyle={{
+                borderBottom: "2px solid #f0f0f0",
+                fontWeight: "600",
+              }}
+            >
+              <FacultyComments taskId={task.id} />
+            </Card>
+          </div>
+        </div>
       </div>
-    )
+
+      {/* Modals */}
+      <AssigneesModal
+        isModalVisible={isModalVisible}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        assignees={assigneeMembers}
+        selectedAssignees={selectedAssignees}
+        handleFormSubmit={handleFormSubmit}
+        members={members}
+      />
+    </div>
   );
-  
 }
 
 export default TaskDetail;

@@ -119,9 +119,9 @@ function SubmittedFiles({ files, taskId}) {
 
   return (
     <div className="submitted-files">
-        <h1 className="text-lg md:text-xl mb-4 font-semibold">
+        {/* <h1 className="text-lg md:text-xl mb-4 font-semibold">
           Submitted Work
-        </h1>
+        </h1> */}
       {Object.keys(groupFiles).length === 0 ? (
         <p className="text-base text-gray-500">No files submitted yet.</p>
       ) : (

@@ -41,7 +41,7 @@ const TaskAssignees = ({ assignees, showModal, taskId }) => {
 
   return (
     <div className="flex flex-wrap items-center gap-4 mb-4">
-      <h3 className="text-base md:text-lg font-semibold">Assignees :</h3>
+      <h3 className="text-base md:text-lg font-semibold italic text-gray-700">Assignees :</h3>
       <div className="flex items-center gap-2">
         {assigneeMembers.length > 0 ? (
           assigneeMembers.map((assignee, index) => {

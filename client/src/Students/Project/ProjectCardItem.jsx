@@ -21,7 +21,7 @@ const ProjectCardItem = ({ project }) => {
     <div className="flex justify-center p-2 cursor-pointer">
       <Card
         bordered={false}
-        className="relative group max-w-lg w-full shadow-lg rounded-xl border-2 bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:shadow-lg transition-transform transform hover:scale-[1.02]"
+        className="relative group max-w-lg w-full shadow-lg rounded-xl border-2 bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:shadow-lg transition-transform transform hover:scale-[1.02] font-poppins"
         onClick={handleReadMore}
         bodyStyle={{ padding: "1.5rem" }}
       >

@@ -45,6 +45,10 @@ function Profile() {
   const [loadings, setLoadings] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+
+  useEffect(() => {
     setLoadings(true);
     axios
       .get(`http://localhost:1818/students/u/${fetchedUsername}`, {

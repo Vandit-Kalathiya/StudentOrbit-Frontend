@@ -43,7 +43,7 @@ function GroupDetailsNew({ collapsed }) {
 
   return (
     <motion.div
-      className="flex flex-col m-[none] h-auto w-[100%] md:h-[100%] md:overflow-hidden bg-[#F5F5F5]"
+      className="flex flex-col m-[none] h-auto w-[100%] md:h-[100%] md:overflow-hidden bg-[#F5F5F5] font-poppins"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
