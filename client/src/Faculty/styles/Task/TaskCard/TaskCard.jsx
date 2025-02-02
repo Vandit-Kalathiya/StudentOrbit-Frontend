@@ -9,10 +9,8 @@ import TaskCompletionModal from "./TaskCompletionModal";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Button, Modal } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { adminRole, getRole } from "../../../../../authToken";
 import { DeleteOutlined, EditOutlined, TrophyOutlined } from "@ant-design/icons";
-import { getRole } from "../../../../../authToken";
+import { adminRole, getRole } from "../../../../../authToken";
 import EditTaskModal from "./EditTaskModal";
 
 const TaskCard = ({
@@ -22,7 +20,6 @@ const TaskCard = ({
   onTaskUpdate,
   groupId,
 }) => {
-  // const [isModalVisible, setIsModalVisible] = useState(false);
   const [task, setTask] = useState(singleTask);
   const [currentAssignees, setCurrentAssignees] = useState(singleTask.assignee);
   const navigate = useNavigate();
@@ -51,12 +48,11 @@ const TaskCard = ({
       );
       setTask(res.data);
       setCurrentAssignees(res.data.assignee);
-      // onTaskUpdate?.(res.data); // Notify parent component
       return res.data;
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "An error occurred while assigning tasks."
+        "An error occurred while assigning tasks."
       );
     }
   };
@@ -69,19 +65,16 @@ const TaskCard = ({
 
   const showModal = () => {
     setIsDrawerVisible(true);
-    // setIsModalVisible(true);
   };
 
   const handleOk = (grades, comments) => {
     console.log("Final Grades:", grades);
     console.log("Faculty Comments:", comments);
     updateTaskStatus(task.id, "COMPLETED", currentAssignees);
-    // setIsModalVisible(false);
     setIsDrawerVisible(false);
   };
 
   const handleCancel = () => {
-    // setIsModalVisible(false);
     setIsDrawerVisible(false);
   };
 
@@ -95,13 +88,13 @@ const TaskCard = ({
       );
 
       setTask(response.data);
-      onTaskUpdate?.(response.data); 
+      onTaskUpdate?.(response.data);
       toast.success("Task Updated Successfully");
       closeEditModal();
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "An error occurred while updating the task."
+        "An error occurred while updating the task."
       );
     }
   };
@@ -135,7 +128,7 @@ const TaskCard = ({
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "An error occurred while deleting the task."
+        "An error occurred while deleting the task."
       );
     }
   };
@@ -143,8 +136,6 @@ const TaskCard = ({
   const closeEditModal = () => {
     setEditModalVisible(false);
   };
-
-  useEffect(() => {}, [task]);
 
   return (
     <motion.div
@@ -157,30 +148,7 @@ const TaskCard = ({
     >
       <div className="flex items-center justify-between">
         <TaskStatus status={task.status} title={task.name} />
-        {(role === "student" || role === adminRole) && (task.status === 'TO_DO' || task.status === 'IN_PROGRESS') && (
-          <div className="flex space-x-3">
-            <Button
-              type="text"
-              size="medium"
-              title="Edit Task"
-              icon={<EditOutlined style={{ color: "blue" }} />}
-              onClick={(e) => {
-                e.preventDefault();
-                setEditModalVisible(true);
-              }}
-            />
-            <Button
-              type="text"
-              size="medium"
-              title="Delete Task"
-              icon={<DeleteOutlined style={{ color: "red" }} />}
-              onClick={(e) => {
-                e.preventDefault();
-                setDeleteModalVisible(true);
-              }}
-            />
-          </div>
-        {(role === "student" || role === "admin") &&
+        {(role === "student" || role === adminRole) &&
           (task.status === "TO_DO" || task.status === "IN_PROGRESS") && (
             <div className="flex space-x-3">
               <Button
@@ -207,10 +175,9 @@ const TaskCard = ({
           )}
         {task.status === "COMPLETED" && (
           <div className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-700 text-white p-2 rounded-lg shadow-lg">
-          <TrophyOutlined style={{ fontSize: "16px", color: "gold" }} />
-          {/* <span className="text-lg font-bold">{task.totalScore} / {task.maxScore}</span> */}
-          <span className="text-xs font-bold">21 / 28</span>
-        </div>
+            <TrophyOutlined style={{ fontSize: "16px", color: "gold" }} />
+            <span className="text-xs font-bold">21 / 28</span>
+          </div>
         )}
       </div>
       <TaskDescription
@@ -233,7 +200,6 @@ const TaskCard = ({
         assignees={currentAssignees}
       />
       <TaskCompletionModal
-        // isModalVisible={isModalVisible}
         isDrawerVisible={isDrawerVisible}
         handleOk={handleOk}
         handleCancel={handleCancel}
