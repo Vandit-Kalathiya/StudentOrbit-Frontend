@@ -3,7 +3,7 @@ import RubricGradingModal from "./RubricGradingModal";
 import { useState } from "react";
 
 
-const TaskCompletionModal = ({ isDrawerVisible, handleOk, handleCancel }) => {
+const TaskCompletionModal = ({ isDrawerVisible, handleOk, handleCancel, taskId }) => {
   const [generalComment, setGeneralComment] = useState("");
 
   const handleGeneralCommentChange = (e) => {
@@ -29,6 +29,7 @@ const TaskCompletionModal = ({ isDrawerVisible, handleOk, handleCancel }) => {
         handleCancel={handleCancel}
         generalComment={generalComment}
         handleGeneralCommentChange={handleGeneralCommentChange}
+        taskId={taskId}
       />
     </Drawer>
   );

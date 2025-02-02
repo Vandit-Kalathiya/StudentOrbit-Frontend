@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TaskDescription = ({ description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ac tortor", onReadMore }) => {
+const TaskDescription = ({ description, onReadMore }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   
   const handleReadMoreToggle = (e) => {

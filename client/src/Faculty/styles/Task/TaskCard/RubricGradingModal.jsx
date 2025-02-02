@@ -3,7 +3,13 @@ import { useEffect, useState } from "react";
 
 const { Text } = Typography;
 
-const RubricGradingModal = ({ isModalVisible, handleOk, handleGeneralCommentChange, generalComment }) => {
+const RubricGradingModal = ({
+  isModalVisible,
+  handleOk,
+  handleGeneralCommentChange,
+  generalComment,
+  taskId
+}) => {
   const [grades, setGrades] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -24,42 +30,42 @@ const RubricGradingModal = ({ isModalVisible, handleOk, handleGeneralCommentChan
     { label: "Excellent (4)", value: 4 },
   ];
 
-  // Handle grade change
   const handleGradeChange = (criterion, value) => {
     setGrades({ ...grades, [criterion]: value });
   };
 
-  // Calculate total score
   const calculateTotalScore = () => {
     return Object.values(grades).reduce((acc, score) => acc + (score || 0), 0);
   };
 
-  // Validate if all criteria are graded
   const isAllCriteriaGraded = () => {
     return criteria.every((criterion) => grades[criterion.key] !== undefined);
   };
 
-  // Handle modal submission
   const handleSubmit = () => {
     if (!isAllCriteriaGraded()) {
       setIsSubmitted(true);
       return;
     }
-    handleOk(grades);
-  };
-
-  // Prevent background scrolling when modal is open
-  useEffect(() => {
-    if (isModalVisible) {
-      document.body.classList.add("modal-open");
-    } else {
-      document.body.classList.remove("modal-open");
-    }
-
-    return () => {
-      document.body.classList.remove("modal-open");
+    
+    const response = {
+      grades: criteria.map((criterion) => ({
+        criterion: criterion.label,
+        level:
+          levels.find((level) => level.value === grades[criterion.key])
+            ?.label || "Not Graded",
+        score: grades[criterion.key],
+      })),
+      totalScore: calculateTotalScore(),
+      maxScore: criteria.length * 4,
+      generalComment: generalComment,
+      taskId
     };
-  }, [isModalVisible]);
+
+    console.log(response);
+
+    // handleOk(grades);
+  };
 
   return (
     <div className="font-poppins">
@@ -76,7 +82,11 @@ const RubricGradingModal = ({ isModalVisible, handleOk, handleGeneralCommentChan
           dataIndex="label"
           key="label"
           width="25%"
-          render={(text) => <Text strong className="font-poppins">{text}</Text>}
+          render={(text) => (
+            <Text strong className="font-poppins">
+              {text}
+            </Text>
+          )}
         />
         <Table.Column
           title="Grade"
@@ -90,7 +100,11 @@ const RubricGradingModal = ({ isModalVisible, handleOk, handleGeneralCommentChan
               className="font-poppins"
             >
               {levels.map((level) => (
-                <Radio.Button key={level.value} value={level.value} className="font-poppins">
+                <Radio.Button
+                  key={level.value}
+                  value={level.value}
+                  className="font-poppins"
+                >
                   {level.label}
                 </Radio.Button>
               ))}

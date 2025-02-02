@@ -191,6 +191,7 @@ const TaskActions = ({
         open={isLinkModalVisible}
         onOk={handleOkLink}
         onCancel={handleCancelLink}
+        className=" font-poppins"
       >
         <Input
           value={reviewLink}
