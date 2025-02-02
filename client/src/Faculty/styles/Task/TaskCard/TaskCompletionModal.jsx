@@ -1,17 +1,37 @@
-import { Modal } from "antd";
+import { Drawer } from "antd";
+import RubricGradingModal from "./RubricGradingModal";
+import { useState } from "react";
 
-const TaskCompletionModal = ({ isModalVisible, handleOk, handleCancel }) => {
+
+const TaskCompletionModal = ({ isDrawerVisible, handleOk, handleCancel, taskId }) => {
+  const [generalComment, setGeneralComment] = useState("");
+
+  const handleGeneralCommentChange = (e) => {
+    setGeneralComment(e.target.value);
+  };
+
+  const handleSubmit = (grades) => {
+    handleOk(grades, generalComment);
+  };
+
   return (
-    <Modal
-      title="Are you sure?"
-      open={isModalVisible}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      okText="Yes, Approve"
-      cancelText="Cancel"
+    <Drawer
+      title="Rubric Grading"
+      placement="right"
+      width={750}
+      onClose={handleCancel}
+      open={isDrawerVisible}
+      className="font-poppins"
     >
-      <p>Are you sure to mark this task as completed?</p>
-    </Modal>
+      <RubricGradingModal
+        isModalVisible={isDrawerVisible}
+        handleOk={handleSubmit}
+        handleCancel={handleCancel}
+        generalComment={generalComment}
+        handleGeneralCommentChange={handleGeneralCommentChange}
+        taskId={taskId}
+      />
+    </Drawer>
   );
 };
 

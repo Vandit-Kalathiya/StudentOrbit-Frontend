@@ -122,15 +122,15 @@ const ToDoPage = () => {
         </div>
       ) : (
         <>
-          <div className="relative flex md:flex-row flex-col items-center justify-center p-2 custom-scrollbar">
-            <Typography className="md:m-0 mt-5 text-center text-4xl md:text-5xl flex-grow font-semibold">
+          <div className="relative flex md:flex-row flex-col items-center justify-center p-2 custom-scrollbar font-poppins">
+            <Typography className="md:m-0 mt-5 text-center text-4xl md:text-5xl flex-grow font-semibold font-poppins">
               {weekNumber}
             </Typography>
             {role !== "faculty" && <div className="p-2">
               <Button
                 shape="round"
                 icon={<Plus />}
-                className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center mt-2"
+                className="bg-[#5B6DF3] text-white hover:bg-[#4859da] py-5 text-center mt-2 font-poppins"
                 onClick={() => setShowModal(true)}
               >
                 Add Task
@@ -140,7 +140,7 @@ const ToDoPage = () => {
 
           <Row gutter={16}>
             <Col span={24}>
-              <h3 className="text-xl mb-4 font-semibold">To-do Tasks</h3>
+              <h3 className="text-xl mb-4 font-semibold font-poppins">To-do Tasks</h3>
               <TaskList
                 tasks={tasks}
                 status="TO_DO"
@@ -152,7 +152,7 @@ const ToDoPage = () => {
               />
             </Col>
             <Col span={24}>
-              <h3 className="text-xl mb-4 font-semibold">In Progress Tasks</h3>
+              <h3 className="text-xl mb-4 font-semibold font-poppins">In Progress Tasks</h3>
               <TaskList
                 tasks={tasks}
                 status="IN_PROGRESS"
@@ -164,7 +164,7 @@ const ToDoPage = () => {
               />
             </Col>
             <Col span={24}>
-              <h3 className="text-xl mb-4 font-semibold">In Review Tasks</h3>
+              <h3 className="text-xl mb-4 font-semibold font-poppins">In Review Tasks</h3>
               <TaskList
                 tasks={tasks}
                 status="IN_REVIEW"
@@ -176,7 +176,7 @@ const ToDoPage = () => {
               />
             </Col>
             <Col span={24}>
-              <h3 className="text-xl mb-4 font-semibold">Completed Tasks</h3>
+              <h3 className="text-xl mb-4 font-semibold font-poppins">Completed Tasks</h3>
               <TaskList
                 tasks={tasks}
                 status="COMPLETED"

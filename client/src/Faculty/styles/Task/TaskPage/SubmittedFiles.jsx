@@ -1,164 +1,135 @@
-// import { FaFilePdf, FaFileWord, FaFileImage, FaDownload } from "react-icons/fa";
-
-// function SubmittedFiles({ files }) {
-//   const getFileIcon = (fileType) => {
-//     switch (fileType) {
-//       case "pdf":
-//         return <FaFilePdf className="text-red-500" />;
-//       case "doc":
-//       case "docx":
-//         return <FaFileWord className="text-blue-500" />;
-//       case "jpg":
-//       case "png":
-//         return <FaFileImage className="text-green-500" />;
-//       default:
-//         return <FaFilePdf className="text-gray-500" />;
-//     }
-//   };
-
-//   return (
-//     <div className="submitted-files">
-//       {files.length === 0 ? (
-//         <p className="text-gray-400">No files submitted yet.</p>
-//       ) : (
-//         <ul className="space-y-2 mb-6">
-//           {files.map((file, index) => (
-//             <li
-//               key={index}
-//               className="inline-flex items-center justify-between p-3 bg-gray-100 border border-[#5B6DF2] rounded-lg gap-16"
-//             >
-//               <div className="flex items-center space-x-3">
-//                 {getFileIcon(file.type)}
-//                 <a
-//                   href={file.url}
-//                   target="_blank"
-//                   rel="noopener noreferrer"
-//                   className="hover:text-[#5B6DF2] font-medium"
-//                 >
-//                   {file.name}
-//                 </a>
-//               </div>
-
-//               <div className="flex flex-col items-center">
-//                 <a
-//                   href={file.url}
-//                   download={file.name}
-//                   className="text-gray-700 hover:text-[#5B6DF2]"
-//                 >
-//                   <FaDownload />
-//                 </a>
-//                 {/* <p className="text-xs text-gray-500">{file.uploadedAt}</p> */}
-//               </div>
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default SubmittedFiles;
-
-
-
+import { CalendarOutlined, DownloadOutlined } from "@ant-design/icons";
+import { Button, List, Typography, Card } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FaFilePdf, FaFileWord, FaFileImage, FaDownload } from "react-icons/fa";
+import { FaFilePdf, FaFileWord, FaFileImage } from "react-icons/fa";
 
-function SubmittedFiles({ files, taskId}) {
-
+function SubmittedFiles({ taskId }) {
   const [submittedFiles, setSubmittedFiles] = useState([]);
-  const [groupFiles, setGroupFiles] = useState([]);
+  const [groupFiles, setGroupFiles] = useState({});
 
+  const { Text } = Typography;
+
+  // Group files by date
   const groupFilesByDate = (files) => {
-    return files.reduce((groups, file) => {
-      const date = file.createDate; 
+    const grouped = files.reduce((groups, file) => {
+      const date = file.createDate;
       if (!groups[date]) {
         groups[date] = [];
       }
       groups[date].push(file);
-      setGroupFiles(groups)
       return groups;
     }, {});
+    setGroupFiles(grouped);
   };
 
+  // Get file icon based on file type
   const getFileIcon = (fileType) => {
-    console.log(fileType);
-    
     switch (fileType) {
       case "pdf":
-        return <FaFilePdf className="text-red-500" />;
+        return <FaFilePdf className="text-red-500 text-xl" />;
       case "doc":
       case "docx":
-        return <FaFileWord className="text-blue-500" />;
+        return <FaFileWord className="text-blue-500 text-xl" />;
       case "jpg":
       case "png":
-        return <FaFileImage className="text-green-500" />;
+        return <FaFileImage className="text-green-500 text-xl" />;
       default:
-        return <FaFilePdf className="text-gray-500" />;
+        return <FaFilePdf className="text-gray-500 text-xl" />;
     }
   };
 
-  // Group the files by date
-
+  // Fetch all submissions
   const fetchAllSubmissions = async () => {
-    axios.get(`http://localhost:1820/${taskId}`)
-    .then((res) => {
+    try {
+      const res = await axios.get(`http://localhost:1820/${taskId}`);
       setSubmittedFiles(res.data);
-      groupFilesByDate(res.data)
-    })
-  }
+      groupFilesByDate(res.data);
+    } catch (error) {
+      console.error("Error fetching submissions:", error);
+    }
+  };
 
   useEffect(() => {
     fetchAllSubmissions();
-  }, []);
-
-  console.log(groupFiles);
-  
-  
+  }, [taskId]);
 
   return (
     <div className="submitted-files">
-        {/* <h1 className="text-lg md:text-xl mb-4 font-semibold">
-          Submitted Work
-        </h1> */}
       {Object.keys(groupFiles).length === 0 ? (
-        <p className="text-base text-gray-500">No files submitted yet.</p>
+        <p className="text-base text-gray-500 font-poppins">No files submitted yet.</p>
       ) : (
         Object.keys(groupFiles).map((date) => (
-          <div key={date} className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">{date}</h3> 
-            <ul className="space-y-2">
-              {groupFiles[date].map((file, index) => (
-                <li
-                  key={index}
-                  className="inline-flex items-center justify-between p-3 bg-gray-100 border border-[#5B6DF2] rounded-lg gap-16 mr-4"
-                >
-                  <div className="flex items-center space-x-3">
-                    {getFileIcon(file.fileType.slice(12))}
-                    <a
-                      href={file.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-[#5B6DF2] font-medium"
-                    >
-                      {file.fileName}
-                    </a>
-                  </div>
+          <Card
+            key={date}
+            className="mb-4 shadow-sm hover:shadow-md transition-shadow"
+            title={
+              <div className="flex items-center space-x-2">
+                <CalendarOutlined className="text-gray-600" />
+                <Text className="text-lg font-semibold text-gray-700 font-poppins">{date}</Text>
+              </div>
+            }
+          >
+            <List
+              dataSource={groupFiles[date]}
+              renderItem={(file) => (
+                <List.Item key={file.fileName} className="!p-0 !mb-4 font-poppins">
+                  <div className="w-full space-y-1">
+                    {/* File Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        {getFileIcon(file.fileType.slice(12))}
+                        <a
+                          href={file.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-[#5B6DF2] font-medium text-base font-poppins"
+                        >
+                          {file.fileName}
+                        </a>
+                      </div>
+                      <Button
+                        type="link"
+                        icon={<DownloadOutlined />}
+                        href={file.downloadUrl}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        className="hover:text-[#5B6DF2] font-medium font-poppins"
+                      >
+                        Download
+                      </Button>
+                    </div>
 
-                  <div className="flex flex-col items-center">
-                    <a
-                      href={file.downloadUrl}
-                      download={file.fileName}
-                      className="text-gray-700 hover:text-[#5B6DF2]"
-                    >
-                      <FaDownload />
-                    </a>
+                    {/* Task Description */}
+                    <div className="flex items-start space-x-2 font-poppins">
+                      <Text strong className="whitespace-nowrap">
+                        Task Description:
+                      </Text>
+                      <Text className="text-gray-700">{file.taskDescription}</Text>
+                    </div>
+
+                    {/* Review Link */}
+                    <div className="flex items-center space-x-2 font-poppins">
+                      <Text strong>Review Link:</Text>
+                      <Button
+                        type="link"
+                        href={file.taskReviewLink}
+                        target="_blank"
+                        className="p-0"
+                      >
+                        View Review
+                      </Button>
+                    </div>
+
+                    {/* Upload Time */}
+                    <Text type="secondary" className="block font-poppins">
+                      Uploaded at: {file.createTime.slice(0, 5)}
+                    </Text>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                </List.Item>
+              )}
+            />
+          </Card>
         ))
       )}
     </div>
