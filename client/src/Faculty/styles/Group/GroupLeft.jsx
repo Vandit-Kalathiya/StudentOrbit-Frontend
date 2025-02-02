@@ -12,7 +12,7 @@ import {
 import { PlusOutlined, EditOutlined, CloseOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
-import { getRole } from "../../../../authToken";
+import { adminRole, getRole } from "../../../../authToken";
 import toast from "react-hot-toast";
 
 const colorCombinations = [
@@ -71,9 +71,9 @@ function GroupLeft({ projectName }) {
   };
 
   const handleTechnologyDelete = (techId) => {
-    setTechnologiesToDelete(prevTechnologies => {
+    setTechnologiesToDelete((prevTechnologies) => {
       if (prevTechnologies.includes(techId)) {
-        return prevTechnologies.filter(id => id !== techId);
+        return prevTechnologies.filter((id) => id !== techId);
       } else {
         return [...prevTechnologies, techId];
       }
@@ -109,23 +109,33 @@ function GroupLeft({ projectName }) {
       return;
     }
 
+    // const techData = {
+    //   name: technology.trim(),
+    // };
+    console.log(technology);
+    let name = technology;
+
     axios
       .post(
         `http://localhost:1818/tech/add/${project.id}`,
-        technology.trim(),
-        { withCredentials: true }
+        name,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       )
       .then((res) => {
-        // console.log(res.data);
         toast.success("Technology added successfully!");
         setTemp((prev) => !prev);
+        setIsTechModalVisible(false);
+        setTechnology("");
       })
       .catch((err) => {
         console.log(err.message);
         toast.error("Failed to add technology");
       });
-    setIsTechModalVisible(false);
-    setTechnology("");
   };
 
   const handleTechChange = (e) => setTechnology(e.target.value);
@@ -214,7 +224,7 @@ function GroupLeft({ projectName }) {
       title: "Mark Project as Completed",
       content: (
         <span>
-          Are you sure you want to mark the project{' '}
+          Are you sure you want to mark the project{" "}
           <strong>{project.groupName}</strong> as Completed.?
         </span>
       ),
@@ -243,7 +253,7 @@ function GroupLeft({ projectName }) {
     }
 
     let memberUsername = [];
-    memberUsername.push(username);  
+    memberUsername.push(username);
     axios
       .post(
         `http://localhost:1818/faculty/groups/add/member/${project.id}`,
@@ -291,8 +301,8 @@ function GroupLeft({ projectName }) {
               key={index}
               className={`px-4 py-1.5 text-sm rounded-full border-2 
               ${isMarkedForDeletion
-                  ? 'border-red-500 text-red-500 bg-red-50'
-                  : 'border-[#5B6DF3]/30 text-[#5B6DF3] hover:bg-[#5B6DF3] hover:text-white'
+                  ? "border-red-500 text-red-500 bg-red-50"
+                  : "border-[#5B6DF3]/30 text-[#5B6DF3] hover:bg-[#5B6DF3] hover:text-white"
                 } transition-all duration-300 
               cursor-default transform hover:-translate-y-0.5 relative group flex items-center gap-2`}
             >
@@ -300,7 +310,7 @@ function GroupLeft({ projectName }) {
                 .split(" ")
                 .map(
                   (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                    word.charAt(0).toUpperCase() + word.slice(1)
                 )
                 .join(" ")}
               {isEditMode && (
@@ -311,11 +321,11 @@ function GroupLeft({ projectName }) {
                 >
                   <CloseOutlined
                     style={{
-                      fontSize: '12px',
-                      paddingLeft: '2px',
-                      fontWeight: 'bold',
-                      transform: isMarkedForDeletion ? 'rotate(45deg)' : 'none',
-                      transition: 'transform 0.3s ease'
+                      fontSize: "12px",
+                      paddingLeft: "2px",
+                      fontWeight: "bold",
+                      transform: isMarkedForDeletion ? "rotate(45deg)" : "none",
+                      transition: "transform 0.3s ease",
                     }}
                   />
                 </button>
@@ -323,21 +333,25 @@ function GroupLeft({ projectName }) {
             </span>
           );
         })}
-        <Button
-          type="dashed"
-          shape="circle"
-          icon={<PlusOutlined />}
-          onClick={showTechModal}
-          title="Add a technology"
-        />
-        <Button
-          type="dashed"
-          shape="circle"
-          icon={<EditOutlined />}
-          onClick={toggleEditMode}
-          title="Edit technologies"
-          className={isEditMode ? "bg-blue-100" : ""}
-        />
+        {(role === "student" || role === adminRole) && (
+          <>
+            <Button
+              type="dashed"
+              shape="circle"
+              icon={<PlusOutlined />}
+              onClick={showTechModal}
+              title="Add a technology"
+            />
+            <Button
+              type="dashed"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={toggleEditMode}
+              title="Edit technologies"
+              className={isEditMode ? "bg-blue-100" : ""}
+            />
+          </>
+        )}
       </div>
 
       {isEditMode && (
@@ -359,7 +373,7 @@ function GroupLeft({ projectName }) {
           {project.groupLeader?.toUpperCase() || "N/A"}
         </h3>
       </div>
-  
+
       <div className="flex flex-wrap items-center gap-4 my-4">
         <h3 className="md:text-lg text-base font-semibold">Members :</h3>
         {project.students.map((member, index) => {
@@ -377,7 +391,7 @@ function GroupLeft({ projectName }) {
             </Avatar>
           );
         })}
-        {role === "faculty" && (
+        {(role === "faculty" || role === adminRole) && (
           <Button
             type="dashed"
             shape="circle"
@@ -431,17 +445,18 @@ function GroupLeft({ projectName }) {
 
       <Progress percent={30} strokeColor="#5A6CF1" className="w-[80%]" />
 
-      {role === "faculty" && project.projectStatus === "IN_PROGRESS" && (
-        <div className="flex justify-start items-center mt-6 absolute bottom-5">
-          <button
-            icon={<FaCheckCircle />}
-            onClick={markProjectAsCompleted}
-            className="bg-[#5A6CF1] text-white p-2 px-4 rounded"
-          >
-            Mark Completed
-          </button>
-        </div>
-      )}
+      {(role === "faculty" || role === adminRole) &&
+        project.projectStatus === "IN_PROGRESS" && (
+          <div className="flex justify-start items-center mt-6 absolute bottom-5">
+            <button
+              icon={<FaCheckCircle />}
+              onClick={markProjectAsCompleted}
+              className="bg-[#5A6CF1] text-white p-2 px-4 rounded"
+            >
+              Mark Completed
+            </button>
+          </div>
+        )}
 
       <Modal
         title="Add New Member"

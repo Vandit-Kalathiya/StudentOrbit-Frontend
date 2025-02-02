@@ -2,7 +2,7 @@ import { message, Modal, Button } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { getRole } from "../../../../../authToken";
+import { adminRole, getRole } from "../../../../../authToken";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -115,7 +115,7 @@ const Banner = ({ project, batch }) => {
               />
             </svg>
           </button>
-          {role === "faculty" && (
+          {role === adminRole && (
             <div className="flex space-x-3">
               <Button
                 type="text"

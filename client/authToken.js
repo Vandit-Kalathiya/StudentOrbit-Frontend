@@ -64,3 +64,6 @@ export const getRole = () => {
       return null;
     }
   };
+
+
+export const adminRole = "admin";

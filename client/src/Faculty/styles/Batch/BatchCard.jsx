@@ -1,11 +1,11 @@
 import { Card, Button, Modal, Form, Input, message } from "antd";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { getRole } from "../../../../authToken";
+import { adminRole, getRole } from "../../../../authToken";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-const BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
+const   BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
   const role = getRole();
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
@@ -42,7 +42,7 @@ const BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
           className="relative group mx-auto w-[100%] transition-all duration-300 border-0 rounded-xl mb-4 cursor-pointer bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 shadow-sm hover:shadow-lg"
           headStyle={{ fontSize: "clamp(1.4rem, 1.5vw, 1.75rem)" }}
           extra={
-            role === "faculty" && (
+            role === adminRole && (
               <div className="flex space-x-2">
                 <Button
                   type="text"

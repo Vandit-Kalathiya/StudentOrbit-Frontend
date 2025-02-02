@@ -1,3 +1,5 @@
+import { adminRole, getRole } from "../../../../../authToken";
+
 const AccordionItem = ({
   week,
   isActive,
@@ -21,7 +23,7 @@ const AccordionItem = ({
     endDate.setHours(0, 0, 0, 0);
 
     return currentDate <= endDate;
-  };  
+  };
 
   return (
     <div className={`${week.weekNumber === 1 ? "rounded rtl xl bg-gray-100" : ""}`}>
@@ -74,7 +76,7 @@ const AccordionItem = ({
           ) : (
             <p className="mb-2 text-gray-700">{week.tasks}</p>
           )}
-          {isCurrentWeek(week) && (
+          {(isCurrentWeek(week) || getRole() === adminRole) && (
             <button
               className="mt-3 text-[#5B6DF2] text-sm border-2 p-[0.4rem] rounded-md border-[#5B6DF2]"
               onClick={showModal}

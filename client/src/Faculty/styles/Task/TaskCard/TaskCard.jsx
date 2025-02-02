@@ -10,7 +10,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Button, Modal } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { getRole } from "../../../../../authToken";
+import { adminRole, getRole } from "../../../../../authToken";
 import EditTaskModal from "./EditTaskModal";
 
 const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId }) => {
@@ -140,7 +140,7 @@ const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId
     >
       <div className="flex items-center justify-between">
         <TaskStatus status={task.status} title={task.name} />
-        {(role === "student" || role === 'admin') && (task.status === 'TO_DO' || task.status === 'IN_PROGRESS') && (
+        {(role === "student" || role === adminRole) && (task.status === 'TO_DO' || task.status === 'IN_PROGRESS') && (
           <div className="flex space-x-3">
             <Button
               type="text"
