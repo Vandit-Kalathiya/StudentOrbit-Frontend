@@ -14,7 +14,7 @@ import { getRole } from "../../../../../authToken";
 import EditTaskModal from "./EditTaskModal";
 
 const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId }) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
   const [task, setTask] = useState(singleTask);
   const [currentAssignees, setCurrentAssignees] = useState(singleTask.assignee);
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId
   const { batch, projectName, week } = useParams();
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const role = getRole();
 
   let currentWeek = week.length === 5 ? week.slice(4, 5) : week.slice(4, 6);
@@ -59,16 +60,21 @@ const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId
   };
 
   const showModal = () => {
-    setIsModalVisible(true);
+    setIsDrawerVisible(true);
+    // setIsModalVisible(true);
   };
 
-  const handleOk = () => {
+  const handleOk = (grades, comments) => {
+    console.log("Final Grades:", grades);
+    console.log("Faculty Comments:", comments);
     updateTaskStatus(task.id, "COMPLETED", currentAssignees);
-    setIsModalVisible(false);
+    // setIsModalVisible(false);
+    setIsDrawerVisible(false); 
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
+    // setIsModalVisible(false);
+    setIsDrawerVisible(false);
   };
 
   const saveTask = async (updatedTask) => {
@@ -113,7 +119,7 @@ const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId
         withCredentials: true,
       });
       onTaskUpdate?.(task.id); // Notify parent about deletion
-      toast.success("Task Deleted Duccessfully");
+      toast.success("Task Deleted Successfully");
       setDeleteModalVisible(false);
     } catch (error) {
       toast.error(
@@ -131,7 +137,7 @@ const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId
 
   return (
     <motion.div
-      className="border md:min-w-full rounded-lg shadow-md p-4 max-w-md mx-auto bg-white mb-4 cursor-pointer"
+      className="border md:min-w-full rounded-lg shadow-md p-4 max-w-md mx-auto bg-white mb-4 cursor-pointer font-poppins"
       variants={cardVariants}
       initial="initial"
       animate="animate"
@@ -185,7 +191,8 @@ const TaskCard = ({ singleTask, updateTaskStatus, members, onTaskUpdate, groupId
         assignees={currentAssignees}
       />
       <TaskCompletionModal
-        isModalVisible={isModalVisible}
+        // isModalVisible={isModalVisible}
+        isDrawerVisible={isDrawerVisible}
         handleOk={handleOk}
         handleCancel={handleCancel}
       />

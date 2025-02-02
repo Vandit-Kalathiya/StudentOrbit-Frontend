@@ -7,11 +7,12 @@ import TaskAssignees from "./TaskAssignees";
 import FacultyComments from "./FacultyComments";
 import AssigneesModal from "./AssigneesModal";
 import axios from "axios";
-import SubmittedFiles from "./SubmittedFiles";
 import TaskDetailSkeleton from "../../../../skeleton/TaskDetailSkeleton";
-import { Card, Typography } from "antd";
+import { Card, Typography, Button, List } from "antd";
+import { FileTextOutlined, DownloadOutlined } from "@ant-design/icons";
+import SubmittedFiles from "./SubmittedFiles";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 function TaskDetail() {
   const location = useLocation();
@@ -23,7 +24,7 @@ function TaskDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [])
+  }, []);
 
   useEffect(() => {}, [assigneeMembers]);
 
@@ -38,23 +39,33 @@ function TaskDetail() {
       });
   };
 
-  const dummyFiles = [
+  // Example data for submitted files
+  const submittedFiles = [
     {
+      id: 1,
       name: "Project_Report.pdf",
       type: "pdf",
       url: "#",
+      description: "Final project report with all details and analysis.",
+      reviewLink: "https://example.com/review/1",
       uploadedAt: "2023-11-01",
     },
     {
+      id: 2,
       name: "Presentation_Slides.pptx",
       type: "ppt",
       url: "#",
-      uploadedAt: "2023-11-01",
+      description: "Slides for the final project presentation.",
+      reviewLink: "https://example.com/review/2",
+      uploadedAt: "2023-11-02",
     },
     {
+      id: 3,
       name: "Design_Mockup.png",
       type: "png",
       url: "#",
+      description: "High-fidelity design mockup for the project.",
+      reviewLink: "https://example.com/review/3",
       uploadedAt: "2023-11-03",
     },
   ];
@@ -85,10 +96,11 @@ function TaskDetail() {
     <div className="min-h-screen bg-slate-100">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Task Details */}
+          {/* Left Column - Task Details and Submitted Work */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Task Details Card */}
             <Card
-              className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 font-poppins"
               bodyStyle={{ padding: "20px 24px" }}
             >
               <div className="border-b pb-4 mb-4">
@@ -111,12 +123,9 @@ function TaskDetail() {
                 </div>
               </div>
             </Card>
-          </div>
 
-          {/* Right Column - Submitted Work and Comments */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Submitted Work Section */}
-            <Card
+            {/* Submitted Work Card */}
+            {/* <Card
               title={<Title level={4} className="text-primary">Submitted Work</Title>}
               className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
               headStyle={{
@@ -124,12 +133,51 @@ function TaskDetail() {
                 fontWeight: "600",
               }}
             >
-              <SubmittedFiles files={dummyFiles} taskId={task.id} />
-            </Card>
+              <List
+                itemLayout="vertical"
+                dataSource={submittedFiles}
+                renderItem={(file) => (
+                  <List.Item key={file.id}>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <FileTextOutlined className="text-lg" />
+                          <Text strong>{file.name}</Text>
+                        </div>
+                        <Button
+                          type="link"
+                          icon={<DownloadOutlined />}
+                          href={file.url}
+                          target="_blank"
+                        >
+                          Download
+                        </Button>
+                      </div>
+                      <Text type="secondary">{file.description}</Text>
+                      <div className="flex items-center space-x-2">
+                        <Text strong>Review Link:</Text>
+                        <Button type="link" href={file.reviewLink} target="_blank">
+                          View Review
+                        </Button>
+                      </div>
+                      <Text type="secondary">Uploaded on: {file.uploadedAt}</Text>
+                    </div>
+                  </List.Item>
+                )}
+              />
+            </Card> */}
+          <Card
+            title={<Title level={4} className="text-primary font-poppins">Submitted Work</Title>}
+            className="shadow-lg rounded-lg hover:shadow-xl transition duration-300"
+          >
+            <SubmittedFiles taskId={task.id} />
+          </Card>
+          </div>
 
-            {/* Faculty Comments Section */}
+          {/* Right Column - Faculty Comments */}
+          <div className="lg:col-span-1 space-y-6">
             <Card
-              title={<Title level={4} className="text-primary">Faculty Comments</Title>}
+              title={<Title level={4} className="text-primary font-poppins">Faculty Comments</Title>}
               className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
               headStyle={{
                 borderBottom: "2px solid #f0f0f0",

@@ -55,9 +55,9 @@ const FacultyComments = ({ taskId }) => {
         Faculty Comments
       </h1> */}
       {isLoading ? (
-        <p className="text-base text-gray-500">Loading comments...</p>
+        <p className="text-base text-gray-500 font-poppins">Loading comments...</p>
       ) : comments.length === 0 ? (
-        <p className="text-base text-gray-500">
+        <p className="text-base text-gray-500 font-poppins">
           No comments yet.
         </p>
       ) : (
@@ -65,8 +65,7 @@ const FacultyComments = ({ taskId }) => {
           {comments.map((comment) => (
             <Card
               key={comment.id}
-              className="rounded-lg shadow-sm hover:shadow-lg w-full border border-[#5B6DF2] hover:border hover:border-[#5B6DF2]"
-              hoverable
+              className="rounded-lg shadow-sm hover:shadow-lg w-full border border-[#5B6DF2] hover:border hover:border-[#5B6DF2] font-poppins"
             >
               <div className="flex items-center mb-2">
                 <Avatar
