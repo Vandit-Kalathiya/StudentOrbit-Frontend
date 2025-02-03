@@ -3,6 +3,7 @@ import { Button, List, Typography, Card } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaFilePdf, FaFileWord, FaFileImage } from "react-icons/fa";
+import { FILE_URL } from "../../../../../authToken";
 
 function SubmittedFiles({ taskId }) {
   const [submittedFiles, setSubmittedFiles] = useState([]);
@@ -42,7 +43,7 @@ function SubmittedFiles({ taskId }) {
   // Fetch all submissions
   const fetchAllSubmissions = async () => {
     try {
-      const res = await axios.get(`http://localhost:1820/${taskId}`);
+      const res = await axios.get(`${FILE_URL}/${taskId}`);
       setSubmittedFiles(res.data);
       groupFilesByDate(res.data);
     } catch (error) {

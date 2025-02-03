@@ -7,7 +7,7 @@ import WorkloadCard from "./WorkloadCard";
 import { useEffect, useRef, useState } from "react";
 import useLenisScroll from "../../Hooks/useLenisScroll";
 import axios from "axios";
-import { getUsernameFromToken } from "../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../authToken";
 import { Select } from "antd";
 import StudentDashboardSkeleton from "../../skeleton/StudentDashboardSkeleton";
 
@@ -28,7 +28,7 @@ const DashboardDetails = () => {
     const fetchedUsername = getUsernameFromToken();
     setLoading(true);
     axios
-      .get(`http://localhost:1818/students/gs/${fetchedUsername}`, {
+      .get(`${BASE_URL}/students/gs/${fetchedUsername}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -37,19 +37,19 @@ const DashboardDetails = () => {
       });
 
     axios
-      .get(`http://localhost:1818/tasks/count/${fetchedUsername}/TO_DO`, {
+      .get(`${BASE_URL}/tasks/count/${fetchedUsername}/TO_DO`, {
         withCredentials: true,
       })
       .then((res) => setTodo(res.data));
 
     axios
-      .get(`http://localhost:1818/tasks/count/${fetchedUsername}/IN_PROGRESS`, {
+      .get(`${BASE_URL}/tasks/count/${fetchedUsername}/IN_PROGRESS`, {
         withCredentials: true,
       })
       .then((res) => setInProgress(res.data));
 
     axios
-      .get(`http://localhost:1818/tasks/count/${fetchedUsername}/COMPLETED`, {
+      .get(`${BASE_URL}/tasks/count/${fetchedUsername}/COMPLETED`, {
         withCredentials: true,
       })
       .then((res) => setCompleted(res.data))

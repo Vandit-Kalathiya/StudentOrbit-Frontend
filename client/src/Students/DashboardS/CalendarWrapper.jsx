@@ -1,9 +1,9 @@
 import { Calendar } from "antd";
-import { CheckCircleOutlined, TaobaoSquareFilled } from "@ant-design/icons";
+import { CheckCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import axios from "axios";
-import { getUsernameFromToken } from '../../../authToken';
+import { BASE_URL, getUsernameFromToken } from '../../../authToken';
 
 
 const CalendarWrapper = ({ onPanelChange }) => {
@@ -11,7 +11,7 @@ const CalendarWrapper = ({ onPanelChange }) => {
 
   useEffect(() => {
     const fetchedUsername = getUsernameFromToken();
-    axios.get(`http://localhost:1818/tasks/s/${fetchedUsername}`,{ withCredentials: true, })
+    axios.get(`${BASE_URL}/tasks/s/${fetchedUsername}`,{ withCredentials: true, })
       .then((res) => {
         setCompletedTasks(res.data)
       })

@@ -3,7 +3,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { getRole } from "../../../../../authToken";
+import { BASE_URL, getRole } from "../../../../../authToken";
 
 const FacultyComments = ({ taskId }) => {
   const [comments, setComments] = useState([]);
@@ -14,7 +14,7 @@ const FacultyComments = ({ taskId }) => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `http://localhost:1818/tasks/comments/${taskId}`,
+        `${BASE_URL}/tasks/comments/${taskId}`,
         { withCredentials: true }
       );
       setComments(response.data);
@@ -33,7 +33,7 @@ const FacultyComments = ({ taskId }) => {
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:1818/comment/${commentId}/${taskId}`,
+        `${BASE_URL}/comment/${commentId}/${taskId}`,
         { withCredentials: true }
       );
 

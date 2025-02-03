@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckCircleOutlined, PlusCircleOutlined, SyncOutlined } from "@ant-design/icons";
 
 const cardData = [

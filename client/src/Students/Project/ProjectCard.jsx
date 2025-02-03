@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ProjectCardItem from "./ProjectCardItem";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { getUsernameFromToken } from "../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../authToken";
 import ProjectCardSkeleton from "../../skeleton/ProjectCardSkeleton";
 
 const ProjectCard = () => {
@@ -13,7 +13,7 @@ const ProjectCard = () => {
     const fetchedUsername = getUsernameFromToken();
     setLoading(true);
     axios
-      .get(`http://localhost:1818/students/g/${fetchedUsername}`, {
+      .get(`${BASE_URL}/students/g/${fetchedUsername}`, {
         withCredentials: true,
       })
       .then((res) => {

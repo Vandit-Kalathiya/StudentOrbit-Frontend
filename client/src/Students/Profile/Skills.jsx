@@ -10,7 +10,7 @@ import {
   FaJs,
   FaJava,
 } from "react-icons/fa";
-import { getUsernameFromToken } from "../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../authToken";
 
 function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill }) {
   // const [skills, setSkills] = useState([]);
@@ -30,7 +30,7 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
   const fetchedUsername = getUsernameFromToken();
 
   useEffect(() => {
-    axios.get(`http://localhost:1818/students/skills/${fetchedUsername}`, { withCredentials: true, })
+    axios.get(`${BASE_URL}/students/skills/${fetchedUsername}`, { withCredentials: true, })
       .then((res) => {
         const demo = res.data;
         // console.log(demo);
@@ -43,7 +43,7 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
 
   // useEffect(() => {
   //   const username = localStorage.getItem("username")
-  //   axios.get(`http://localhost:1818/students/skills/${username}`)
+  //   axios.get(`${BASE_URL}/students/skills/${username}`)
   //     .then((res) => {
   //       const demo = res.data;
   //       setSkills(demo);
@@ -53,7 +53,7 @@ function Skills({ openAddSkillModal, skills, setSkills, newSkill, setNewSkill })
   // }, [skills])
 
   const removeSkill = (skillToRemove) => {
-    axios.delete(`http://localhost:1818/students/skills/${fetchedUsername}/${skillToRemove}`, { withCredentials: true, })
+    axios.delete(`${BASE_URL}/students/skills/${fetchedUsername}/${skillToRemove}`, { withCredentials: true, })
       .then((res) => {
         setSkills(res.data)
       })

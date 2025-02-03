@@ -1,7 +1,7 @@
 import { Modal, Form, Input, Select, Button } from "antd";
 import axios from "axios";
 import { useState } from "react";
-import { getUsernameFromToken } from "../../../../authToken";
+import { getUsernameFromToken, BASE_URL } from "../../../../authToken";
 
 const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
   const [batchName, setBatchName] = useState("");
@@ -36,7 +36,7 @@ const AddBatchModal = ({ visible, onCancel, form, onBatchAdded }) => {
     console.log(batchData);
 
     try {
-      const response = await axios.post("http://localhost:1818/faculty/batches/add", batchData, {
+      const response = await axios.post(`${BASE_URL}/faculty/batches/add`, batchData, {
         withCredentials: true,
       });
       onBatchAdded(response.data);

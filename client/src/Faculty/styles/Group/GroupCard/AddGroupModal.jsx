@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { openNotification } from "../../../../Utils/Notification";
 import moment from "moment/moment";
+import { BASE_URL } from "../../../../../authToken";
 
 const { TextArea } = Input;
 
@@ -32,7 +33,7 @@ const AddGroupModal = ({ visible, onClose, batch, onGroupAdded }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:1818/faculty/groups/create",
+        `${BASE_URL}/faculty/groups/create`,
         groupData,
         {
           withCredentials: true,

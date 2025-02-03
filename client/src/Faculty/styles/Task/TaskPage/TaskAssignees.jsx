@@ -3,6 +3,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "../../../../../authToken";
 
 const colorCombinations = [
   { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" }, // Coral
@@ -17,7 +18,7 @@ const TaskAssignees = ({ assignees, showModal, taskId }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/tasks/assignees/${taskId}`, { withCredentials: true })
+      .get(`${BASE_URL}/tasks/assignees/${taskId}`, { withCredentials: true })
       .then((res) => {
         setAssigneeMembers(res.data);
       })
@@ -28,7 +29,7 @@ const TaskAssignees = ({ assignees, showModal, taskId }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/tasks/assignees/${taskId}`, { withCredentials: true })
+      .get(`${BASE_URL}/tasks/assignees/${taskId}`, { withCredentials: true })
       .then((res) => {
         setAssigneeMembers(res.data);
       })

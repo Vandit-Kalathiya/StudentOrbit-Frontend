@@ -1,4 +1,3 @@
-import { GithubOutlined, LinkedinOutlined } from "@ant-design/icons";
 import { FaGithubSquare, FaLinkedin } from "react-icons/fa";
 
 const SocialLinks = ({ student }) => {

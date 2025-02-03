@@ -2,7 +2,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import GroupLeft from "./GroupLeft";
 import GroupRight from "./GroupRight/GroupRight";
-import { getUsernameFromToken } from "../../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../../authToken";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import GroupSkeleton from "../../../skeleton/GroupSkeleton";
@@ -32,7 +32,7 @@ function GroupDetailsNew({ collapsed }) {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`, {
+      .get(`${BASE_URL}/faculty/groups/g/${project.groupName}`, {
         withCredentials: true,
       })
       .then((res) => {

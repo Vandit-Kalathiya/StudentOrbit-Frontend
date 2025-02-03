@@ -1,6 +1,7 @@
 import { Card, Table, Avatar, Progress, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '../../../authToken';
 
 const colorStyles = {
   coral: { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" },
@@ -19,10 +20,10 @@ const WorkloadCard = ({ members }) => {
     const fetchProgress = async () => {
       const data = await Promise.all(members.map(async (member) => {
         // Fetch task counts for each member
-        const todoCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/TO_DO`, { withCredentials: true, });
-        const inProgressCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/IN_PROGRESS`, { withCredentials: true, });
-        const completedCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/COMPLETED`, { withCredentials: true, });
-        const inReviewCount = await axios.get(`http://localhost:1818/tasks/count/${member.username}/IN_REVIEW`, { withCredentials: true, });
+        const todoCount = await axios.get(`${BASE_URL}/tasks/count/${member.username}/TO_DO`, { withCredentials: true, });
+        const inProgressCount = await axios.get(`${BASE_URL}/tasks/count/${member.username}/IN_PROGRESS`, { withCredentials: true, });
+        const completedCount = await axios.get(`${BASE_URL}/tasks/count/${member.username}/COMPLETED`, { withCredentials: true, });
+        const inReviewCount = await axios.get(`${BASE_URL}/tasks/count/${member.username}/IN_REVIEW`, { withCredentials: true, });
 
         const totalTasks = todoCount.data + inProgressCount.data + completedCount.data + inReviewCount.data;
         const progress = totalTasks > 0 ? (completedCount.data / totalTasks) * 100 : 0;

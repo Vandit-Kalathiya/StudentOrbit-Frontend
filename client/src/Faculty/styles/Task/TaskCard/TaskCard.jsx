@@ -9,9 +9,14 @@ import TaskCompletionModal from "./TaskCompletionModal";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Button, Modal } from "antd";
-import { DeleteOutlined, EditOutlined, TrophyOutlined } from "@ant-design/icons";
-import { adminRole, getRole } from "../../../../../authToken";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  TrophyOutlined,
+} from "@ant-design/icons";
+import { adminRole, BASE_URL, getRole } from "../../../../../authToken";
 import EditTaskModal from "./EditTaskModal";
+import RubricScoreDrawer from "./RubricScoreDrawer";
 
 const TaskCard = ({
   singleTask,
@@ -28,13 +33,13 @@ const TaskCard = ({
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+  const [isRubricsVisible, setIsRubricsVisible] = useState(false);
   const role = getRole();
 
   let currentWeek = week.length === 5 ? week.slice(4, 5) : week.slice(4, 6);
   currentWeek = parseInt(currentWeek[0], 10); // Base 10
 
   useEffect(() => {
-    // Update local state when singleTask prop changes
     setTask(singleTask);
     setCurrentAssignees(singleTask.assignee);
   }, [singleTask]);
@@ -42,7 +47,7 @@ const TaskCard = ({
   const handleAssign = async (assigneeIds, taskId) => {
     try {
       const res = await axios.post(
-        `http://localhost:1818/tasks/${taskId}`,
+        `${BASE_URL}/tasks/${taskId}`,
         assigneeIds,
         { withCredentials: true }
       );
@@ -52,7 +57,7 @@ const TaskCard = ({
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-        "An error occurred while assigning tasks."
+          "An error occurred while assigning tasks."
       );
     }
   };
@@ -82,7 +87,7 @@ const TaskCard = ({
     try {
       updatedTask = { ...updatedTask, taskStatus: task.status };
       const response = await axios.put(
-        `http://localhost:1818/tasks/${task.id}`,
+        `${BASE_URL}/tasks/${task.id}`,
         updatedTask,
         { withCredentials: true }
       );
@@ -94,7 +99,7 @@ const TaskCard = ({
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-        "An error occurred while updating the task."
+          "An error occurred while updating the task."
       );
     }
   };
@@ -117,7 +122,7 @@ const TaskCard = ({
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:1818/tasks/${task.id}/${groupId}/${currentWeek}`,
+        `${BASE_URL}/tasks/${task.id}/${groupId}/${currentWeek}`,
         {
           withCredentials: true,
         }
@@ -128,7 +133,7 @@ const TaskCard = ({
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-        "An error occurred while deleting the task."
+          "An error occurred while deleting the task."
       );
     }
   };
@@ -174,9 +179,15 @@ const TaskCard = ({
             </div>
           )}
         {task.status === "COMPLETED" && (
-          <div className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-700 text-white p-2 rounded-lg shadow-lg">
+          <div
+            className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-700 text-white p-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-600 transition-all"
+            onClick={() => setIsRubricsVisible(true)}
+          >
             <TrophyOutlined style={{ fontSize: "16px", color: "gold" }} />
-            <span className="text-xs font-bold">21 / 28</span>
+            <span className="text-xs font-bold">
+              {/* {task.totalScore} / {task.maxScore} */}
+              21/28
+            </span>
           </div>
         )}
       </div>
@@ -226,6 +237,12 @@ const TaskCard = ({
         onSave={saveTask}
         task={task}
       />
+
+      {isRubricsVisible && (
+        <RubricScoreDrawer isRubricsVisible={isRubricsVisible} setIsRubricsVisible={setIsRubricsVisible} />
+      )}
+
+      
     </motion.div>
   );
 };

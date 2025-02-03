@@ -1,5 +1,3 @@
-// BatchProgressChart.js
-import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,7 +9,6 @@ import {
   Legend,
 } from "chart.js";
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,7 +19,6 @@ ChartJS.register(
 );
 
 const BatchProgressChart = ({ batchData }) => {
-  // Define colors for each batch
   const colors = [
     "rgba(255, 99, 132, 0.6)",  // Red
     "rgba(54, 162, 235, 0.6)",  // Blue
@@ -38,8 +34,8 @@ const BatchProgressChart = ({ batchData }) => {
       {
         label: "Progress (%)",
         data: batchData.map((batch) => batch.progress),
-        backgroundColor: colors.slice(0, batchData.length), // Unique color per batch
-        borderColor: colors.map((color) => color.replace("0.6", "1")), // Darker border
+        backgroundColor: colors.slice(0, batchData.length), 
+        borderColor: colors.map((color) => color.replace("0.6", "1")),
         borderWidth: 1,
       },
     ],
@@ -55,7 +51,7 @@ const BatchProgressChart = ({ batchData }) => {
             const defaultLabels = chart.data.labels || [];
             return defaultLabels.map((label, index) => ({
               text: label,
-              fillStyle: colors[index % colors.length], // Cycle through colors
+              fillStyle: colors[index % colors.length], 
             }));
           },
         },
@@ -83,7 +79,7 @@ const BatchProgressChart = ({ batchData }) => {
           callback: (val, index) => {
             return batchData[index].name;
           },
-          color: (context) => colors[context.index % colors.length], // Apply color to each label
+          color: (context) => colors[context.index % colors.length], 
         },
       },
     },

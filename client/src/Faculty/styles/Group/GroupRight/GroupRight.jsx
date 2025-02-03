@@ -5,6 +5,7 @@ import TaskModal from "./TaskModal";
 import { Form } from "antd";
 import axios from "axios";
 import useLenisScroll from "../../../../Hooks/useLenisScroll";
+import { BASE_URL } from "../../../../../authToken";
 
 
 function GroupRight({ project }) {
@@ -25,7 +26,7 @@ function GroupRight({ project }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${project.groupName}`,{withCredentials: true})
+      .get(`${BASE_URL}/faculty/groups/g/${project.groupName}`,{withCredentials: true})
       .then((res) => {        
         setWeekTasks(res.data.weeks);
       });

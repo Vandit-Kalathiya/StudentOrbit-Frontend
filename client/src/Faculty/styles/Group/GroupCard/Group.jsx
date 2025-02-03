@@ -4,6 +4,7 @@ import GroupHeader from "./GroupHeader";
 import GroupList from "./GroupList";
 import axios from "axios";
 import SkeletonCardGrid from "../../../../skeleton/SkeletonCardGrid";
+import { BASE_URL } from "../../../../../authToken";
 
 const Group = () => {
   const [data, setData] = useState([]);
@@ -13,7 +14,7 @@ const Group = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:1818/faculty/groups/b/${batch}`, {
+      .get(`${BASE_URL}/faculty/groups/b/${batch}`, {
         withCredentials: true,
       })
       .then((res) => {

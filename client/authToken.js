@@ -67,3 +67,9 @@ export const getRole = () => {
 
 
 export const adminRole = "admin";
+
+export const BASE_URL = "http://localhost:1818"
+
+export const REPORT_URL = "http://localhost:1819"
+
+export const FILE_URL = "http://localhost:1820"

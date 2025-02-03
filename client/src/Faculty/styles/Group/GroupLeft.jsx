@@ -12,7 +12,7 @@ import {
 import { PlusOutlined, EditOutlined, CloseOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
-import { adminRole, getRole } from "../../../../authToken";
+import { adminRole, BASE_URL, getRole } from "../../../../authToken";
 import toast from "react-hot-toast";
 
 const colorCombinations = [
@@ -87,7 +87,7 @@ function GroupLeft({ projectName }) {
     }
 
     axios
-      .delete(`http://localhost:1818/tech/delete/${project.id}`, {
+      .delete(`${BASE_URL}/tech/delete/${project.id}`, {
         data: technologiesToDelete,
         withCredentials: true,
       })
@@ -117,7 +117,7 @@ function GroupLeft({ projectName }) {
 
     axios
       .post(
-        `http://localhost:1818/tech/add/${project.id}`,
+        `${BASE_URL}/tech/add/${project.id}`,
         name,
         {
           withCredentials: true,
@@ -142,14 +142,14 @@ function GroupLeft({ projectName }) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:1818/faculty/all", { withCredentials: true })
+      .get(`${BASE_URL}/faculty/all`, { withCredentials: true })
       .then((response) => setMentors(response.data))
       .catch((error) => console.error("Failed to fetch mentors:", error));
   }, []);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, {
+      .get(`${BASE_URL}/faculty/groups/g/${projectName}`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -171,7 +171,7 @@ function GroupLeft({ projectName }) {
       onOk: () => {
         axios
           .post(
-            `http://localhost:1818/faculty/mentor/${selectedMentor}/${project.id}`,
+            `${BASE_URL}/faculty/mentor/${selectedMentor}/${project.id}`,
             null,
             { withCredentials: true }
           )
@@ -231,7 +231,7 @@ function GroupLeft({ projectName }) {
       onOk: () => {
         axios
           .put(
-            `http://localhost:1818/faculty/groups/complete/${project.id}`,
+            `${BASE_URL}/faculty/groups/complete/${project.id}`,
             {},
             { withCredentials: true }
           )
@@ -256,7 +256,7 @@ function GroupLeft({ projectName }) {
     memberUsername.push(username);
     axios
       .post(
-        `http://localhost:1818/faculty/groups/add/member/${project.id}`,
+        `${BASE_URL}/faculty/groups/add/member/${project.id}`,
         memberUsername,
         {
           withCredentials: true,

@@ -8,7 +8,7 @@ const RubricGradingModal = ({
   handleOk,
   handleGeneralCommentChange,
   generalComment,
-  taskId
+  taskId,
 }) => {
   const [grades, setGrades] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -47,7 +47,7 @@ const RubricGradingModal = ({
       setIsSubmitted(true);
       return;
     }
-    
+
     const response = {
       grades: criteria.map((criterion) => ({
         criterion: criterion.label,
@@ -59,12 +59,12 @@ const RubricGradingModal = ({
       totalScore: calculateTotalScore(),
       maxScore: criteria.length * 4,
       generalComment: generalComment,
-      taskId
+      taskId,
     };
 
     console.log(response);
 
-    // handleOk(grades);
+    handleOk(grades);
   };
 
   return (
@@ -120,7 +120,7 @@ const RubricGradingModal = ({
         </Text>
       )}
 
-      <div className="mt-2 font-poppins">
+      <div className="mt-4 font-poppins">
         <Text strong>Remark:</Text>
         <Input.TextArea
           value={generalComment}
@@ -132,21 +132,23 @@ const RubricGradingModal = ({
       </div>
 
       {/* Total score */}
-      <div className="text-right mt-2 font-poppins">
-        <Text strong className="text-lg">
-          Total Score: {calculateTotalScore()} / {criteria.length * 4}
-        </Text>
-      </div>
+      <div className="flex justify-between mt-5">
+        <div className="text-left mt-2 font-poppins">
+          <Text strong className="text-lg">
+            Total Score: {calculateTotalScore()} / {criteria.length * 4}
+          </Text>
+        </div>
 
-      {/* Submit button */}
-      <div className="flex justify-end mt-2 font-poppins">
-        <Button
-          className="bg-green-500 text-white font-poppins"
-          onClick={handleSubmit}
-          disabled={!isAllCriteriaGraded()}
-        >
-          Complete
-        </Button>
+        {/* Submit button */}
+        <div className="flex justify-end mt-2 font-poppins">
+          <Button
+            className="bg-green-500 text-white font-poppins"
+            onClick={handleSubmit}
+            disabled={!isAllCriteriaGraded()}
+          >
+            Complete
+          </Button>
+        </div>
       </div>
     </div>
   );

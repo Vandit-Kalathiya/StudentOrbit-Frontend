@@ -1,8 +1,8 @@
-import { message, Modal, Button } from "antd";
+import { Modal, Button } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { adminRole, getRole } from "../../../../../authToken";
+import { adminRole, getRole, BASE_URL } from "../../../../../authToken";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -22,7 +22,7 @@ const Banner = ({ project, batch }) => {
 
   const handleDelete = () => {
     // onDelete(batch);
-    axios.delete(`http://localhost:1818/faculty/groups/${project.id}`, { withCredentials: true })
+    axios.delete(`${BASE_URL}/faculty/groups/${project.id}`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data);
       })

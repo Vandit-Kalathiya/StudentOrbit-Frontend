@@ -7,7 +7,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import { openNotification } from "../../../Utils/Notification";
-import { getUsernameFromToken } from "../../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../../authToken";
 import SkeletonCardGrid from "../../../skeleton/BatchCardSkeleton";
 
 const containerVariants = {
@@ -33,7 +33,7 @@ const Batch = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:1818/faculty/batches/b/${fetchedUsername}`,
+          `${BASE_URL}/faculty/batches/b/${fetchedUsername}`,
           { withCredentials: true }
         );
         const demo = response.data;
@@ -105,8 +105,6 @@ const Batch = () => {
       </div>
       {loading ? (
         <div className="text-center h-10">
-          {/* <Loader /> */}
-          {/* <Skeleton active avatar={{ shape: "circle" }} paragraph={{ rows: 2 }} /> */}
           <SkeletonCardGrid />
         </div>
       ) : data.length === 0 ? (

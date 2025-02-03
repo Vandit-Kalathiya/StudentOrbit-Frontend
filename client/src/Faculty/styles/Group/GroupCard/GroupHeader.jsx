@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 
-const GroupHeader = ({ batch, onGroupAdded, date }) => {
+const GroupHeader = ({ batch, onGroupAdded }) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => setShowModal(true);

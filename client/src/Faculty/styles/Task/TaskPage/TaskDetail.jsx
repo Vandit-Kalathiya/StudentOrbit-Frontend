@@ -8,11 +8,11 @@ import FacultyComments from "./FacultyComments";
 import AssigneesModal from "./AssigneesModal";
 import axios from "axios";
 import TaskDetailSkeleton from "../../../../skeleton/TaskDetailSkeleton";
-import { Card, Typography, Button, List } from "antd";
-import { FileTextOutlined, DownloadOutlined } from "@ant-design/icons";
+import { Card, Typography } from "antd";
 import SubmittedFiles from "./SubmittedFiles";
+import { BASE_URL } from "../../../../../authToken";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 function TaskDetail() {
   const location = useLocation();
@@ -30,7 +30,7 @@ function TaskDetail() {
 
   const handleAssign = (assigneeIds) => {
     axios
-      .post(`http://localhost:1818/tasks/${task.id}`, assigneeIds, { withCredentials: true })
+      .post(`${BASE_URL}/tasks/${task.id}`, assigneeIds, { withCredentials: true })
       .then((res) => {
         setAssigneeMembers(res.data.assignee);
       })
@@ -38,37 +38,6 @@ function TaskDetail() {
         console.log(error);
       });
   };
-
-  // Example data for submitted files
-  const submittedFiles = [
-    {
-      id: 1,
-      name: "Project_Report.pdf",
-      type: "pdf",
-      url: "#",
-      description: "Final project report with all details and analysis.",
-      reviewLink: "https://example.com/review/1",
-      uploadedAt: "2023-11-01",
-    },
-    {
-      id: 2,
-      name: "Presentation_Slides.pptx",
-      type: "ppt",
-      url: "#",
-      description: "Slides for the final project presentation.",
-      reviewLink: "https://example.com/review/2",
-      uploadedAt: "2023-11-02",
-    },
-    {
-      id: 3,
-      name: "Design_Mockup.png",
-      type: "png",
-      url: "#",
-      description: "High-fidelity design mockup for the project.",
-      reviewLink: "https://example.com/review/3",
-      uploadedAt: "2023-11-03",
-    },
-  ];
 
   const showModal = () => {
     setIsModalVisible(true);

@@ -7,7 +7,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 const TodoList = ({ projects }) => {
   const currentDate = moment();
 
-  // Prepare the todo list data
   const todoListData = projects
     .flatMap((project) =>
       project.weeks.flatMap((week) => {
@@ -49,7 +48,6 @@ const TodoList = ({ projects }) => {
         </div>
         <div>
           <button className="bg-blue-100 text-[0.7rem] md:text-sm text-blue-600 font-semibold rounded-md px-2 py-1 md:px-4 md:py-2 md:mr-2 ml-2">
-            {/* {todoListData.length} Tasks */}
             {todoListData.length == 1 ? `${todoListData.length} Task` : `${todoListData.length} Tasks`}
           </button>
         </div>

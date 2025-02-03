@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { getTokenFromCookie } from '../../../../authToken';
+import { BASE_URL, getTokenFromCookie } from '../../../../authToken';
 
 const MenuList = ({ darkTheme, setLoginStatus }) => {
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(false);
@@ -35,7 +35,7 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
 
   const handleLogout = () => {
     axios
-      .post("http://localhost:1818/auth/logout", null, {
+      .post(`${BASE_URL}/auth/logout`, null, {
         withCredentials: true,
         headers:{
           Authorization:"Bearer " + getTokenFromCookie()

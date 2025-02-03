@@ -1,7 +1,7 @@
 import { CheckCircleOutlined, SyncOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { getUsernameFromToken } from "../../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../../authToken";
 
 const cardData = [
   {
@@ -30,7 +30,7 @@ const CardList = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/batches/g/${fetchedUsername}`, { withCredentials: true })
+      .get(`${BASE_URL}/faculty/batches/g/${fetchedUsername}`, { withCredentials: true })
       .then((res) => {
         const tasksInReview = [];
         const tasksCompleted = [];

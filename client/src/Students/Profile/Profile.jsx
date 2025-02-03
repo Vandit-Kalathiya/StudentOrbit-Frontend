@@ -10,7 +10,7 @@ import Mentors from "./Mentors";
 import Projects from "./Projects";
 import { MdOutlineEdit } from "react-icons/md";
 import axios from "axios";
-import { getUsernameFromToken } from "../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../authToken";
 import ProfileSkeleton from "../../skeleton/ProfileSkeleton";
 
 const containerVariants = {
@@ -51,7 +51,7 @@ function Profile() {
   useEffect(() => {
     setLoadings(true);
     axios
-      .get(`http://localhost:1818/students/u/${fetchedUsername}`, {
+      .get(`${BASE_URL}/students/u/${fetchedUsername}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -59,7 +59,7 @@ function Profile() {
       })
       .catch(() => console.log("Error while fetching user data"));
     axios
-      .get(`http://localhost:1818/students/${fetchedUsername}/image`, {
+      .get(`${BASE_URL}/students/${fetchedUsername}/image`, {
         withCredentials: true,
         responseType: "blob",
       })
@@ -71,7 +71,7 @@ function Profile() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/students/${getUsernameFromToken()}/image`, {
+      .get(`${BASE_URL}/students/${getUsernameFromToken()}/image`, {
         withCredentials: true,
         responseType: "blob",
       })
@@ -106,7 +106,7 @@ function Profile() {
     if (newSkill) {
       t.push(newSkill);
       axios
-        .post(`http://localhost:1818/students/skills/${fetchedUsername}`, t, {
+        .post(`${BASE_URL}/students/skills/${fetchedUsername}`, t, {
           withCredentials: true,
         })
         .then((res) => {
@@ -130,7 +130,7 @@ function Profile() {
     );
     axios
       .put(
-        `http://localhost:1818/students/profile/${fetchedUsername}`,
+        `${BASE_URL}/students/profile/${fetchedUsername}`,
         formData,
         {
           withCredentials: true,

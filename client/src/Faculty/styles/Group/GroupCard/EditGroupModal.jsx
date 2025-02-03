@@ -1,6 +1,7 @@
 import { Button, Form, Input, Modal } from "antd";
 import axios from "axios";
 import PropTypes from "prop-types";
+import { BASE_URL } from "../../../../../authToken";
 
 const { TextArea } = Input;
 
@@ -26,7 +27,7 @@ const EditGroupModal = ({
 
     try {
       const res = await axios.put(
-        `http://localhost:1818/faculty/groups/update/${initialGroupData.id}`,
+        `${BASE_URL}/faculty/groups/update/${initialGroupData.id}`,
         updatedGroupData,
         {
           withCredentials: true,

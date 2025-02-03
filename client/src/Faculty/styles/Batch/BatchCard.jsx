@@ -1,7 +1,7 @@
 import { Card, Button, Modal, Form, Input, message } from "antd";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { adminRole, getRole } from "../../../../authToken";
+import { adminRole, BASE_URL, getRole } from "../../../../authToken";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
 
@@ -13,7 +13,7 @@ const   BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:1818/faculty/batches/${id}`, {
+      .delete(`${BASE_URL}/faculty/batches/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -26,7 +26,7 @@ const   BatchCard = ({ batch, sem, id1, id2, id, setTemp }) => {
   };
 
   // useEffect(() => {
-  //   axios.get(`http://localhost:1818/faculty/batches/${id}`)
+  //   axios.get(`${BASE_URL}/faculty/batches/${id}`)
   //     .then((res) => {
   //       console.log(res.data);
   //     })

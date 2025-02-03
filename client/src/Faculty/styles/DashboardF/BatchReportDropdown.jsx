@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Select, Button, Input, Checkbox, Form } from "antd";
 import axios from "axios";
-import { getUsernameFromToken } from "../../../../authToken";
+import { BASE_URL, getUsernameFromToken, REPORT_URL } from "../../../../authToken";
 import { ThreeDots } from "react-loader-spinner";
 
 const { Option } = Select;
@@ -26,7 +26,7 @@ const BatchReportDropdown = () => {
     const fetchBatches = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:1818/faculty/batches/b/${fetchedUsername}`,
+          `${BASE_URL}/faculty/batches/b/${fetchedUsername}`,
           { withCredentials: true }
         );
         setBatch(response.data);
@@ -45,7 +45,7 @@ const BatchReportDropdown = () => {
         try {
           setFetching("Fetching the Projects...");
           const response = await axios.get(
-            `http://localhost:1818/students/g/${studentId.toUpperCase()}`,
+            `${BASE_URL}/students/g/${studentId.toUpperCase()}`,
             { withCredentials: true }
           );
           if (response.data?.length === 0) {
@@ -68,7 +68,7 @@ const BatchReportDropdown = () => {
         try {
           setFetching("Fetching the Projects...");
           const response = await axios.get(
-            `http://localhost:1818/faculty/batches/allGroups/${selectedBatch[0]}/${selectedBatch.slice(1, 3)}`,
+            `${BASE_URL}/faculty/batches/allGroups/${selectedBatch[0]}/${selectedBatch.slice(1, 3)}`,
             { withCredentials: true }
           );
           setProjects(response.data);
@@ -90,7 +90,7 @@ const BatchReportDropdown = () => {
         try {
           setWeekFetching("Fetching Weeks...");
           const response = await axios.get(
-            `http://localhost:1818/faculty/groups/week/${selectedProject}`,
+            `${BASE_URL}/faculty/groups/week/${selectedProject}`,
             { withCredentials: true }
           );
           setCurrentWeek(response.data);
@@ -138,7 +138,7 @@ const BatchReportDropdown = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:1819/pdf/create`,
+        `${REPORT_URL}/pdf/create`,
         pdfGenerateRequest,
         { responseType: "blob", withCredentials: true }
       );

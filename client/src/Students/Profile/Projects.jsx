@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { getUsernameFromToken } from "../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../authToken";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -12,7 +12,7 @@ function Projects() {
     const fetchedUsername = getUsernameFromToken();
 
     axios
-      .get(`http://localhost:1818/students/g/${fetchedUsername}`, {
+      .get(`${BASE_URL}/students/g/${fetchedUsername}`, {
         withCredentials: true,
       })
       .then((res) => {

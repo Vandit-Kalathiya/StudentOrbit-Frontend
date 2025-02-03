@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { NavLink, useNavigate, useLocation, matchPath } from "react-router-dom";
 import axios from "axios";
-import { getTokenFromCookie } from "../../authToken";
+import { BASE_URL, getTokenFromCookie } from "../../authToken";
 
 const MenuList = ({ darkTheme, setLoginStatus }) => {
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
@@ -19,7 +19,7 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:1818/auth/logout", null, {
+      await axios.post(`${BASE_URL}/auth/logout`, null, {
         withCredentials: true,
         headers:{
           Authorization:"Bearer " + getTokenFromCookie()
@@ -82,7 +82,7 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
         theme={darkTheme ? "dark" : "light"}
         mode="inline"
         selectedKeys={[selectedKey]}
-        items={menuItems} // Using the items prop instead of children
+        items={menuItems} 
         className="min-h-[100vh] mt-0 flex flex-col gap-[15px] text-[1rem] relative"
       />
 

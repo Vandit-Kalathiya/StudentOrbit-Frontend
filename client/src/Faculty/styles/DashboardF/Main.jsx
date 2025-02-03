@@ -5,7 +5,7 @@ import CardList from "../DashboardF/CardList";
 import BatchReportDropdown from "./BatchReportDropdown";
 import MarksReportDropdown from "./MarksReportDropDown";
 import axios from "axios";
-import { getUsernameFromToken } from "../../../../authToken";
+import { BASE_URL, getUsernameFromToken } from "../../../../authToken";
 import { Skeleton } from "antd";
 import SkeletonLoader from "../../../skeleton/SkeletonLoader";
 
@@ -20,7 +20,7 @@ function Main() {
     setLoading(true);
     axios
       .get(
-        `http://localhost:1818/faculty/batches/g/${getUsernameFromToken()}`,
+        `${BASE_URL}/faculty/batches/g/${getUsernameFromToken()}`,
         { withCredentials: true }
       )
       .then((res) => {

@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Modal, Input, message } from "antd";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { getUsernameFromToken } from "../../../../../authToken";
+import { BASE_URL, FILE_URL, getUsernameFromToken } from "../../../../../authToken";
+import Confetti from 'react-confetti'; 
 
 const TaskActions = ({
   status,
@@ -18,6 +19,7 @@ const TaskActions = ({
   const [reviewLink, setReviewLink] = useState("");
   const [assigneeMembers, setAssigneeMembers] = useState(assignees);
   const [taskDescription, setTaskDescription] = useState('');
+  const [isCelebrating, setIsCelebrating] = useState(false);
 
   const location = useLocation();
   const [file, setFile] = useState(null);
@@ -44,10 +46,10 @@ const TaskActions = ({
       taskId: taskId,
     };
     axios
-      .post("http://localhost:1818/comment/add", commentRequest, { withCredentials: true })
+      .post(`${BASE_URL}/comment/add`, commentRequest, { withCredentials: true })
       .then(() => {
         axios
-          .get(`http://localhost:1818/tasks/assignees/${taskId}`, { withCredentials: true })
+          .get(`${BASE_URL}/tasks/assignees/${taskId}`, { withCredentials: true })
           .then((res) => {
             setAssigneeMembers(res.data);
           })
@@ -87,9 +89,8 @@ const TaskActions = ({
     }
 
     try {
-      // If a file is present, upload it
       if (file) {
-        const response = await axios.post(`http://localhost:1820/upload/${taskId}`, formData, {
+        const response = await axios.post(`${FILE_URL}/upload/${taskId}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -102,6 +103,10 @@ const TaskActions = ({
       // Update task status after uploading the file (if any)
       await updateTaskStatus(taskId, "IN_REVIEW", assignees);
 
+      // Trigger celebration animation
+      setIsCelebrating(true);
+      setTimeout(() => setIsCelebrating(false), 5000); // Stop after 5 seconds
+
     } catch (error) {
       console.error("File upload or task update failed:", error);
       message.error("Failed to upload file or update task. Please try again.");
@@ -111,7 +116,6 @@ const TaskActions = ({
     setReviewLink("");
     setFile(null);
   };
-
 
   const handleCancelLink = () => {
     setIsLinkModalVisible(false);
@@ -125,6 +129,8 @@ const TaskActions = ({
 
   return (
     <div className="flex justify-between items-center">
+      {isCelebrating && <Confetti />} 
+
       {status !== "COMPLETED" ? (
         <>
           {status === "TO_DO" && !isFacultyRoute && (
@@ -191,7 +197,7 @@ const TaskActions = ({
         open={isLinkModalVisible}
         onOk={handleOkLink}
         onCancel={handleCancelLink}
-        className=" font-poppins"
+        className="font-poppins"
       >
         <Input
           value={reviewLink}

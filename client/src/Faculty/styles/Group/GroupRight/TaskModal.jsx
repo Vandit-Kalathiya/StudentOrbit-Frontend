@@ -3,6 +3,7 @@ import { Modal, Form, Input } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { BASE_URL } from "../../../../../authToken";
 
 const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, currentWeekId }) => {
   const [tasks, setTasks] = useState({
@@ -16,7 +17,7 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, currentWeekId })
 
   useEffect(() => {
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName}`,{ withCredentials: true})
+      .get(`${BASE_URL}/faculty/groups/g/${projectName}`,{ withCredentials: true})
       .then((res) => {
         const demo = res.data;
         setProjectData(demo);
@@ -42,7 +43,7 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, currentWeekId })
       }
 
       const res = await axios.post(
-        `http://localhost:1818/tasks/add/${projectData.id}/${currentWeekId}`,
+        `${BASE_URL}/tasks/add/${projectData.id}/${currentWeekId}`,
         tasks,
         {
           withCredentials: true,
@@ -52,7 +53,7 @@ const TaskModal = ({ isModalOpen, handleOk, handleCancel, form, currentWeekId })
       console.log("Task added successfully");
 
       axios
-        .get(`http://localhost:1818/faculty/groups/g/${projectName}`, { withCredentials: true })
+        .get(`${BASE_URL}/faculty/groups/g/${projectName}`, { withCredentials: true })
         .then((res) => {
           const demo = res.data;
           handleOk(demo);

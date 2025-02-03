@@ -6,7 +6,7 @@ import axios from "axios";
 import { openNotification } from "../../../../Utils/Notification";
 import { Plus } from "lucide-react";
 import TaskModal from "../../Group/GroupRight/TaskModal";
-import { getRole } from "../../../../../authToken";
+import { BASE_URL, getRole } from "../../../../../authToken";
 import TaskSkeletonList from "../../../../skeleton/TaskSkeleton";
 
 const ToDoPage = () => {
@@ -25,7 +25,7 @@ const ToDoPage = () => {
   const fetchTasks = () => {
     setLoading(true);
     axios
-      .get(`http://localhost:1818/faculty/groups/g/${projectName}`, {
+      .get(`${BASE_URL}/faculty/groups/g/${projectName}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -83,7 +83,7 @@ const ToDoPage = () => {
   const changeStatus = async (id, status) => {
     await axios
       .post(
-        `http://localhost:1818/tasks/${id}/${status}`,
+        `${BASE_URL}/tasks/${id}/${status}`,
         {},
         { withCredentials: true }
       )
