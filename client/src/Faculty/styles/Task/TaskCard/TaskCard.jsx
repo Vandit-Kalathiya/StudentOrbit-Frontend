@@ -17,6 +17,7 @@ import {
 import { adminRole, BASE_URL, getRole } from "../../../../../authToken";
 import EditTaskModal from "./EditTaskModal";
 import RubricScoreDrawer from "./RubricScoreDrawer";
+import { openNotification } from "../../../../Utils/Notification";
 
 const TaskCard = ({
   singleTask,
@@ -57,7 +58,7 @@ const TaskCard = ({
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "An error occurred while assigning tasks."
+        "An error occurred while assigning tasks."
       );
     }
   };
@@ -72,12 +73,14 @@ const TaskCard = ({
     setIsDrawerVisible(true);
   };
 
-  const handleOk = (grades, comments) => {
-    console.log("Final Grades:", grades);
-    console.log("Faculty Comments:", comments);
-    updateTaskStatus(task.id, "COMPLETED", currentAssignees);
+  const handleOk = (completeTaskRequest) => {
+    console.log("Final Grades:", completeTaskRequest.grades);
+    console.log("Faculty Comments:", completeTaskRequest.remark);
+    updateTaskStatus(task.id, "COMPLETED", currentAssignees, completeTaskRequest);
     setIsDrawerVisible(false);
   };
+
+  
 
   const handleCancel = () => {
     setIsDrawerVisible(false);
@@ -99,7 +102,7 @@ const TaskCard = ({
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "An error occurred while updating the task."
+        "An error occurred while updating the task."
       );
     }
   };
@@ -133,7 +136,7 @@ const TaskCard = ({
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "An error occurred while deleting the task."
+        "An error occurred while deleting the task."
       );
     }
   };
@@ -141,6 +144,10 @@ const TaskCard = ({
   const closeEditModal = () => {
     setEditModalVisible(false);
   };
+  
+  const maxScore = singleTask.rubrics 
+    ? task.rubrics.length * 4 
+    : 0;
 
   return (
     <motion.div
@@ -185,8 +192,8 @@ const TaskCard = ({
           >
             <TrophyOutlined style={{ fontSize: "16px", color: "gold" }} />
             <span className="text-xs font-bold">
-              {/* {task.totalScore} / {task.maxScore} */}
-              21/28
+              {singleTask.scoredMarks} / {maxScore}
+              {/* 21/28 */}
             </span>
           </div>
         )}
@@ -239,10 +246,10 @@ const TaskCard = ({
       />
 
       {isRubricsVisible && (
-        <RubricScoreDrawer isRubricsVisible={isRubricsVisible} setIsRubricsVisible={setIsRubricsVisible} />
+        <RubricScoreDrawer isRubricsVisible={isRubricsVisible} setIsRubricsVisible={setIsRubricsVisible} task={singleTask}/>
       )}
 
-      
+
     </motion.div>
   );
 };

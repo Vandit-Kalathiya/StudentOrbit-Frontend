@@ -97,7 +97,7 @@ function SubmittedFiles({ taskId }) {
                         target="_blank"
                         className="hover:text-[#5B6DF2] font-medium font-poppins"
                       >
-                        Download
+                        {window.innerWidth >= 768 && 'Download'}
                       </Button>
                     </div>
 

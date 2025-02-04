@@ -2,64 +2,67 @@ import { Drawer, Table, Typography } from "antd";
 
 const { Text } = Typography;
 
-const RubricScoreDrawer = ({ isRubricsVisible, setIsRubricsVisible }) => {
-//   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  // Example rubric criteria with acquired scores (This should come from task data)
-  const rubricData = [
-    { key: "codeQuality", label: "Code Quality", score: 4 },
-    { key: "teamwork", label: "Teamwork & Collaboration", score: 3 },
-    { key: "timeliness", label: "Task Completion on Time", score: 4 },
-    { key: "innovation", label: "Creativity & Innovation", score: 2 },
-    { key: "problemSolving", label: "Problem-Solving Ability", score: 3 },
-    { key: "research", label: "Research & Understanding", score: 3 },
-    { key: "effort", label: "Effort & Engagement", score: 2 },
-  ];
+const RubricScoreDrawer = ({ isRubricsVisible, setIsRubricsVisible, task }) => {
+  // Calculate total score dynamically
+  const totalScore = task.rubrics 
+    ? task.rubrics.reduce((sum, rubric) => sum + rubric.rubricScore, 0)
+    : 0;
+  
+  // Maximum possible score (assuming each rubric is out of 4)
+  const maxScore = task.rubrics 
+    ? task.rubrics.length * 4 
+    : 0;
 
   return (
-    <>
-      {/* Drawer for Detailed Rubric Marks */}
-      <Drawer
-        title="Rubric Breakdown"
-        placement="right"
-        closable={true}
-        onClose={() => setIsRubricsVisible(false)}
-        open={isRubricsVisible}
-        width={400}
-        className="font-poppins"
-      >
-        <Table
-          dataSource={rubricData}
-          pagination={false}
-          rowKey="key"
-          bordered
-        >
-          <Table.Column
-            title="Criteria"
-            dataIndex="label"
-            key="label"
-            render={(text) => <Text strong className="font-poppins">{text}</Text>}
-          />
-          <Table.Column
-            title="Score"
-            dataIndex="score"
-            key="score"
-            align="center"
-            render={(score) => (
-              <span className="text-green-600 font-semibold font-poppins">{score} / 4</span>
-            )}
-          />
-        </Table>
+    <Drawer
+      title="Rubric Breakdown"
+      placement="right"
+      closable={true}
+      onClose={() => setIsRubricsVisible(false)}
+      open={isRubricsVisible}
+      width={400}
+      className="font-poppins"
+    >
+      {task.rubrics && task.rubrics.length > 0 ? (
+        <>
+          <Table
+            dataSource={task.rubrics}
+            pagination={false}
+            rowKey="id"  // Use the actual id from the rubric
+            bordered
+          >
+            <Table.Column
+              title="Criteria"
+              dataIndex="rubricName"
+              key="rubricName"
+              render={(text) => <Text strong className="font-poppins">{text}</Text>}
+            />
+            <Table.Column
+              title="Score"
+              dataIndex="rubricScore"
+              key="rubricScore"
+              align="center"
+              render={(score) => (
+                <span className="text-green-600 font-semibold font-poppins">
+                  {score} / 4
+                </span>
+              )}
+            />
+          </Table>
 
-        {/* Total Score at Bottom */}
-        <div className="text-right mt-4 font-poppins">
-          <Text strong className="text-lg text-green-700 font-poppins">
-            {/* Total Score: {task.totalScore} / {task.maxScore} */}
-            Total Score: 21/28
-          </Text>
+          {/* Total Score at Bottom */}
+          <div className="text-right mt-4 font-poppins">
+            <Text strong className="text-lg text-green-700 font-poppins">
+              Total Score: {totalScore} / {maxScore}
+            </Text>
+          </div>
+        </>
+      ) : (
+        <div className="text-center text-gray-500 font-poppins">
+          No rubrics available for this task.
         </div>
-      </Drawer>
-    </>
+      )}
+    </Drawer>
   );
 };
 

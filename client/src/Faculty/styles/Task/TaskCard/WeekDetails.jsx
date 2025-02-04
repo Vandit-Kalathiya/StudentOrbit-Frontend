@@ -86,6 +86,44 @@ const ToDoPage = () => {
         `${BASE_URL}/tasks/${id}/${status}`,
         {},
         { withCredentials: true }
+      ) 
+      .then((res) => {
+        console.log("Status changed successfully...", res.data);
+        fetchTasks();
+      })
+      .catch((error) => {
+        console.error("There was an error while changing status: ", error);
+      });
+  };
+
+  const updateTaskStatusToCompleted = async (id, newStatus, assignees, completeTaskRequest) => {
+    if (assignees.length === 0) {
+      openNotification(
+        "error",
+        `Can't move to in progress.!`,
+        "No assignees are present in task. Please assign at least one assignee.!"
+      );
+    } else {
+      await changeStatusToCompleted(id, newStatus, completeTaskRequest);
+      openNotification(
+        "success",
+        "Update Successful",
+        `Task is moved to ${newStatus === "IN_PROGRESS"
+          ? "In Progress"
+          : newStatus === "IN_REVIEW"
+            ? "In Review"
+            : "Completed"
+        }.!`
+      );
+    }
+  };
+
+  const changeStatusToCompleted = async (id, status, completeTaskRequest) => {
+    await axios
+      .post(
+        `${BASE_URL}/tasks/${id}/c/${status}`,
+        completeTaskRequest,
+        { withCredentials: true }
       )
       .then((res) => {
         console.log("Status changed successfully...", res.data);
@@ -168,7 +206,7 @@ const ToDoPage = () => {
               <TaskList
                 tasks={tasks}
                 status="IN_REVIEW"
-                updateTaskStatus={updateTaskStatus}
+                updateTaskStatus={updateTaskStatusToCompleted}
                 updateAssignees={updateAssignees}
                 members={members}
                 groupId={projectData.id}

@@ -10,8 +10,8 @@ const TaskCompletionModal = ({ isDrawerVisible, handleOk, handleCancel, taskId }
     setGeneralComment(e.target.value);
   };
 
-  const handleSubmit = (grades) => {
-    handleOk(grades, generalComment);
+  const handleSubmit = (completeTaskRequest) => {
+    handleOk(completeTaskRequest);
   };
 
   return (

@@ -48,23 +48,20 @@ const RubricGradingModal = ({
       return;
     }
 
-    const response = {
+    const completeTaskRequest = {
       grades: criteria.map((criterion) => ({
-        criterion: criterion.label,
-        level:
-          levels.find((level) => level.value === grades[criterion.key])
-            ?.label || "Not Graded",
+        name: criterion.label,
         score: grades[criterion.key],
       })),
       totalScore: calculateTotalScore(),
       maxScore: criteria.length * 4,
-      generalComment: generalComment,
+      remark: generalComment,
       taskId,
     };
 
-    console.log(response);
+    console.log(completeTaskRequest);
 
-    handleOk(grades);
+    handleOk(completeTaskRequest);
   };
 
   return (
