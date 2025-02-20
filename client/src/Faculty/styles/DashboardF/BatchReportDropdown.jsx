@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { Select, Button, Input, Checkbox, Form } from "antd";
 import axios from "axios";
-import { BASE_URL, getUsernameFromToken, REPORT_URL } from "../../../../authToken";
+import {
+  BASE_URL,
+  getUsernameFromToken,
+  REPORT_URL,
+} from "../../../../authToken";
 import { ThreeDots } from "react-loader-spinner";
+import { RiAiGenerate } from "react-icons/ri";
+import { BiSolidReport } from "react-icons/bi";
 
 const { Option } = Select;
 
@@ -68,7 +74,9 @@ const BatchReportDropdown = () => {
         try {
           setFetching("Fetching the Projects...");
           const response = await axios.get(
-            `${BASE_URL}/faculty/batches/allGroups/${selectedBatch[0]}/${selectedBatch.slice(1, 3)}`,
+            `${BASE_URL}/faculty/batches/allGroups/${
+              selectedBatch[0]
+            }/${selectedBatch.slice(1, 3)}`,
             { withCredentials: true }
           );
           setProjects(response.data);
@@ -128,11 +136,14 @@ const BatchReportDropdown = () => {
   const handleGenerateReport = async () => {
     setLoading(true);
 
-    const reportTypeValue = reportType === "Individual Student" ? "student" : "group";
+    const reportTypeValue =
+      reportType === "Individual Student" ? "student" : "group";
     const pdfGenerateRequest = {
       reportType: reportTypeValue,
       identifier: selectedBatch || studentId?.toUpperCase(),
-      projectName: projects.find((project) => project.groupName === selectedProject)?.uniqueGroupId,
+      projectName: projects.find(
+        (project) => project.groupName === selectedProject
+      )?.uniqueGroupId,
       weeks: selectedWeeks,
     };
 
@@ -143,12 +154,21 @@ const BatchReportDropdown = () => {
         { responseType: "blob", withCredentials: true }
       );
 
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
       const link = document.createElement("a");
       link.href = url;
       if (reportTypeValue === "student") {
-        link.setAttribute("download", `${studentId.toUpperCase()}_${selectedProject}.pdf`)
-      } else link.setAttribute("download", `${selectedBatch }_${selectedProject}.pdf`)
+        link.setAttribute(
+          "download",
+          `${studentId.toUpperCase()}_${selectedProject}.pdf`
+        );
+      } else
+        link.setAttribute(
+          "download",
+          `${selectedBatch}_${selectedProject}.pdf`
+        );
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -160,18 +180,24 @@ const BatchReportDropdown = () => {
   };
 
   const renderWeekSelection = () => {
-    if (weekFetching) return <p className="text-gray-500 ml-1">{weekFetching}</p>;
-    if (currentWeek === 0) return <p className="text-gray-500">No week started</p>;
+    if (weekFetching)
+      return <p className="text-gray-500 ml-1 font-poppins">{weekFetching}</p>;
+    if (currentWeek === 0)
+      return <p className="text-gray-500 font-poppins">No week started</p>;
 
     return (
-      <div className="mt-4">
+      <div className="mt-4 font-poppins">
         <p className="mb-2 text-gray-700">Select Weeks:</p>
         <Checkbox
           onChange={(e) => {
-            const allWeeks = Array.from({ length: currentWeek }, (_, i) => i + 1);
+            const allWeeks = Array.from(
+              { length: currentWeek },
+              (_, i) => i + 1
+            );
             setSelectedWeeks(e.target.checked ? allWeeks : []);
           }}
           checked={selectedWeeks.length === currentWeek}
+          className="font-poppins"
         >
           Select All Weeks
         </Checkbox>
@@ -182,17 +208,17 @@ const BatchReportDropdown = () => {
           }))}
           value={selectedWeeks}
           onChange={setSelectedWeeks}
-          className="flex flex-wrap gap-4 mt-2"
+          className="flex flex-wrap gap-4 mt-2 font-poppins"
         />
       </div>
     );
   };
 
   return (
-    <div className="p-5 bg-gradient-to-br from-blue-50 via-white to-purple-50 w-full rounded-lg shadow-lg space-y-4 mb-2">
+    <div className="p-5 bg-gradient-to-br from-blue-50 via-white to-purple-50 w-full rounded-lg shadow-lg space-y-4 mb-2 font-poppins">
       <h2 className="text-2xl font-semibold text-gray-700">Generate Report</h2>
       <Select
-        style={{ width: "100%" }}
+        style={{ width: "100%", fontFamily: "Poppins" }}
         placeholder="Select Report Type"
         onChange={handleReportTypeChange}
         value={reportType}
@@ -206,13 +232,13 @@ const BatchReportDropdown = () => {
           <Form.Item
             validateStatus={
               studentId &&
-                !/^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/.test(studentId)
+              !/^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/.test(studentId)
                 ? "error"
                 : ""
             }
             help={
               studentId &&
-                !/^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/.test(studentId)
+              !/^(\d{2})[Cc][Ee](00[1-9]|0[1-9]\d|1\d\d|200)$/.test(studentId)
                 ? "Invalid Student ID. Format should be YYCEXXX."
                 : ""
             }
@@ -221,14 +247,14 @@ const BatchReportDropdown = () => {
               placeholder="Enter Student ID (e.g., 22CE001)"
               onChange={(e) => handleInputChange(e.target.value, "student")}
               value={studentId}
-              className="text-gray-700 w-full"
+              className="w-full font-poppins"
             />
           </Form.Item>
           {error && <p className="text-red-500 ml-1">{error}</p>}
           {fetching && <p className="text-gray-500 ml-1">{fetching}</p>}
           {projects.length > 0 && (
             <Select
-              style={{ width: "100%" }}
+              style={{ width: "100%", fontFamily: "Poppins" }}
               placeholder="Select Project"
               onChange={setSelectedProject}
               value={selectedProject}
@@ -250,7 +276,7 @@ const BatchReportDropdown = () => {
             placeholder="Select Batch"
             onChange={(value) => handleInputChange(value, "batch")}
             value={selectedBatch}
-            className="text-gray-700 w-full"
+            className="text-gray-700 w-full font-poppins"
           >
             {batch.map((batch) => (
               <Option key={batch.id} value={batch.semester + batch.batchName}>
@@ -258,10 +284,12 @@ const BatchReportDropdown = () => {
               </Option>
             ))}
           </Select>
-          {fetching && <p className="text-gray-500 ml-1">{fetching}</p>}
+          {fetching && (
+            <p className="text-gray-500 ml-1 font-poppins">{fetching}</p>
+          )}
           {projects.length > 0 && (
             <Select
-              style={{ width: "100%" }}
+              style={{ width: "100%", fontFamily: "Poppins" }}
               placeholder="Select Project"
               onChange={setSelectedProject}
               value={selectedProject}
@@ -282,8 +310,11 @@ const BatchReportDropdown = () => {
           type="primary"
           onClick={handleGenerateReport}
           disabled={!selectedProject || selectedWeeks.length === 0 || loading}
-          className={`w-full mt-4  h-10 flex items-center justify-center ${loading ? "bg-blue-400" : "bg-blue-500 hover:bg-blue-600"
-            } text-white`}
+          className={`mt-6 font-poppins p-5 flex items-center justify-center m-auto w-auto ${
+            loading
+              ? "bg-blue-400"
+              : "bg-blue-500 hover:bg-blue-600 hover:text-white"
+          } text-white`}
         >
           {loading ? (
             <div className="flex items-center justify-center gap-2 text-blue-500">
@@ -301,7 +332,12 @@ const BatchReportDropdown = () => {
               />
             </div>
           ) : (
-            <div className="text-sm">Generate Report</div>
+            <div className="flex items-center justify-center gap-2 text-[1rem]">
+              <div>Generate Report</div>
+              <div>
+                <RiAiGenerate className="h-5 w-5" />
+              </div>
+            </div>
           )}
         </Button>
       </div>

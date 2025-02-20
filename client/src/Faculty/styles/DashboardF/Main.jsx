@@ -49,7 +49,7 @@ function Main() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col gap-7 p-4 mt-5 md:mt-2 md:flex-row justify-between items-start">
+    <div className="w-full flex flex-col gap-7 p-4 mt-5 md:mt-2 md:flex-row justify-between items-start font-poppins">
       {loading ? (
         <>
           <>

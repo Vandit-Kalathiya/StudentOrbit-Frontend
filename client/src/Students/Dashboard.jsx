@@ -2,11 +2,22 @@ import { useEffect, useRef, useState } from "react";
 import Sidebar from "./Sidebar";
 import { MessageOutlined } from "@ant-design/icons";
 import ChatPopUp from "./Chat/ChatPopUp";
+import { useLocation } from "react-router-dom";
 
-function Dashboard({setLoginStatus}) {
+function Dashboard({ setLoginStatus }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const chatPopupRef = useRef(null);
+  const location = useLocation();
+  const [roomId, setRoomId] = useState("");
+  const [members, setMembers] = useState([]);
   
+  useEffect(() => {
+    if (location.state) {
+      setRoomId(location.state.uniqueGroupId);
+      setMembers(location.state.students);
+    }
+  });
+
   const toggleChatPopup = () => {
     if (isChatOpen) {
       setIsChatOpen(false);
@@ -15,29 +26,27 @@ function Dashboard({setLoginStatus}) {
       setIsChatOpen(true);
     }
   };
-  
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (chatPopupRef.current && !chatPopupRef.current.contains(event.target)) {
+      if (
+        chatPopupRef.current &&
+        !chatPopupRef.current.contains(event.target)
+      ) {
         setIsChatOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   return (
-    <section
-      id="hero"
-    >
-      <div
-        className="justify-between"
-      >
+    <section id="hero">
+      <div className="justify-between">
         <Sidebar setLoginStatus={setLoginStatus} />
       </div>
       <div
@@ -53,7 +62,7 @@ function Dashboard({setLoginStatus}) {
 
       {isChatOpen && (
         <div ref={chatPopupRef} className="z-50">
-          <ChatPopUp onClose={toggleChatPopup} />
+          <ChatPopUp roomId={roomId} members={members} onClose={toggleChatPopup} />
         </div>
       )}
     </section>

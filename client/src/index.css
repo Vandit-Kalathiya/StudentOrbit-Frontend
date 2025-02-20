@@ -64,7 +64,7 @@ body {
 .chat-popup-exit {
   opacity: 0;
   transform: translateZ(-100px) rotateY(-90deg);
-}
+} 
 
 /* .chat-popup {
   opacity: 0;

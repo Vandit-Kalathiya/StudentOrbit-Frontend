@@ -12,9 +12,11 @@ const colorCombinations = [
   { backgroundColor: "#f9f0ff", color: "#531dab", border: "#531dab" }, // Purple
 ];
 
-const TaskAssignees = ({ assignees, showModal, taskId }) => {
+const TaskAssignees = ({ assignees, showModal, taskId, taskStatus }) => {
   const location = useLocation();
   const [assigneeMembers, setAssigneeMembers] = useState(assignees);
+  console.log(taskStatus);
+  
 
   useEffect(() => {
     axios
@@ -65,7 +67,7 @@ const TaskAssignees = ({ assignees, showModal, taskId }) => {
         ) : (
           <span className="text-gray-500">NA</span>
         )}
-        {!isInFDashboard && (
+        {!isInFDashboard && taskStatus !=="COMPLETED" && (
           <Button
             icon={<PlusOutlined />}
             className="ml-2 rounded-full"

@@ -10,6 +10,7 @@ import IntroSection from './IntroSection'
 import KeewayFeatures from './KeeWayFeatures'
 import EndPart from './EndPart'
 import MainSection from './MainSection'
+import "../../init";
 
 function Home() {
   return (

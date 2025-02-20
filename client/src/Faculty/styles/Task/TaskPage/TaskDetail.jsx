@@ -88,6 +88,7 @@ function TaskDetail() {
                     showModal={showModal}
                     handleFormSubmit={handleFormSubmit}
                     taskId={task.id}
+                    taskStatus = {task.status}
                   />
                 </div>
               </div>
