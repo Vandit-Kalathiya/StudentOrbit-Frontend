@@ -1,9 +1,26 @@
+import { useMemo } from "react";
+
 const ChatMessage = ({ message, members, getAvatarStyle, username }) => {
   const sender = members.find(
     (member) => member.username.toUpperCase() === message.sender.toUpperCase()
   );
-  const avatarStyle = getAvatarStyle(parseInt(sender.username.substring(4)));
-  // console.log(sender);
+  const avatarStyle = getAvatarStyle(
+    parseInt(sender?.username.substring(4) || "0")
+  );
+
+  const formattedTime = useMemo(() => {
+    if (!message.timeStamp) return "";
+
+    const date = new Date(message.timeStamp);
+    return date.toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }); // e.g., "10:30 AM"
+  }, [message.timeStamp]);
+
+  // Determine if the message is short (1 or 2 characters)
+  const isShortMessage = message.content.length <= 2;
 
   return (
     <div
@@ -23,19 +40,31 @@ const ChatMessage = ({ message, members, getAvatarStyle, username }) => {
         </div>
       )}
 
-      <div
-        className={`relative max-w-[60%] p-2 rounded-lg order-2`}
-        style={{
-          border: `2px solid ${
-            message.sender ? avatarStyle.border : avatarStyle.border
-          }`,
-          backgroundColor: message.sender
-            ? avatarStyle.backgroundColor
-            : "#d6e4ff",
-          color: message.sender ? avatarStyle.color : "#1d39c4",
-        }}
-      >
-        {message.content}
+      <div className="flex flex-col order-2 max-w-[70%]">
+        <div
+          className={`relative p-2 rounded-lg ${
+            isShortMessage ? "text-center w-auto" : "w-full"
+          }`}
+          style={{
+            border: `2px solid ${avatarStyle.border}`,
+            backgroundColor: message.sender
+              ? avatarStyle.backgroundColor
+              : "#d6e4ff",
+            color: message.sender ? avatarStyle.color : "#1d39c4",
+            wordBreak: "break-word", // Ensures long words break to the next line
+          }}
+        >
+          {message.content}
+        </div>
+        {formattedTime && (
+          <span
+            className={`text-xs text-gray-500 mt-1 ${
+              message.sender === username ? "self-end" : "self-start"
+            }`}
+          >
+            {formattedTime}
+          </span>
+        )}
       </div>
 
       {message.sender === username && (

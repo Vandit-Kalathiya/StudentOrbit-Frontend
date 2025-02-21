@@ -6,18 +6,50 @@ import { BsEmojiSmile } from "react-icons/bs";
 const ChatInput = ({ inputMessage, setInputMessage, sendMessage }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef(null);
-  const inputRef = useRef(null);
-
+  const textareaRef = useRef(null); 
+  
   // Function to toggle emoji picker
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prev) => !prev);
   };
 
-  // Add emoji to the input field
+  const scrollToBottom = () => {
+    if (textareaRef.current) {
+      textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+    }
+  };
+
   const addEmoji = (emoji) => {
-    setInputMessage((prevInput) => prevInput + emoji);
-    setShowEmojiPicker(false); // Close picker after selecting emoji
-    inputRef.current.focus(); // Keep focus on input
+    setInputMessage((prevInput) => {
+      const newInput = prevInput + emoji;
+      setTimeout(scrollToBottom, 0); 
+      return newInput;
+    });
+    setShowEmojiPicker(false); 
+    textareaRef.current.focus(); 
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (e.shiftKey) {
+        e.preventDefault();
+        setInputMessage((prevInput) => {
+          const newInput = prevInput + "\n";
+          setTimeout(scrollToBottom, 0); 
+          return newInput;
+        });
+      } else {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    if(e.target.value) {
+      setInputMessage(e.target.value);
+      setTimeout(scrollToBottom, 0); 
+    }
   };
 
   useEffect(() => {
@@ -37,22 +69,26 @@ const ChatInput = ({ inputMessage, setInputMessage, sendMessage }) => {
   }, []);
 
   return (
-    <div className="p-4 bg-white border-gray-300 relative w-full flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-      <div className="flex w-full items-center bg-gray-100 rounded-lg p-2 relative">
-        <input
-          ref={inputRef}
-          type="text"
-          className="flex-grow p-2 bg-transparent border-none focus:outline-none w-full"
+    <div className="px-4 pb-3 pt-2 bg-white border-gray-300 relative w-full flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+      <div className="flex w-full items-center bg-gray-100 rounded-lg p-1 relative">
+        <textarea
+          ref={textareaRef}
+          className="flex-grow p-2 bg-transparent border-none focus:outline-none w-full resize-none"
           placeholder="Type your message..."
           value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") sendMessage();
+          onChange={handleChange} 
+          onKeyDown={handleKeyDown}
+          rows="1"
+          style={{
+            minHeight: "40px",
+            maxHeight: "100px",
+            overflow: "hidden",
+            WebkitOverflowScrolling: "touch",
           }}
         />
         <button
           className="ml-2 p-2 rounded-full bg-transparent hover:bg-gray-200 transition"
-          onClick={toggleEmojiPicker} // Toggle emoji picker
+          onClick={toggleEmojiPicker}
         >
           <BsEmojiSmile className="h-6 w-6 text-gray-600" />
         </button>

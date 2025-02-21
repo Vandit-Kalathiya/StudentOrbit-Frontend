@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
-import NoMsgs from "../../assets/No_msgs.jpg";
 import NoMessages from "../../assets/No_messages.gif";
 import {
   getMessagess,
@@ -10,9 +9,8 @@ import {
 } from "../../../authToken";
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import toast from "react-hot-toast";
-import { message, notification } from "antd";
 import { openNotification } from "../../Utils/Notification";
+import ChatSkeletonModern from "../../skeleton/ChatSkeletonModern";
 
 const COLOR_PALETTE = [
   { backgroundColor: "#fff1e6", color: "#fa541c", border: "#fa541c" },
@@ -25,6 +23,7 @@ const Chatbot = ({ roomId, members }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [stompClient, setStompClient] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const messagesEndRef = useRef(null);
   const chatBoxRef = useRef(null);
@@ -71,11 +70,13 @@ const Chatbot = ({ roomId, members }) => {
 
   const loadMessages = useCallback(async () => {
     try {
+      setIsLoading(true);
       console.log("Joining room...");
       await joinChatApi(roomId);
       console.log("Loading messages...");
       const loadedMessages = await getMessagess(roomId);
       setMessages(loadedMessages);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error loading messages:", error);
     }
@@ -129,6 +130,42 @@ const Chatbot = ({ roomId, members }) => {
     requestAnimationFrame(animateScroll);
   }, []);
 
+  const formatDateHeader = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    const day = date.toLocaleString("en-US", { weekday: "short" });
+    const formatted = date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+    return `${day}, ${formatted}`;
+  };
+
+  const groupMessagesByDate = () => {
+    const grouped = [];
+    let lastDate = null;
+
+    messages.forEach((message) => {
+      const date = new Date(message.timeStamp).toDateString();
+      if (date !== lastDate) {
+        grouped.push({
+          type: "date",
+          date: formatDateHeader(message.timeStamp),
+        });
+        lastDate = date;
+      }
+      grouped.push({ type: "message", message });
+    });
+
+    return grouped;
+  };
+
+  const scrollToBottom = useCallback(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+
   useEffect(() => {
     if (roomId) {
       const cleanup = connectWebSocket();
@@ -176,6 +213,16 @@ const Chatbot = ({ roomId, members }) => {
   }, [smoothScrollTo]);
 
   useEffect(() => {
+    if (messages.length > 0) {
+      setTimeout(scrollToBottom, 100); 
+    }
+  }, [messages, scrollToBottom]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [scrollToBottom]);
+
+  useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
@@ -184,10 +231,11 @@ const Chatbot = ({ roomId, members }) => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-col overflow-hidden mb-20">
+      {isLoading && <ChatSkeletonModern />}
+      <div className="flex flex-col overflow-hidden mb-8">
         <div
           ref={chatBoxRef}
-          className="overflow-y-hidden max-h-full p-4 space-y-2 text-sm md:text-[1rem]"
+          className="overflow-hidden max-h-full p-4 space-y-2 text-sm md:text-[1rem]"
           style={{
             WebkitOverflowScrolling: "touch",
           }}
@@ -203,19 +251,28 @@ const Chatbot = ({ roomId, members }) => {
                 No messages yet
               </p>
               <p className="text-gray-400 text-sm">
-                Start a conversation by sending a message.!
+                Start a conversation by sending a message!
               </p>
             </div>
           ) : (
-            messages.map((message) => (
-              <ChatMessage
-                key={message.id}
-                message={message}
-                members={members}
-                getAvatarStyle={getAvatarStyle}
-                username={currentUser}
-              />
-            ))
+            groupMessagesByDate().map((item, index) =>
+              item.type === "date" ? (
+                <div
+                  key={index}
+                  className="text-center text-gray-500 text-sm my-2"
+                >
+                  {item.date}
+                </div>
+              ) : (
+                <ChatMessage
+                  key={item.message.id}
+                  message={item.message}
+                  members={members}
+                  getAvatarStyle={getAvatarStyle}
+                  username={currentUser}
+                />
+              )
+            )
           )}
           <div ref={messagesEndRef} />
         </div>

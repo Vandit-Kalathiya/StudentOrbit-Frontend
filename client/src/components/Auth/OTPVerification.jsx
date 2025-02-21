@@ -122,7 +122,7 @@ const OTPVerification = ({ setLoginStatus }) => {
         />
       </div>
       <div className="right w-full md:w-[30%] bg-[#4457e9] pt-10 mt-10 flex items-center pb-9">
-        <div className="bg-white p-6 mx-2 rounded-2xl border-[1px] border-black text-center w-full max-w-md mx-auto md:p-8 md:w-auto md:max-w-none md:absolute md:top-1/2 md:left-1/2 md:transform md:translate-x-1/3 md:-translate-y-1/2">
+        <div className="bg-white p-6 rounded-2xl border-[1px] border-black text-center w-full max-w-md mx-auto md:p-8 md:w-auto md:max-w-none md:absolute md:top-1/2 md:left-1/2 md:transform md:translate-x-1/3 md:-translate-y-1/2">
           <h2 className="text-3xl mb-4">Email Verification</h2>
           <p className="mb-4">OTP sent to your registered email ID</p>
           <div className="flex justify-center mb-6">

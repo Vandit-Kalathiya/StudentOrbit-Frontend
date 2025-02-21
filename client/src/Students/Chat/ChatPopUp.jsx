@@ -24,7 +24,7 @@ function ChatPopUp({ onClose, roomId, members }) {
 
   return (
     <div
-      className={`fixed top-10 md:right-80 right-10  z-50 bg-white border border-gray-300 shadow-xl rounded-2xl w-[80%] md:w-[60%] h-[90%] overflow-hidden chat-popup ${
+      className={`fixed top-24 md:right-80 right-10 bg-white border border-gray-300 shadow-xl rounded-2xl w-[80%] md:w-[60%] h-[88%] overflow-hidden chat-popup z-[100] ${
         isVisible ? "chat-popup-enter" : ""
       } ${isClosing ? "chat-popup-exit" : ""}`}
     >

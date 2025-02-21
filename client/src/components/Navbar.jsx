@@ -28,7 +28,7 @@ function Navbar({ loginStatus }) {
     } hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#4859DA] md:p-0`;
 
   return (
-    <nav className="bg-[#FFFFFF] border-gray-200 text-black p-2 fixed top-0 left-0 w-full z-50">
+    <nav className="bg-[#FFFFFF] border-gray-200 text-black p-2 fixed top-0 left-0 w-full z-30">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <svg width="3em" height="3em" viewBox="0 0 24 24">
