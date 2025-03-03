@@ -43,42 +43,47 @@ function Sidebar({setLoginStatus}) {
   return (
     <Layout className="flex w-full">
       {isMobile && (
-      <div
-        className="md:hidden fixed bottom-8 left-2 cursor-pointer z-50 bg-[#5B6DF3] text-white py-2 px-6 rounded-md"
-        onClick={toggleSidebar}
-      >
-        {sidebarVisible ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
-      </div>
+        <div
+          className="md:hidden fixed bottom-8 left-2 cursor-pointer z-50 bg-[#5B6DF3] text-white py-2 px-6 rounded-md"
+          onClick={toggleSidebar}
+        >
+          {sidebarVisible ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+        </div>
       )}
 
       <Sider
         collapsed={collapsed}
         collapsible
         trigger={null}
-        className={`md:block custom-sidebar bg-white z-[40] mt-20 ${!sidebarVisible ? 'hidden' : ''}`}
+        className={`md:block custom-sidebar bg-white z-[40] mt-20 ${
+          !sidebarVisible ? "hidden" : ""
+        }`}
         style={{ position: "fixed", left: 0, bottom: 0, top: 0 }}
       >
         <div className="md:flex flex-col h-full">
           <MenuList setLoginStatus={setLoginStatus} className="flex-grow" />
           {!isMobile && (
-          <Button
-            type="text"
-            className="toggle -mt-36 ml-5"
-            onClick={() => setCollapsed(!collapsed)}
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          />
-        )}
+            <Button
+              type="text"
+              className="toggle -mt-36 ml-5"
+              onClick={() => setCollapsed(!collapsed)}
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            />
+          )}
         </div>
       </Sider>
 
       {isMobile && sidebarVisible && (
-        <div className="fixed inset-0 bg-black opacity-50 z-30" 
-            onClick={toggleSidebar}
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-30"
+          onClick={toggleSidebar}
         />
       )}
 
       <Layout
-        className={`w-full ${sidebarVisible ? 'md:pl-0' : 'pl-0'} bg-inherit min-h-screen`}
+        className={`w-full ${
+          sidebarVisible ? "md:pl-0" : "pl-0"
+        } bg-inherit min-h-screen`}
         style={{
           marginLeft: !isMobile && sidebarVisible ? (collapsed ? 70 : 150) : 0,
           transition: !isMobile ? "margin-left 0.1s linear" : "none",
@@ -86,7 +91,7 @@ function Sidebar({setLoginStatus}) {
         }}
       >
         <Content
-          className="transition-margin  h-full mt-20"
+          className="transition-margin  h-full mt-20 bg-slate-100"
           style={{
             marginLeft: !isMobile ? (collapsed ? "1vw" : "4vw") : 0,
             transition: !isMobile ? "margin-left 0.3s ease-in-out" : "none",
@@ -95,9 +100,18 @@ function Sidebar({setLoginStatus}) {
           <Routes>
             <Route path="/" element={<DashboardDetails />} />
             <Route path="/projects" element={<ProjectCard />} />
-            <Route path="/projects/:projectName" element={<ProjectDetails collapsed={collapsed} />} />
-            <Route path="/projects/:projectName/:week" element={<WeekDetails />} />
-            <Route path="/projects/:projectName/:week/:taskId" element={<TaskDetail />} />
+            <Route
+              path="/projects/:projectName"
+              element={<ProjectDetails collapsed={collapsed} />}
+            />
+            <Route
+              path="/projects/:projectName/:week"
+              element={<WeekDetails />}
+            />
+            <Route
+              path="/projects/:projectName/:week/:taskId"
+              element={<TaskDetail />}
+            />
             <Route path="/profile" element={<Profile />} />
             <Route path="/chat" element={<Chatbot />} />
           </Routes>

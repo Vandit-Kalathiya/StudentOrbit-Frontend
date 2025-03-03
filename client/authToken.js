@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-export const adminRole = "admin";
+export const adminRole = "faculty";
 
 export const BASE_URL = "http://localhost:1818"
 

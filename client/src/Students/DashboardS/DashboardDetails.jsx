@@ -78,7 +78,7 @@ const DashboardDetails = () => {
     <StudentDashboardSkeleton />
   ) : (
     <motion.div
-      className="overflow-hidden mt-10 px-8 md:mt-8 md:px-8"
+      className="overflow-hidden mt-10 px-8 md:mt-8 md:px-8 bg-slate-100"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

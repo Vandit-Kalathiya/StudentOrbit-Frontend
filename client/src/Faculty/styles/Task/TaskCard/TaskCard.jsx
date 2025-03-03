@@ -158,7 +158,7 @@ const TaskCard = ({
       exit="exit"
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <TaskStatus status={task.status} title={task.name} />
         {(role === "student" || role === adminRole) &&
           (task.status === "TO_DO" || task.status === "IN_PROGRESS") && (
@@ -187,7 +187,7 @@ const TaskCard = ({
           )}
         {task.status === "COMPLETED" && (
           <div
-            className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-700 text-white p-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-600 transition-all"
+            className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-700 text-white px-3 py-2 rounded-lg shadow-lg cursor-pointer hover:bg-green-600 transition-all"
             onClick={() => setIsRubricsVisible(true)}
           >
             <TrophyOutlined style={{ fontSize: "16px", color: "gold" }} />

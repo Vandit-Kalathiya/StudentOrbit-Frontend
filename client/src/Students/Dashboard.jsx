@@ -6,10 +6,9 @@ function Dashboard({ setLoginStatus }) {
 
   return (
     <section id="hero">
-      <div className="justify-between">
+      <div className="justify-between bg-slate-100">
         <Sidebar setLoginStatus={setLoginStatus} />
       </div>
-      
     </section>
   );
 }

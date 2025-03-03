@@ -232,7 +232,7 @@ const Chatbot = ({ roomId, members }) => {
   return (
     <div className="flex flex-col h-full">
       {isLoading && <ChatSkeletonModern />}
-      <div className="flex flex-col overflow-hidden mb-8">
+      <div className="flex flex-col overflow-hidden mb-14">
         <div
           ref={chatBoxRef}
           className="overflow-hidden max-h-full p-4 space-y-2 text-sm md:text-[1rem]"

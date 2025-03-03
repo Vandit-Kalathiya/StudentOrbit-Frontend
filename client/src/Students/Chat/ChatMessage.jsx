@@ -26,11 +26,11 @@ const ChatMessage = ({ message, members, getAvatarStyle, username }) => {
     <div
       className={`flex ${
         message.sender === username ? "justify-end" : "justify-start"
-      } items-center space-x-2`}
+      } space-x-2`}
     >
       {message.sender !== username && sender && (
         <div
-          className="w-9 h-9 rounded-full flex items-center justify-center border-2 text-sm order-1"
+          className="w-9 h-9 rounded-full flex items-center justify-center border-2 text-sm flex-shrink-0"
           style={{
             borderColor: avatarStyle.border,
             background: avatarStyle.backgroundColor,
@@ -40,36 +40,38 @@ const ChatMessage = ({ message, members, getAvatarStyle, username }) => {
         </div>
       )}
 
-      <div className="flex flex-col order-2 max-w-[70%]">
-        <div
-          className={`relative p-2 rounded-lg ${
-            isShortMessage ? "text-center w-auto" : "w-full"
-          }`}
-          style={{
-            border: `2px solid ${avatarStyle.border}`,
-            backgroundColor: message.sender
-              ? avatarStyle.backgroundColor
-              : "#d6e4ff",
-            color: message.sender ? avatarStyle.color : "#1d39c4",
-            wordBreak: "break-word", // Ensures long words break to the next line
-          }}
-        >
-          {message.content}
-        </div>
-        {formattedTime && (
-          <span
-            className={`text-xs text-gray-500 mt-1 ${
-              message.sender === username ? "self-end" : "self-start"
+      <div className="flex items-center space-x-2 max-w-[70%]">
+        <div className="flex flex-col">
+          <div
+            className={`relative p-2 rounded-lg ${
+              isShortMessage ? "text-center w-auto" : "w-full"
             }`}
+            style={{
+              border: `2px solid ${avatarStyle.border}`,
+              backgroundColor: message.sender
+                ? avatarStyle.backgroundColor
+                : "#d6e4ff",
+              color: message.sender ? avatarStyle.color : "#1d39c4",
+              wordBreak: "break-word",
+            }}
           >
-            {formattedTime}
-          </span>
-        )}
+            {message.content}
+          </div>
+          {formattedTime && (
+            <span
+              className={`text-xs text-gray-500 mt-1 ${
+                message.sender === username ? "self-end" : "self-start"
+              }`}
+            >
+              {formattedTime}
+            </span>
+          )}
+        </div>
       </div>
 
       {message.sender === username && (
         <div
-          className="w-9 h-9 rounded-full flex items-center justify-center border-2 text-sm order-3"
+          className="w-9 h-9 rounded-full flex items-center justify-center border-2 text-sm flex-shrink-0"
           style={{
             borderColor: avatarStyle.border,
             background: avatarStyle.backgroundColor,

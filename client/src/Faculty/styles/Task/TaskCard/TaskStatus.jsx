@@ -22,7 +22,7 @@ const TaskStatus = ({ status, title }) => {
   };
 
   return (
-    <h2 className="text-lg font-semibold mb-2 flex items-center">
+    <h2 className="text-lg font-semibold mb-2 flex max-w-[70%] items-center">
       {getStatusIcon(status)} {title}
     </h2>
   );
