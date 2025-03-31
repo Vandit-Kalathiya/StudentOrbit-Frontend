@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import Loader from "./components/Loader.jsx";
 import NotFound from "./components/NotFound.jsx";
 import useLenisScroll from "./Hooks/useLenisScroll.jsx";
-import Footer from "./components/Footer.jsx";
+// import Footer from "./components/Footer.jsx";
 import GlobalStyle from "../GlobalStyles.js";
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode'

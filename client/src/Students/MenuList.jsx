@@ -6,6 +6,7 @@ import {
   ProjectOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { FiGithub } from "react-icons/fi";
 import { NavLink, useNavigate, useLocation, matchPath } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL, getTokenFromCookie } from "../../authToken";
@@ -43,7 +44,8 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
   const selectedKey = (() => {
     if (matchPath("/f/dashboard", location.pathname)) return "1";
     if (matchPath("/s/dashboard/projects/*", location.pathname)) return "2";
-    if (matchPath("/s/dashboard/profile", location.pathname)) return "3";
+    if (matchPath("/s/dashboard/github/*", location.pathname)) return "3";
+    if (matchPath("/s/dashboard/profile", location.pathname)) return "4";
     return "1";
   })();
 
@@ -65,11 +67,16 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
     },
     {
       key: "3",
+      icon: <FiGithub />,
+      label: <NavLink to="/s/dashboard/github/user" className={getNavLinkClass}>Github</NavLink>,
+    },
+    {
+      key: "4",
       icon: <UserOutlined />,
       label: <NavLink to="/s/dashboard/profile" className={getNavLinkClass}>Profile</NavLink>,
     },
     {
-      key: "4",
+      key: "5",
       icon: <LogoutOutlined />,
       label: "Logout",
       onClick: showLogoutModal,

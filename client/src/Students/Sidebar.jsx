@@ -5,26 +5,30 @@ import MenuList from "./MenuList";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import ProjectCard from "./Project/ProjectCard";
 import ProjectDetails from "./Project/ProjectDetails";
-import WeekDetails from '../Faculty/styles/Task/TaskCard/WeekDetails'
+import WeekDetails from "../Faculty/styles/Task/TaskCard/WeekDetails";
 import TaskDetail from "../Faculty/styles/Task/TaskPage/TaskDetail";
 import DashboardDetails from "./DashboardS/DashboardDetails";
 import Profile from "./Profile/Profile";
 import Chatbot from "./Chat/Chatbot";
+import Index from "./Github/Pages/Index"
+import Repository from "./Github/Pages/Repository"
+import UserProfile from "./Github/Pages/UserProfile"
+
 
 const { Sider, Content } = Layout;
 
-function Sidebar({setLoginStatus}) {
+function Sidebar({ setLoginStatus }) {
   const [collapsed, setCollapsed] = useState(true);
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const location = useLocation();
 
   const toggleSidebar = () => {
-    setSidebarVisible(prev => !prev);
+    setSidebarVisible((prev) => !prev);
   };
 
   useEffect(() => {
     const handleReSize = () => {
-      if(window.innerWidth <= 768) {
+      if (window.innerWidth <= 768) {
         setSidebarVisible(false);
         setCollapsed(false);
       } else {
@@ -38,7 +42,6 @@ function Sidebar({setLoginStatus}) {
   }, [location]);
 
   const isMobile = window.innerWidth <= 768;
-
 
   return (
     <Layout className="flex w-full">
@@ -114,6 +117,9 @@ function Sidebar({setLoginStatus}) {
             />
             <Route path="/profile" element={<Profile />} />
             <Route path="/chat" element={<Chatbot />} />
+            <Route path="/github" element={<Index />} />
+            <Route path="/github/repository" element={<Repository />} />
+            <Route path="/github/user" element={<UserProfile />} />
           </Routes>
         </Content>
       </Layout>

@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/flowbite/**/*.js",
+    "./node_modules/@shadcn/ui/dist/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {
@@ -12,7 +13,5 @@ export default {
       }
     },
   },
-  plugins: [
-
-  ]
+  plugins: [],
 }
