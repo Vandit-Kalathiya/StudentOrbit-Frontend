@@ -109,15 +109,23 @@ function GroupLeft({ projectName }) {
       return;
     }
 
+    // const techData = {
+    //   name: technology.trim(),
+    // };
+    console.log(technology);
     let name = technology;
 
     axios
-      .post(`${BASE_URL}/tech/add/${project.id}`, name, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        `${BASE_URL}/tech/add/${project.id}`,
+        name,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res) => {
         toast.success("Technology added successfully!");
         setTemp((prev) => !prev);
@@ -149,9 +157,7 @@ function GroupLeft({ projectName }) {
         setMentor(response.data.mentor);
         setUsername("");
       })
-      .catch((error) =>
-        console.error("Failed to fetch project details:", error)
-      );
+      .catch((error) => console.error("Failed to fetch project details:", error));
   }, [temp, projectName]);
 
   const handleMentorChange = (username) => {
@@ -294,24 +300,24 @@ function GroupLeft({ projectName }) {
             <span
               key={index}
               className={`px-4 py-1.5 text-sm rounded-full border-2 
-              ${
-                isMarkedForDeletion
+              ${isMarkedForDeletion
                   ? "border-red-500 text-red-500 bg-red-50"
                   : "border-[#5B6DF3]/30 text-[#5B6DF3] hover:bg-[#5B6DF3] hover:text-white"
-              } transition-all duration-300 
+                } transition-all duration-300 
               cursor-default transform hover:-translate-y-0.5 relative group flex items-center gap-2`}
             >
               {tech.name
                 .split(" ")
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .map(
+                  (word) =>
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                )
                 .join(" ")}
               {isEditMode && (
                 <button
                   onClick={() => handleTechnologyDelete(tech.id)}
                   className="flex items-center justify-center"
-                  title={
-                    isMarkedForDeletion ? "Undo remove" : "Remove technology"
-                  }
+                  title={isMarkedForDeletion ? "Undo remove" : "Remove technology"}
                 >
                   <CloseOutlined
                     style={{
@@ -431,26 +437,13 @@ function GroupLeft({ projectName }) {
         </h3>
         <h3 className="md:text-lg text-base italic">
           {parseInt(project.startDate.substring(8, 10), 10)}
-          {getOrdinalSuffix(
-            parseInt(project.startDate.substring(8, 10), 10)
-          )}{" "}
-          {getMonthAbbreviation(
-            parseInt(project.startDate.substring(5, 7), 10)
-          )}
-          , {project.startDate.substring(0, 4)}
+          {getOrdinalSuffix(parseInt(project.startDate.substring(8, 10), 10))}{" "}
+          {getMonthAbbreviation(parseInt(project.startDate.substring(5, 7), 10))},{" "}
+          {project.startDate.substring(0, 4)}
         </h3>
       </div>
 
       <Progress percent={30} strokeColor="#5A6CF1" className="w-[80%]" />
-
-      {project.projectStatus === "COMPLETED" && (
-        <div className="flex items-center gap-2 mt-6">
-          <FaCheckCircle className="text-green-500 text-2xl" />
-          <span className="text-lg font-semibold text-green-600">
-            Project Completed
-          </span>
-        </div>
-      )}
 
       {(role === "faculty" || role === adminRole) &&
         project.projectStatus === "IN_PROGRESS" && (

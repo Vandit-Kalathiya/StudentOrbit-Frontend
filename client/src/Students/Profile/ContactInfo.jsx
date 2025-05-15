@@ -9,7 +9,7 @@ const ContactInfo = ({ student }) => {
       </div>
       <div className="flex items-center space-x-2">
         <PhoneOutlined />
-        <p className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">7990137814</p>
+        <p className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">1234567890</p>
       </div>
     </div>
   );

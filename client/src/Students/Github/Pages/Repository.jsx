@@ -123,7 +123,7 @@ const Repository = () => {
       
       {data.isLoading && (
         <div className="flex flex-col items-center justify-center py-16">
-          <div className="w-10 h-10 border-4 border-[#5B6DF3] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-16 h-16 border-4 border-[#5B6DF3] border-t-transparent rounded-full animate-spin"></div>
           <p className="mt-4 text-lg">Fetching repository data...</p>
         </div>
       )}
