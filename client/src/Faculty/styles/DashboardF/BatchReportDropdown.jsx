@@ -9,6 +9,7 @@ import {
 import { ThreeDots } from "react-loader-spinner";
 import { RiAiGenerate } from "react-icons/ri";
 import { BiSolidReport } from "react-icons/bi";
+import toast from "react-hot-toast";
 
 const { Option } = Select;
 
@@ -172,6 +173,16 @@ const BatchReportDropdown = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      if (reportTypeValue == 'student') {
+        toast.success(
+          `Report generated for Student ID: ${studentId.toUpperCase()}_${selectedProject}`
+        );
+      } else {
+        toast.success(
+          `Report generated for Group: ${selectedBatch}_${selectedProject}`
+        );
+      }
     } catch (error) {
       console.error("Error generating PDF:", error);
     } finally {

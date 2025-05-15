@@ -35,6 +35,22 @@ export const getUsernameFromToken = () => {
   }
 };
 
+
+// Fetch user here
+export const fetchUser = async () => { 
+  try {
+    const username = getUsernameFromToken();
+    const response = await axios.get(`${BASE_URL}/students/u/${username}`, {
+      withCredentials: true,
+    });
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;
+  }
+}
+
 // Function to get the username from the token
 export const getTokenFromCookie = () => {
   try {

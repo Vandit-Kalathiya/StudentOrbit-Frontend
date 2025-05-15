@@ -10,6 +10,7 @@ import {
 import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL, getTokenFromCookie } from '../../../../authToken';
+import { FiGithub } from 'react-icons/fi';
 
 const MenuList = ({ darkTheme, setLoginStatus }) => {
   const [isSubMenuVisible, setIsSubMenuVisible] = useState(false);
@@ -74,11 +75,11 @@ const MenuList = ({ darkTheme, setLoginStatus }) => {
         <Menu.Item key="1" icon={<DashboardOutlined />}>
           <Link to="/f/dashboard">Dashboard</Link>
         </Menu.Item>
-          <Menu.Item key="2" icon={<BarsOutlined />}>
-            <Link to="/f/dashboard/batches">My Batches</Link>
-          </Menu.Item>
-        <Menu.Item key="3" icon={<AreaChartOutlined />}>
-          <Link to="/f/dashboard/progress">Progress</Link>
+        <Menu.Item key="2" icon={<BarsOutlined />}>
+          <Link to="/f/dashboard/batches">My Batches</Link>
+        </Menu.Item>
+        <Menu.Item key="3" icon={<FiGithub />}>
+          <Link to="/f/dashboard/github">Progress</Link>
         </Menu.Item>
         <Menu.Item key="4" icon={<SettingOutlined />}>
           Settings
