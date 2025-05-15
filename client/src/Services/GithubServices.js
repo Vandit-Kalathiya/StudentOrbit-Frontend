@@ -1,5 +1,5 @@
 const BASE_URL = "https://api.github.com";
-const GITHUB_TOKEN = "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"; // Set this in .env
+const GITHUB_TOKEN = process.env.VITE_GITHUB_TOKEN; // Set this in .env
 
 // Base configuration for all fetch requests
 const getFetchOptions = () => ({
