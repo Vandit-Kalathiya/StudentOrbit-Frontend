@@ -3,12 +3,12 @@ import AuthImg from "../../Styles/AuthImg";
 import loginImg from "../../assets/Fingerprint.mp4";
 import { Card, Typography } from "antd";
 import { useState } from "react";
-import axios from "axios";
 import ToggleRole from "./ToggleRole";
 import LoginForm from "./LoginForm";
 import { openNotification } from "../../Utils/Notification";
-import Cookies from 'js-cookie';  
-import toast from "react-hot-toast";
+import { API_ENDPOINTS } from "../../config/api.config";
+import { USER_ROLES, ROUTES } from "../../config/app.config";
+import apiService from "../../services/api.service";
 
 function Login({ setLoginStatus }) {
   const [loginData, setLoginData] = useState({
@@ -22,25 +22,18 @@ function Login({ setLoginStatus }) {
     const { username, password } = loginData;
 
     try {
-      const response = await axios.post(`http://localhost:1818/auth/login`, { username, password }, {
-        withCredentials: true,
-      });
-      const { jwtToken, role } = response.data;
-
-      // localStorage.setItem(role === "student" ? "s_jwt" : "f_jwt", jwtToken);
-      // localStorage.setItem("username", username);
-      // localStorage.setItem("role", role);
+      const response = await apiService.post(API_ENDPOINTS.AUTH.LOGIN, { username, password });
+      const { role } = response.data;
 
       setLoginStatus(true);
 
-      openNotification('success', 'Login Successful', 'You have successfully logged in.!');
-      const redirectPath = role === "student" ? "/s/dashboard" : "/f/dashboard";
+      openNotification('success', 'Login Successful', 'You have successfully logged in!');
+      const redirectPath = role === USER_ROLES.STUDENT ? ROUTES.STUDENT_DASHBOARD : ROUTES.FACULTY_DASHBOARD;
       navigate(redirectPath);
-      // toast.success('You have successfully logged in..!')
     } catch (error) {
       console.error('Login error:', error);
-      // toast.error(error.response.data)
-      openNotification('error', 'Login Failed', error.response.data);
+      const errorMessage = error.response?.data || 'An error occurred during login';
+      openNotification('error', 'Login Failed', errorMessage);
     }
   };
 
