@@ -6,7 +6,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.env
 
 node_modules
 dist
@@ -23,3 +22,31 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ========================================
+# Environment Files (Secrets)
+# ========================================
+# IMPORTANT: Never commit files with actual secrets
+
+# Local environment overrides (contains your personal dev setup)
+.env.local
+.env.development.local
+.env.production.local
+.env.staging.local
+.env.test.local
+
+# Production environment (contains production URLs and keys)
+.env.production
+
+# Staging environment (contains staging URLs and keys)
+.env.staging
+
+# Backup files
+*.env.backup
+
+# ========================================
+# Safe to commit:
+# - .env (base shared config)
+# - .env.example (template)
+# - .env.development (localhost defaults)
+# ========================================
